@@ -1,0 +1,434 @@
+{
+  "needs": [
+    {
+      "id": "kuliah-dan-kantor",
+      "name": "Kuliah dan kantor",
+      "description": "Mengetik tugas dan laporan, Word, Excel, dan PowerPoint, membuka banyak tab browser, rapat lewat Zoom atau Meet, menonton video kuliah."
+    },
+    {
+      "id": "desain-grafis",
+      "name": "Desain grafis",
+      "description": "Photoshop, Illustrator, Figma, atau Canva; edit foto, desain poster, dan edit video ringan."
+    },
+    {
+      "id": "pemrograman",
+      "name": "Pemrograman",
+      "description": "Menulis kode di VS Code atau IDE lain, menjalankan server lokal, Docker atau mesin virtual, Android Studio, dan membuka banyak halaman dokumentasi."
+    },
+    {
+      "id": "game-ringan",
+      "name": "Game ringan",
+      "description": "Game yang tidak terlalu menuntut, seperti Minecraft, Valorant, atau Dota 2 pada pengaturan grafis rendah sampai sedang."
+    },
+    {
+      "id": "game-berat",
+      "name": "Game berat",
+      "description": "Game 3D baru yang menuntut (sering disebut AAA) pada pengaturan sedang sampai tinggi."
+    }
+  ],
+  "criteria": [
+    {
+      "key": "cpu",
+      "name": "Prosesor (tingkat 1-5)",
+      "unit": "tingkat"
+    },
+    {
+      "key": "gpu",
+      "name": "Kartu grafis (tingkat 1-5)",
+      "unit": "tingkat"
+    },
+    {
+      "key": "ram",
+      "name": "RAM",
+      "unit": "GB"
+    },
+    {
+      "key": "storage",
+      "name": "Penyimpanan",
+      "unit": "GB"
+    },
+    {
+      "key": "display",
+      "name": "Jenis layar (peringkat)",
+      "unit": "peringkat"
+    },
+    {
+      "key": "refresh",
+      "name": "Refresh rate layar",
+      "unit": "Hz"
+    }
+  ],
+  "thresholds": {
+    "kuliah-dan-kantor": [
+      {
+        "criterion": "cpu",
+        "minimum": 1,
+        "comfortable": 2,
+        "reason": "Dokumen dan internet berjalan di prosesor dasar, tetapi terasa lambat bila banyak tab dan aplikasi dibuka bersamaan. Tingkat 2 sudah cukup lancar untuk kuliah dan kantor.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "gpu",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: grafis bawaan apa pun cukup untuk dokumen, internet, dan video.",
+        "basis": "-"
+      },
+      {
+        "criterion": "ram",
+        "minimum": 4,
+        "comfortable": 8,
+        "reason": "4 GB adalah syarat minimum Windows 11, tetapi cepat penuh bila banyak tab terbuka. 8 GB terasa lega untuk kuliah dan kantor.",
+        "basis": "Batas minimal: syarat minimum Windows 11 (Microsoft). Batas nyaman: penilaian awal."
+      },
+      {
+        "criterion": "storage",
+        "minimum": 128,
+        "comfortable": 256,
+        "reason": "Windows 11 meminta minimal 64 GB. 128 GB cukup untuk Windows, Office, dan tugas, tetapi cepat penuh bila banyak video. 256 GB lebih lega.",
+        "basis": "Dasar: syarat Windows 11 (64 GB, Microsoft). Angka 128 dan 256: penilaian awal."
+      },
+      {
+        "criterion": "display",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: jenis layar tidak menentukan cocok atau tidaknya untuk dokumen. Panel TN dan resolusi rendah tetap muncul sebagai peringatan.",
+        "basis": "-"
+      },
+      {
+        "criterion": "refresh",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: refresh rate hanya penting untuk game.",
+        "basis": "-"
+      }
+    ],
+    "desain-grafis": [
+      {
+        "criterion": "cpu",
+        "minimum": 2,
+        "comfortable": 3,
+        "reason": "Aplikasi desain terasa lancar mulai tingkat 3. Tingkat 2 masih bisa untuk berkas kecil, tetapi lambat saat berkas besar atau banyak lapisan (layer).",
+        "basis": "Penilaian awal; belum dicocokkan dengan syarat sistem aplikasinya"
+      },
+      {
+        "criterion": "gpu",
+        "minimum": 1,
+        "comfortable": 2,
+        "reason": "Grafis bawaan generasi baru (tingkat 2) membantu mempercepat tampilan dan filter. Grafis paling dasar (tingkat 1) tetap bisa dipakai, tetapi lebih lambat.",
+        "basis": "Penilaian awal; belum dicocokkan dengan syarat sistem aplikasinya"
+      },
+      {
+        "criterion": "ram",
+        "minimum": 8,
+        "comfortable": 16,
+        "reason": "Aplikasi desain memakai banyak RAM, apalagi untuk berkas besar. 8 GB cukup untuk belajar dan berkas kecil; 16 GB lebih nyaman.",
+        "basis": "Penilaian awal; belum dicocokkan dengan syarat sistem aplikasinya"
+      },
+      {
+        "criterion": "storage",
+        "minimum": 256,
+        "comfortable": 512,
+        "reason": "Berkas desain, foto, dan video cepat memenuhi penyimpanan. 512 GB lebih lega.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "display",
+        "minimum": 3,
+        "comfortable": 4,
+        "reason": "Jenis layar dipakai sebagai perkiraan kasar mutu warna, karena cakupan warna (sRGB atau DCI-P3) belum dicatat. TN dan VA umumnya kalah dalam ketepatan warna, IPS cukup, OLED umumnya mencakup warna lebih luas. Nanti diganti dengan data cakupan warna.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "refresh",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: refresh rate tidak menentukan untuk desain.",
+        "basis": "-"
+      }
+    ],
+    "pemrograman": [
+      {
+        "criterion": "cpu",
+        "minimum": 2,
+        "comfortable": 3,
+        "reason": "Kompilasi dan alat pengembang lebih cepat di tingkat 3. Tingkat 2 masih bisa untuk proyek kuliah, tetapi lebih lama saat proyek besar.",
+        "basis": "Penilaian awal; belum dicocokkan dengan syarat sistem aplikasinya"
+      },
+      {
+        "criterion": "gpu",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: pemrograman umum tidak bergantung pada kartu grafis. Pekerjaan khusus seperti pembelajaran mesin (machine learning) yang butuh GPU belum dinilai.",
+        "basis": "-"
+      },
+      {
+        "criterion": "ram",
+        "minimum": 8,
+        "comfortable": 16,
+        "reason": "Editor kode, browser, dan server lokal masih muat di 8 GB. Docker, mesin virtual, atau Android Studio terasa lebih lega di 16 GB.",
+        "basis": "Penilaian awal; belum dicocokkan dengan syarat sistem aplikasinya"
+      },
+      {
+        "criterion": "storage",
+        "minimum": 256,
+        "comfortable": 512,
+        "reason": "Alat pengembang, repositori, dan image Docker cepat memakan ruang. 512 GB lebih lega.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "display",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: jenis layar tidak menentukan untuk pemrograman.",
+        "basis": "-"
+      },
+      {
+        "criterion": "refresh",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: refresh rate tidak menentukan untuk pemrograman.",
+        "basis": "-"
+      }
+    ],
+    "game-ringan": [
+      {
+        "criterion": "cpu",
+        "minimum": 2,
+        "comfortable": 3,
+        "reason": "Game, bahkan yang ringan, butuh prosesor lebih kuat daripada untuk dokumen. Prosesor tingkat 1 (dua inti, sangat hemat daya) cenderung tersendat.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "gpu",
+        "minimum": 1,
+        "comfortable": 2,
+        "reason": "Syarat minimum Valorant memakai grafis setara Intel HD 3000, jadi grafis bawaan paling dasar masih bisa untuk game sangat ringan di pengaturan rendah. Grafis bawaan generasi baru (tingkat 2) memberi ruang lebih.",
+        "basis": "Batas minimal: persyaratan Valorant yang dikutip Shacknews (2020); cek ulang di situs Riot. Batas nyaman: penilaian awal."
+      },
+      {
+        "criterion": "ram",
+        "minimum": 4,
+        "comfortable": 8,
+        "reason": "Valorant meminta 4 GB. Karena Windows dan browser juga memakai RAM, 8 GB lebih nyaman.",
+        "basis": "Batas minimal: persyaratan Valorant yang dikutip Shacknews (2020); cek ulang di situs Riot. Batas nyaman: penilaian awal."
+      },
+      {
+        "criterion": "storage",
+        "minimum": 128,
+        "comfortable": 256,
+        "reason": "Game ringan tidak besar, tetapi beberapa judul cepat memenuhi 128 GB bersama Windows dan aplikasi lain.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "display",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: jenis layar tidak menentukan untuk game ringan.",
+        "basis": "-"
+      },
+      {
+        "criterion": "refresh",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: refresh rate tidak menentukan untuk game ringan.",
+        "basis": "-"
+      }
+    ],
+    "game-berat": [
+      {
+        "criterion": "cpu",
+        "minimum": 3,
+        "comfortable": 4,
+        "reason": "Game baru menuntut prosesor yang kuat. Tingkat 3 cukup menemani kartu grafis kelas pemula; tingkat 4 (kelas performa) memberi ruang lebih.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "gpu",
+        "minimum": 3,
+        "comfortable": 4,
+        "reason": "Game baru butuh kartu grafis terpisah. Tingkat 3 cukup untuk pengaturan sedang; tingkat 4 untuk pengaturan tinggi.",
+        "basis": "Penilaian awal"
+      },
+      {
+        "criterion": "ram",
+        "minimum": 8,
+        "comfortable": 16,
+        "reason": "Contoh: Baldur's Gate 3 meminta minimal 8 GB dan menyarankan 16 GB.",
+        "basis": "Persyaratan Baldur's Gate 3 (Trusted Reviews)."
+      },
+      {
+        "criterion": "storage",
+        "minimum": 512,
+        "comfortable": 1000,
+        "reason": "Satu game baru bisa memakan puluhan sampai ratusan GB (Baldur's Gate 3 meminta 150 GB). 512 GB cepat penuh; 1000 GB (1 TB) lebih lega.",
+        "basis": "Contoh Baldur's Gate 3 (Trusted Reviews). Angka 512 dan 1000: penilaian awal."
+      },
+      {
+        "criterion": "display",
+        "minimum": null,
+        "comfortable": null,
+        "reason": "Tidak dinilai: jenis layar tidak menentukan untuk game berat.",
+        "basis": "-"
+      },
+      {
+        "criterion": "refresh",
+        "minimum": 60,
+        "comfortable": 120,
+        "reason": "Layar 60 Hz cukup untuk bermain; 120 Hz atau lebih membuat gerakan terasa lebih halus.",
+        "basis": "Penilaian awal"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "name": "TN",
+      "rank": 1,
+      "note": "Murah; warna cenderung pucat dan sudut pandang sempit."
+    },
+    {
+      "name": "VA",
+      "rank": 2,
+      "note": "Kontras bagus, tetapi warna dan kecerahan bergeser bila dilihat dari samping."
+    },
+    {
+      "name": "IPS",
+      "rank": 3,
+      "note": "Warna dan sudut pandang baik; mutunya tetap berbeda-beda antarlaptop."
+    },
+    {
+      "name": "OLED",
+      "rank": 4,
+      "note": "Warna pekat dan kontras tinggi; umumnya mencakup warna lebih luas."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "P1",
+      "when": "Sistem operasi bawaan Windows 10.",
+      "text": "Memakai Windows 10: dukungan resmi Microsoft sudah berakhir pada 14 Oktober 2025. Siapkan naik ke Windows 11."
+    },
+    {
+      "code": "P2",
+      "when": "Prosesor tidak resmi mendukung Windows 11 (kolom Windows 11 resmi? di tab Varian bernilai tidak).",
+      "text": "Prosesor tidak resmi mendukung Windows 11, sehingga sulit naik ke versi Windows yang lebih baru."
+    },
+    {
+      "code": "P3",
+      "when": "Info upgrade belum terverifikasi atau tidak diketahui.",
+      "text": "Info RAM dan penyimpanan (bisa diganti atau tidak) belum terverifikasi. Periksa lagi sebelum membeli."
+    },
+    {
+      "code": "P4",
+      "when": "Resolusi layar 1366x768.",
+      "text": "Layar beresolusi rendah (1366x768): ruang kerja sempit dan tulisan kurang tajam."
+    },
+    {
+      "code": "P5",
+      "when": "Jenis panel layar TN.",
+      "text": "Panel TN: warna cenderung pucat dan sudut pandang sempit."
+    },
+    {
+      "code": "P6",
+      "when": "RAM menempel (disolder) dan ukurannya 8 GB atau kurang.",
+      "text": "RAM menempel di papan utama dan tidak bisa ditambah, padahal ukurannya kecil (8 GB atau kurang)."
+    }
+  ],
+  "tiers": [
+    {
+      "tier": 1,
+      "cpu": "Dokumen dan internet ringan. Terasa lambat bila banyak tab atau aplikasi dibuka.",
+      "gpu": "Tampilan, dokumen, dan video biasa (grafis bawaan paling dasar)."
+    },
+    {
+      "tier": 2,
+      "cpu": "Kuliah dan kantor cukup lancar (contoh: Core i5 generasi ke-8, empat inti).",
+      "gpu": "Video, desain ringan, dan game ringan (grafis bawaan generasi baru)."
+    },
+    {
+      "tier": 3,
+      "cpu": "Kuliah, kantor, dan banyak aplikasi sekaligus dengan lega; pemrograman umum dan edit ringan.",
+      "gpu": "Game populer pada pengaturan sedang (kartu grafis terpisah kelas pemula)."
+    },
+    {
+      "tier": 4,
+      "cpu": "Kerja berat sesekali: kompilasi besar, edit video menengah (umumnya prosesor kelas performa).",
+      "gpu": "Game baru pada pengaturan tinggi (kartu grafis terpisah kelas menengah)."
+    },
+    {
+      "tier": 5,
+      "cpu": "Kerja berat terus-menerus: render, simulasi, game kelas atas.",
+      "gpu": "Game dan render berat (kartu grafis terpisah kelas atas)."
+    }
+  ],
+  "not_scored": [
+    {
+      "item": "Mutu warna layar",
+      "reason": "Cakupan sRGB dan DCI-P3 belum dicatat di tab Varian. Sementara ini dipakai jenis panel sebagai perkiraan kasar."
+    },
+    {
+      "item": "Resolusi, kecerahan, dan ukuran layar",
+      "reason": "Belum ada aturan. Resolusi rendah (1366x768) baru muncul sebagai peringatan."
+    },
+    {
+      "item": "Bobot, baterai, dan kualitas keyboard",
+      "reason": "Datanya sebagian ada di tab Varian, tetapi belum ada aturan per kebutuhan."
+    },
+    {
+      "item": "Harga dan nilai uang",
+      "reason": "Harga bertanggal ada di tab Harga, tetapi aturan wajar atau mahal belum disusun."
+    },
+    {
+      "item": "Kondisi laptop bekas",
+      "reason": "Baterai, engsel, dan bodi laptop bekas butuh panduan tersendiri (rencana tahap panduan bekas)."
+    },
+    {
+      "item": "Kebutuhan khusus",
+      "reason": "Pembelajaran mesin yang butuh GPU NVIDIA, simulasi teknik, dan edit video 4K belum dibuat sebagai kebutuhan sendiri."
+    }
+  ],
+  "statuses": [
+    {
+      "label": "Nyaman",
+      "meaning": "Nilai sudah mencapai batas nyaman."
+    },
+    {
+      "label": "Cukup",
+      "meaning": "Nilai sudah mencapai batas minimal, tetapi belum mencapai batas nyaman."
+    },
+    {
+      "label": "Kurang",
+      "meaning": "Nilai masih di bawah batas minimal."
+    },
+    {
+      "label": "Belum ada data",
+      "meaning": "Nilainya masih kosong atau unknown di tab Varian, jadi belum bisa dinilai. Data yang kosong tidak dianggap bagus dan tidak dianggap jelek."
+    },
+    {
+      "label": "Tidak dinilai",
+      "meaning": "Batas minimal dan batas nyaman sama-sama dikosongkan, jadi kriteria ini tidak dipakai untuk kebutuhan tersebut."
+    }
+  ],
+  "verdicts": [
+    {
+      "label": "Kurang cocok",
+      "meaning": "Ada satu kriteria atau lebih yang berstatus Kurang."
+    },
+    {
+      "label": "Data belum lengkap",
+      "meaning": "Tidak ada yang Kurang, tetapi ada kriteria yang berstatus Belum ada data. Hasil ditahan sampai datanya lengkap."
+    },
+    {
+      "label": "Bisa, dengan catatan",
+      "meaning": "Tidak ada yang Kurang dan data lengkap, tetapi ada kriteria yang baru Cukup. Alasannya ditulis di tab Hasil."
+    },
+    {
+      "label": "Cocok",
+      "meaning": "Semua kriteria yang dinilai berstatus Nyaman."
+    },
+    {
+      "label": "Tidak dinilai",
+      "meaning": "Semua batas untuk kebutuhan itu dikosongkan, jadi tidak ada yang bisa dinilai (dicek paling awal)."
+    }
+  ]
+}

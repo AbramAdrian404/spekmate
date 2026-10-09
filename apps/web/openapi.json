@@ -1,0 +1,2801 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SpekMate API",
+    "description": "\nRule-based laptop advice in plain Indonesian. No AI ranks anything: every verdict comes from\npublished thresholds (see `/api/methodology`), applied to dated, sourced data.\n\n* `GET /api/models`, `GET /api/models/{id}`: the catalog, with a verdict per need for every configuration.\n* `POST /api/recommendations`: pick a need and a budget, get a short, explained list.\n* `GET /api/methodology`: the thresholds, tiers and warnings behind every verdict.\n",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Is the API alive?",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meta": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Which data is being served",
+        "operationId": "meta_api_meta_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Meta"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/needs": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "The needs a laptop is judged for",
+        "operationId": "needs_api_needs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/NeedInfo"
+                  },
+                  "type": "array",
+                  "title": "Response Needs Api Needs Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "List laptop models",
+        "operationId": "list_models_api_models_get",
+        "parameters": [
+          {
+            "name": "condition",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "baru",
+                    "bekas"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only models with prices in this condition.",
+              "title": "Condition"
+            },
+            "description": "Only models with prices in this condition."
+          },
+          {
+            "name": "need",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Need id. Keeps models with a variant rated Cocok or Bisa, dengan catatan.",
+              "title": "Need"
+            },
+            "description": "Need id. Keeps models with a variant rated Cocok or Bisa, dengan catatan."
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Words that must appear in the name or summary.",
+              "title": "Q"
+            },
+            "description": "Words that must appear in the name or summary."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "name",
+                "price"
+              ],
+              "type": "string",
+              "default": "name",
+              "title": "Sort"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models/{model_id}": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "One model with all its variants",
+        "operationId": "get_model_api_models__model_id__get",
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Model Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelDetailOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/variants/{variant_id}": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "One configuration",
+        "operationId": "get_variant_api_variants__variant_id__get",
+        "parameters": [
+          {
+            "name": "variant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Variant Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VariantOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recommendations": {
+      "post": {
+        "tags": [
+          "consultation"
+        ],
+        "summary": "Recommend laptops for a need and a budget",
+        "operationId": "recommendations_api_recommendations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecommendationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/methodology": {
+      "get": {
+        "tags": [
+          "transparency"
+        ],
+        "summary": "The scoring rules, in the open",
+        "operationId": "methodology_api_methodology_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MethodologyOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssessmentOut": {
+        "properties": {
+          "need_id": {
+            "type": "string",
+            "title": "Need Id"
+          },
+          "need_name": {
+            "type": "string",
+            "title": "Need Name"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "cocok",
+              "bisa_dengan_catatan",
+              "data_belum_lengkap",
+              "kurang_cocok",
+              "tidak_dinilai"
+            ],
+            "title": "Verdict"
+          },
+          "verdict_label": {
+            "type": "string",
+            "title": "Verdict Label"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionOut"
+            },
+            "type": "array",
+            "title": "Criteria"
+          }
+        },
+        "type": "object",
+        "required": [
+          "need_id",
+          "need_name",
+          "verdict",
+          "verdict_label",
+          "reason",
+          "criteria"
+        ],
+        "title": "AssessmentOut"
+      },
+      "Counts": {
+        "properties": {
+          "models": {
+            "type": "integer",
+            "title": "Models"
+          },
+          "variants": {
+            "type": "integer",
+            "title": "Variants"
+          },
+          "prices": {
+            "type": "integer",
+            "title": "Prices"
+          },
+          "needs": {
+            "type": "integer",
+            "title": "Needs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "models",
+          "variants",
+          "prices",
+          "needs"
+        ],
+        "title": "Counts"
+      },
+      "CpuOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "maker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maker"
+          },
+          "tier": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier"
+          },
+          "tier_meaning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier Meaning"
+          },
+          "tier_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier Reason"
+          },
+          "plain": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plain"
+          },
+          "cores": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cores"
+          },
+          "threads": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threads"
+          },
+          "windows11": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Windows11"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CpuOut"
+      },
+      "CriterionOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "nyaman",
+              "cukup",
+              "kurang",
+              "belum_ada_data",
+              "tidak_dinilai"
+            ],
+            "title": "Status"
+          },
+          "status_label": {
+            "type": "string",
+            "title": "Status Label"
+          },
+          "value_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Text",
+            "description": "This laptop's value in words, e.g. '16 GB'. Null when unknown."
+          },
+          "minimum_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimum Text",
+            "description": "Null when this criterion is not assessed for the need."
+          },
+          "comfortable_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comfortable Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "status",
+          "status_label"
+        ],
+        "title": "CriterionOut"
+      },
+      "CriterionRuleOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "assessed": {
+            "type": "boolean",
+            "title": "Assessed"
+          },
+          "minimum_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimum Text"
+          },
+          "comfortable_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comfortable Text"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "assessed"
+        ],
+        "title": "CriterionRuleOut"
+      },
+      "DisplayOut": {
+        "properties": {
+          "panel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Panel"
+          },
+          "panel_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Panel Note"
+          },
+          "resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
+          },
+          "refresh_hz": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refresh Hz"
+          },
+          "touch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Touch"
+          }
+        },
+        "type": "object",
+        "title": "DisplayOut"
+      },
+      "Exclusions": {
+        "properties": {
+          "no_price": {
+            "type": "integer",
+            "title": "No Price",
+            "default": 0
+          },
+          "wrong_condition": {
+            "type": "integer",
+            "title": "Wrong Condition",
+            "default": 0
+          },
+          "not_suitable": {
+            "type": "integer",
+            "title": "Not Suitable",
+            "default": 0
+          },
+          "storage_too_small": {
+            "type": "integer",
+            "title": "Storage Too Small",
+            "default": 0
+          },
+          "storage_unknown": {
+            "type": "integer",
+            "title": "Storage Unknown",
+            "default": 0
+          },
+          "over_budget": {
+            "type": "integer",
+            "title": "Over Budget",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "Exclusions",
+        "description": "How many options were filtered out, and why. Shown so the visitor can see nothing is hidden."
+      },
+      "GpuOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "maker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maker"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "tier": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier"
+          },
+          "tier_meaning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier Meaning"
+          },
+          "tier_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier Reason"
+          },
+          "plain": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plain"
+          },
+          "vram_gb": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vram Gb"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "GpuOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Health": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status",
+            "default": "ok"
+          }
+        },
+        "type": "object",
+        "title": "Health"
+      },
+      "MeaningOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "meaning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meaning"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "label"
+        ],
+        "title": "MeaningOut"
+      },
+      "Meta": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "data_last_checked": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Last Checked",
+            "description": "Most recent date any price or spec was checked."
+          },
+          "data_exported_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data Exported At"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/Counts"
+          },
+          "data_issue_count": {
+            "type": "integer",
+            "title": "Data Issue Count",
+            "description": "Problems found when the spreadsheet was exported (0 is healthy)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "data_exported_at",
+          "counts",
+          "data_issue_count"
+        ],
+        "title": "Meta",
+        "description": "What data this API is serving, and how fresh it is."
+      },
+      "MethodologyOut": {
+        "properties": {
+          "data_last_checked": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Last Checked"
+          },
+          "statuses": {
+            "items": {
+              "$ref": "#/components/schemas/MeaningOut"
+            },
+            "type": "array",
+            "title": "Statuses"
+          },
+          "verdicts": {
+            "items": {
+              "$ref": "#/components/schemas/MeaningOut"
+            },
+            "type": "array",
+            "title": "Verdicts",
+            "description": "In the order the rules are checked; the first match wins."
+          },
+          "needs": {
+            "items": {
+              "$ref": "#/components/schemas/NeedRulesOut"
+            },
+            "type": "array",
+            "title": "Needs"
+          },
+          "panels": {
+            "items": {
+              "$ref": "#/components/schemas/PanelRankOut"
+            },
+            "type": "array",
+            "title": "Panels"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/WarningRuleOut"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "tiers": {
+            "items": {
+              "$ref": "#/components/schemas/TierOut"
+            },
+            "type": "array",
+            "title": "Tiers"
+          },
+          "not_scored": {
+            "items": {
+              "$ref": "#/components/schemas/NotScoredOut"
+            },
+            "type": "array",
+            "title": "Not Scored"
+          },
+          "ranking_steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ranking Steps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "statuses",
+          "verdicts",
+          "needs",
+          "panels",
+          "warnings",
+          "tiers",
+          "not_scored",
+          "ranking_steps"
+        ],
+        "title": "MethodologyOut"
+      },
+      "ModelDetailOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "series": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Series"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "sales_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sales Status"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "conditions": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "baru",
+                "bekas"
+              ]
+            },
+            "type": "array",
+            "title": "Conditions"
+          },
+          "variant_count": {
+            "type": "integer",
+            "title": "Variant Count"
+          },
+          "price_ranges": {
+            "items": {
+              "$ref": "#/components/schemas/PriceRangeOut"
+            },
+            "type": "array",
+            "title": "Price Ranges"
+          },
+          "best_verdicts": {
+            "items": {
+              "$ref": "#/components/schemas/NeedVerdictOut"
+            },
+            "type": "array",
+            "title": "Best Verdicts",
+            "description": "Best verdict among this model's variants, per need."
+          },
+          "body_material": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body Material"
+          },
+          "screen_inches": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Screen Inches"
+          },
+          "ports": {
+            "$ref": "#/components/schemas/PortsOut"
+          },
+          "watch_out": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Watch Out"
+          },
+          "common_issues": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Common Issues"
+          },
+          "spec_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec Url"
+          },
+          "checked_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked On"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/VariantOut"
+            },
+            "type": "array",
+            "title": "Variants"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "conditions",
+          "variant_count",
+          "price_ranges",
+          "best_verdicts",
+          "ports",
+          "variants"
+        ],
+        "title": "ModelDetailOut"
+      },
+      "ModelList": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ModelSummaryOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "items"
+        ],
+        "title": "ModelList"
+      },
+      "ModelSummaryOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "brand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand"
+          },
+          "series": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Series"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "sales_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sales Status"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "conditions": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "baru",
+                "bekas"
+              ]
+            },
+            "type": "array",
+            "title": "Conditions"
+          },
+          "variant_count": {
+            "type": "integer",
+            "title": "Variant Count"
+          },
+          "price_ranges": {
+            "items": {
+              "$ref": "#/components/schemas/PriceRangeOut"
+            },
+            "type": "array",
+            "title": "Price Ranges"
+          },
+          "best_verdicts": {
+            "items": {
+              "$ref": "#/components/schemas/NeedVerdictOut"
+            },
+            "type": "array",
+            "title": "Best Verdicts",
+            "description": "Best verdict among this model's variants, per need."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "conditions",
+          "variant_count",
+          "price_ranges",
+          "best_verdicts"
+        ],
+        "title": "ModelSummaryOut"
+      },
+      "NeedInfo": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "URL-safe id, e.g. 'kuliah-dan-kantor'."
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "short_name": {
+            "type": "string",
+            "title": "Short Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "short_name"
+        ],
+        "title": "NeedInfo"
+      },
+      "NeedRulesOut": {
+        "properties": {
+          "need": {
+            "$ref": "#/components/schemas/NeedInfo"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionRuleOut"
+            },
+            "type": "array",
+            "title": "Criteria"
+          }
+        },
+        "type": "object",
+        "required": [
+          "need",
+          "criteria"
+        ],
+        "title": "NeedRulesOut"
+      },
+      "NeedVerdictOut": {
+        "properties": {
+          "need_id": {
+            "type": "string",
+            "title": "Need Id"
+          },
+          "short_name": {
+            "type": "string",
+            "title": "Short Name"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "cocok",
+              "bisa_dengan_catatan",
+              "data_belum_lengkap",
+              "kurang_cocok",
+              "tidak_dinilai"
+            ],
+            "title": "Verdict"
+          },
+          "verdict_label": {
+            "type": "string",
+            "title": "Verdict Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "need_id",
+          "short_name",
+          "verdict",
+          "verdict_label"
+        ],
+        "title": "NeedVerdictOut"
+      },
+      "NotScoredOut": {
+        "properties": {
+          "item": {
+            "type": "string",
+            "title": "Item"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "item"
+        ],
+        "title": "NotScoredOut"
+      },
+      "PanelRankOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "rank"
+        ],
+        "title": "PanelRankOut"
+      },
+      "PortsOut": {
+        "properties": {
+          "usb_a_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usb A Count"
+          },
+          "usb_c_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usb C Count"
+          },
+          "usb_c_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usb C Kind"
+          },
+          "usb_c_charging": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usb C Charging"
+          },
+          "hdmi": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hdmi"
+          },
+          "hdmi_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hdmi Version"
+          },
+          "sd_card": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sd Card"
+          },
+          "lan": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lan"
+          }
+        },
+        "type": "object",
+        "title": "PortsOut"
+      },
+      "PriceObservationOut": {
+        "properties": {
+          "condition": {
+            "type": "string",
+            "enum": [
+              "baru",
+              "bekas"
+            ],
+            "title": "Condition"
+          },
+          "low": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Low"
+          },
+          "high": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High"
+          },
+          "mid": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mid"
+          },
+          "source_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Type"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "source_is_link": {
+            "type": "boolean",
+            "title": "Source Is Link",
+            "default": false
+          },
+          "checked_on": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked On"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "condition"
+        ],
+        "title": "PriceObservationOut"
+      },
+      "PriceRangeOut": {
+        "properties": {
+          "condition": {
+            "type": "string",
+            "enum": [
+              "baru",
+              "bekas"
+            ],
+            "title": "Condition"
+          },
+          "low": {
+            "type": "integer",
+            "title": "Low"
+          },
+          "high": {
+            "type": "integer",
+            "title": "High"
+          }
+        },
+        "type": "object",
+        "required": [
+          "condition",
+          "low",
+          "high"
+        ],
+        "title": "PriceRangeOut"
+      },
+      "PriceSummaryOut": {
+        "properties": {
+          "condition": {
+            "type": "string",
+            "enum": [
+              "baru",
+              "bekas"
+            ],
+            "title": "Condition"
+          },
+          "low": {
+            "type": "integer",
+            "title": "Low"
+          },
+          "high": {
+            "type": "integer",
+            "title": "High"
+          },
+          "reference": {
+            "type": "integer",
+            "title": "Reference"
+          },
+          "observations": {
+            "type": "integer",
+            "title": "Observations"
+          },
+          "last_checked": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Checked"
+          }
+        },
+        "type": "object",
+        "required": [
+          "condition",
+          "low",
+          "high",
+          "reference",
+          "observations"
+        ],
+        "title": "PriceSummaryOut",
+        "description": "Several dated observations boiled down. `reference` is the median of the observation midpoints."
+      },
+      "RamOut": {
+        "properties": {
+          "gb": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gb"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "speed_mts": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed Mts"
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channel"
+          },
+          "layout": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Layout"
+          },
+          "layout_label": {
+            "type": "string",
+            "title": "Layout Label"
+          },
+          "soldered_gb": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Soldered Gb"
+          },
+          "slots_total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slots Total"
+          },
+          "slots_free": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slots Free"
+          },
+          "max_gb": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Gb"
+          },
+          "upgrade_note": {
+            "type": "string",
+            "title": "Upgrade Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "layout_label",
+          "upgrade_note"
+        ],
+        "title": "RamOut"
+      },
+      "RecommendationItem": {
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "model_id": {
+            "type": "string",
+            "title": "Model Id"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "variant_id": {
+            "type": "string",
+            "title": "Variant Id"
+          },
+          "variant_title": {
+            "type": "string",
+            "title": "Variant Title"
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "baru",
+              "bekas"
+            ],
+            "title": "Condition"
+          },
+          "price": {
+            "$ref": "#/components/schemas/PriceSummaryOut"
+          },
+          "price_fit": {
+            "type": "string",
+            "enum": [
+              "dalam_anggaran",
+              "tergantung_toko"
+            ],
+            "title": "Price Fit"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "cocok",
+              "bisa_dengan_catatan",
+              "data_belum_lengkap",
+              "kurang_cocok",
+              "tidak_dinilai"
+            ],
+            "title": "Verdict"
+          },
+          "verdict_label": {
+            "type": "string",
+            "title": "Verdict Label"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/WarningOut"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "upgrade": {
+            "$ref": "#/components/schemas/UpgradeBrief"
+          },
+          "storage_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Storage Note",
+            "description": "Set when storage is below the request but can be replaced."
+          },
+          "why": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Why",
+            "description": "Short facts that explain this position in the list."
+          }
+        },
+        "type": "object",
+        "required": [
+          "rank",
+          "model_id",
+          "model_name",
+          "variant_id",
+          "variant_title",
+          "condition",
+          "price",
+          "price_fit",
+          "verdict",
+          "verdict_label",
+          "reason",
+          "warnings",
+          "upgrade",
+          "why"
+        ],
+        "title": "RecommendationItem"
+      },
+      "RecommendationRequest": {
+        "properties": {
+          "need": {
+            "type": "string",
+            "title": "Need",
+            "description": "Need id from /api/needs, e.g. 'pemrograman'."
+          },
+          "budget_max": {
+            "type": "integer",
+            "maximum": 1000000000.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Budget Max",
+            "description": "Maximum budget in rupiah."
+          },
+          "storage_min_gb": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 16000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Storage Min Gb",
+            "description": "Smallest storage wanted, in GB."
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "baru",
+              "bekas",
+              "semua"
+            ],
+            "title": "Condition",
+            "default": "semua"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 5
+          }
+        },
+        "type": "object",
+        "required": [
+          "need",
+          "budget_max"
+        ],
+        "title": "RecommendationRequest"
+      },
+      "RecommendationResponse": {
+        "properties": {
+          "need": {
+            "$ref": "#/components/schemas/NeedInfo"
+          },
+          "query": {
+            "$ref": "#/components/schemas/RecommendationRequest"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendationItem"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "considered": {
+            "type": "integer",
+            "title": "Considered",
+            "description": "Options (configuration x condition) that had a price and were evaluated."
+          },
+          "excluded": {
+            "$ref": "#/components/schemas/Exclusions"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          },
+          "data_last_checked": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Last Checked"
+          }
+        },
+        "type": "object",
+        "required": [
+          "need",
+          "query",
+          "results",
+          "considered",
+          "excluded",
+          "notes"
+        ],
+        "title": "RecommendationResponse"
+      },
+      "SpecsOut": {
+        "properties": {
+          "cpu": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CpuOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gpu": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GpuOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ram": {
+            "$ref": "#/components/schemas/RamOut"
+          },
+          "storage": {
+            "$ref": "#/components/schemas/StorageOut"
+          },
+          "display": {
+            "$ref": "#/components/schemas/DisplayOut"
+          },
+          "battery_wh": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Battery Wh"
+          },
+          "charger_w": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charger W"
+          },
+          "weight_kg": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight Kg"
+          },
+          "wifi": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wifi"
+          },
+          "bluetooth": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bluetooth"
+          },
+          "fingerprint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fingerprint"
+          },
+          "backlit_keyboard": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Backlit Keyboard"
+          },
+          "webcam": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webcam"
+          },
+          "os": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Os"
+          },
+          "os_edition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Os Edition"
+          },
+          "office": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Office"
+          },
+          "warranty_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warranty Type"
+          },
+          "warranty_months": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warranty Months"
+          },
+          "battery_warranty_months": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Battery Warranty Months"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ram",
+          "storage",
+          "display"
+        ],
+        "title": "SpecsOut"
+      },
+      "StorageOut": {
+        "properties": {
+          "gb": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gb"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "interface": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Interface"
+          },
+          "form_factor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Form Factor"
+          },
+          "replaceable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Replaceable"
+          },
+          "replaceable_label": {
+            "type": "string",
+            "title": "Replaceable Label"
+          },
+          "upgrade_note": {
+            "type": "string",
+            "title": "Upgrade Note"
+          },
+          "m2_slots_total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "M2 Slots Total"
+          },
+          "m2_slots_free": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "M2 Slots Free"
+          },
+          "bay_25_free": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bay 25 Free"
+          }
+        },
+        "type": "object",
+        "required": [
+          "replaceable_label",
+          "upgrade_note"
+        ],
+        "title": "StorageOut"
+      },
+      "TierOut": {
+        "properties": {
+          "tier": {
+            "type": "integer",
+            "title": "Tier"
+          },
+          "cpu": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cpu"
+          },
+          "gpu": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gpu"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tier"
+        ],
+        "title": "TierOut"
+      },
+      "UpgradeBrief": {
+        "properties": {
+          "ram": {
+            "$ref": "#/components/schemas/UpgradeFact"
+          },
+          "storage": {
+            "$ref": "#/components/schemas/UpgradeFact"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ram",
+          "storage"
+        ],
+        "title": "UpgradeBrief",
+        "description": "Can the buyer upgrade it later? Small enough to show on every result card."
+      },
+      "UpgradeFact": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "Short answer, e.g. 'Lewat slot (bisa diganti)'."
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "description": "One phrase, e.g. 'bisa dinaikkan lewat slot sampai 32 GB'."
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "note"
+        ],
+        "title": "UpgradeFact"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VariantOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "model_id": {
+            "type": "string",
+            "title": "Model Id"
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Short configuration label, e.g. 'AMD Ryzen 5 7430U · 16 GB RAM · 512 GB'."
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "sales_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sales Status"
+          },
+          "market": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Market"
+          },
+          "official_segment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Official Segment"
+          },
+          "official_target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Official Target"
+          },
+          "specs": {
+            "$ref": "#/components/schemas/SpecsOut"
+          },
+          "upgrade_verification": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upgrade Verification"
+          },
+          "upgrade_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Upgrade Source"
+          },
+          "editor_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Editor Note"
+          },
+          "available_new": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available New"
+          },
+          "available_used": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available Used"
+          },
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/AssessmentOut"
+            },
+            "type": "array",
+            "title": "Assessments"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/WarningOut"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "price_summaries": {
+            "items": {
+              "$ref": "#/components/schemas/PriceSummaryOut"
+            },
+            "type": "array",
+            "title": "Price Summaries"
+          },
+          "prices": {
+            "items": {
+              "$ref": "#/components/schemas/PriceObservationOut"
+            },
+            "type": "array",
+            "title": "Prices"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "model_id",
+          "model_name",
+          "title",
+          "specs",
+          "assessments",
+          "warnings",
+          "price_summaries",
+          "prices"
+        ],
+        "title": "VariantOut"
+      },
+      "WarningOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "text"
+        ],
+        "title": "WarningOut"
+      },
+      "WarningRuleOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "when": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "When"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "text"
+        ],
+        "title": "WarningRuleOut"
+      }
+    }
+  }
+}

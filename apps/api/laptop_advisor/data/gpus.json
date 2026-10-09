@@ -1,0 +1,54 @@
+[
+  {
+    "name": "AMD Radeon Graphics (7 inti)",
+    "maker": "AMD",
+    "kind": "bawaan",
+    "architecture": null,
+    "year": null,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "Grafis bawaan Ryzen 5 7430U dengan 7 inti grafis (1800 MHz), berbagi memori dengan RAM. Cukup untuk video, desain ringan, dan game ringan.",
+    "plain": "Pengolah gambar yang menyatu dengan prosesor dan memakai sebagian memori RAM. Cukup untuk menonton video, desain ringan, dan game ringan.",
+    "source": "AMD: https://www.amd.com/en/products/processors/laptop/ryzen/7000-series/amd-ryzen-5-7430u.html",
+    "checked_on": "2026-10-08"
+  },
+  {
+    "name": "Intel Iris Xe Graphics (80 EU)",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": null,
+    "year": null,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "Grafis bawaan i5-1335U dengan 80 unit eksekusi, berbagi memori dengan RAM. Cukup untuk video, desain ringan, dan game ringan.",
+    "plain": "Pengolah gambar yang menyatu dengan prosesor dan memakai sebagian memori RAM. Cukup untuk menonton video, desain ringan, dan game ringan.",
+    "source": "Intel ARK: https://www.intel.com/content/www/us/en/products/sku/232153/specifications.html",
+    "checked_on": "2026-10-08"
+  },
+  {
+    "name": "Intel UHD Graphics 600",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": null,
+    "year": null,
+    "vram_gb": 0,
+    "tier": 1,
+    "tier_reason": "Grafis bawaan paling dasar pada Celeron N4020, tanpa kartu grafis terpisah. Untuk tampilan, dokumen, dan video biasa.",
+    "plain": "Pengolah gambar paling dasar yang menyatu dengan prosesor. Cukup untuk tampilan, dokumen, dan menonton video; tidak untuk game berat.",
+    "source": "Intel ARK: https://www.intel.com/content/www/us/en/products/sku/197310/specifications.html",
+    "checked_on": "2026-10-08"
+  },
+  {
+    "name": "Intel UHD Graphics 620",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": null,
+    "year": null,
+    "vram_gb": 0,
+    "tier": 1,
+    "tier_reason": "Grafis bawaan prosesor Core generasi ke-8, tanpa kartu grafis terpisah. Untuk tampilan, dokumen, dan video biasa.",
+    "plain": "Pengolah gambar dasar yang menyatu dengan prosesor. Cukup untuk tampilan, dokumen, dan menonton video; tidak untuk game berat.",
+    "source": "Intel ARK: https://www.intel.com/content/www/us/en/products/sku/124969/specifications.html; Dell Latitude 5400: UHD Graphics 620 bawaan (atau AMD Radeon 540X pada konfigurasi tertentu)",
+    "checked_on": "2026-10-08"
+  }
+]
