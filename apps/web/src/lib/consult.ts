@@ -44,8 +44,8 @@ const first = (value: string | string[] | undefined): string => (Array.isArray(v
 
 const BUDGET_ERRORS = {
   empty: "Isi anggaran maksimalmu dulu.",
-  unreadable: "Anggaran belum terbaca. Tulis seperti 8.000.000 atau 8 juta.",
-  too_small: "Angkanya terlalu kecil untuk laptop. Tulis lengkap, misalnya 8.000.000 atau 8 juta.",
+  unreadable: "Anggaran belum terbaca. Tulis angkanya saja, misalnya 8.000.000.",
+  too_small: "Angkanya terlalu kecil untuk laptop. Tulis lengkap, misalnya 8.000.000.",
   too_large: `Angkanya terlalu besar. Coba isi di bawah ${formatRupiah(MAX_BUDGET)}.`,
 } as const;
 

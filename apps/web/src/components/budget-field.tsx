@@ -16,8 +16,9 @@ interface BudgetFieldProps {
 }
 
 /**
- * A plain text input (it submits like any form field, whatever is typed) that tidies digits as you type
- * and offers one-tap amounts. The server understands "8.000.000", "8 juta", "8jt" and "750 rb".
+ * A plain text input (it submits like any form field, whatever is typed) that keeps only digits as you
+ * type and groups them with dots, so what you see is always the one format the database reads back:
+ * "8.000.000". Letters and other shorthand ("jt", "juta") are simply dropped as you type them.
  */
 export function BudgetField({ defaultValue = "", error, id: fixedId, name = "anggaran", label = "Anggaran maksimal", suggestions = true }: BudgetFieldProps) {
   const generatedId = useId();
@@ -45,9 +46,8 @@ export function BudgetField({ defaultValue = "", error, id: fixedId, name = "ang
           required
           value={value}
           onChange={(event) => {
-            const raw = event.target.value;
-            const digits = raw.replace(/[.\s]/g, "");
-            setValue(/^\d+$/.test(digits) ? groupDigits(digits) : raw);
+            const digits = event.target.value.replace(/\D/g, "");
+            setValue(digits ? groupDigits(digits) : "");
           }}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${hintId} ${errorId}` : hintId}
@@ -61,7 +61,7 @@ export function BudgetField({ defaultValue = "", error, id: fixedId, name = "ang
         </p>
       ) : null}
       <p id={hintId} className="field-hint">
-        Boleh ditulis 8.000.000, 8 juta, atau 8jt.
+        Tulis angkanya saja, titiknya mengikuti otomatis. Contoh: 8.000.000.
       </p>
       {suggestions ? (
         <div className="mt-2.5 flex flex-wrap gap-2" role="group" aria-label="Pilih anggaran cepat">
@@ -73,7 +73,7 @@ export function BudgetField({ defaultValue = "", error, id: fixedId, name = "ang
               aria-label={`Isi anggaran ${formatRupiah(amount)}`}
               className="inline-flex min-h-11 items-center rounded-full border border-line-strong bg-surface px-3.5 text-sm font-semibold text-ink-2 transition-colors hover:bg-surface-2 hover:text-ink"
             >
-              {amount / 1_000_000} jt
+              {formatRupiah(amount)}
             </button>
           ))}
         </div>
