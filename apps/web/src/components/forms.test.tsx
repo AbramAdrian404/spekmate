@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { NEEDS } from "@/test/fixtures";
 import { CatalogFilters } from "./catalog-filters";
@@ -63,13 +64,52 @@ describe("QuickConsult", () => {
     expect(screen.getByRole("form", { name: "Konsultasi cepat" })).toHaveAttribute("action", "/konsultasi#hasil");
   });
 
-  it("asks only for the need and the budget", () => {
+  it("offers every need as a chip to tick, with the same field name and values as the full form", () => {
     render(<QuickConsult needs={NEEDS} />);
-    const need = screen.getByLabelText("Untuk apa laptopnya?");
-    expect(need).toBeRequired();
-    expect(within(need).getAllByRole("option").map((option) => option.textContent)).toEqual(["Pilih kebutuhan", "Kuliah dan kantor", "Pemrograman"]);
+    const group = screen.getByRole("group", { name: "Untuk apa laptopnya?" });
+    const boxes = within(group).getAllByRole("checkbox") as HTMLInputElement[];
+    expect(boxes.map((box) => box.value)).toEqual(["kuliah-dan-kantor", "pemrograman"]);
+    expect(boxes.every((box) => box.name === "kebutuhan" && !box.checked)).toBe(true);
+    expect(group).toHaveAttribute("aria-required", "true");
+  });
+
+  it("asks for the budget, with quick amounts to pick from", () => {
+    render(<QuickConsult needs={NEEDS} />);
     expect(screen.getByLabelText("Anggaran maksimal")).toHaveAttribute("name", "anggaran");
-    expect(screen.queryByRole("group", { name: "Pilih anggaran cepat" })).toBeNull();
+    expect(screen.getByRole("group", { name: "Pilih anggaran cepat" })).toBeInTheDocument();
+  });
+
+  it("counts what is picked and says every pick has to fit at once", async () => {
+    const user = userEvent.setup();
+    render(<QuickConsult needs={NEEDS} />);
+    expect(screen.getByText("Boleh pilih lebih dari satu.")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("checkbox", { name: /Kuliah dan kantor/ }));
+    expect(screen.getByText("1 kebutuhan dipilih.")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("checkbox", { name: /Pemrograman/ }));
+    expect(screen.getByText(/2 kebutuhan dipilih\. Laptopnya harus cocok untuk semuanya sekaligus/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("checkbox", { name: /Pemrograman/ }));
+    expect(screen.getByText("1 kebutuhan dipilih.")).toBeInTheDocument();
+  });
+
+  it("does not submit with nothing picked: it says so and moves focus to the first chip", () => {
+    render(<QuickConsult needs={NEEDS} />);
+    const form = screen.getByRole("form", { name: "Konsultasi cepat" });
+    const notPrevented = fireEvent.submit(form);
+    expect(notPrevented).toBe(false);
+    expect(screen.getByRole("alert")).toHaveTextContent("Pilih minimal satu kebutuhan dulu");
+    expect(screen.getByRole("checkbox", { name: /Kuliah dan kantor/ })).toHaveFocus();
+  });
+
+  it("drops the message as soon as a need is picked", async () => {
+    const user = userEvent.setup();
+    render(<QuickConsult needs={NEEDS} />);
+    fireEvent.submit(screen.getByRole("form", { name: "Konsultasi cepat" }));
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    await user.click(screen.getByRole("checkbox", { name: /Pemrograman/ }));
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 });
 

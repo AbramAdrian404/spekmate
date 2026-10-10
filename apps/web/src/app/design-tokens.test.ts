@@ -2,8 +2,9 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 /**
- * The colors live in globals.css as CSS variables, light first and dark inside a media query.
- * This reads them from there, so a color change that drops below WCAG contrast fails the tests.
+ * The colors live in globals.css as CSS variables, in one bright theme (the site does not follow the
+ * system's dark mode). This reads them from there, so a color change that drops below WCAG contrast
+ * fails the tests.
  */
 const css = readFileSync(new URL("./globals.css", import.meta.url), "utf8");
 
@@ -27,8 +28,7 @@ function tokens(source: string): Record<string, string> {
   return found;
 }
 
-const light = tokens(block(css, /^:root\s*\{/m));
-const dark = { ...light, ...tokens(block(block(css, /@media \(prefers-color-scheme: dark\)\s*\{/), /:root\s*\{/)) };
+const theme = tokens(block(css, /^:root\s*\{/m));
 
 function luminance(hex: string): number {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number];
@@ -87,23 +87,13 @@ const TONE_TEXT: readonly Pair[] = TONES.flatMap((tone): Pair[] => [
   [`${tone}-fg`, "bg", `${tone} text on the page`],
 ]);
 
-/** The hero gradient and the closing band carry text too. */
+/** The hero sky carries text too, so the headline, intro and links must hold up on every stop of it. */
 const SECTIONS: readonly Pair[] = ["hero-1", "hero-2", "hero-3"].flatMap((bg): Pair[] => [
   ["ink", bg, "headline on the hero"],
   ["ink-2", bg, "intro text on the hero"],
   ["ink-3", bg, "small text on the hero"],
-  ["accent", bg, "eyebrow and links on the hero"],
-]).concat(
-  ["band-1", "band-2", "band-3"].flatMap((bg): Pair[] => [
-    ["on-band", bg, "heading on the closing band"],
-    ["on-band-2", bg, "body text on the closing band"],
-    ["band-button", bg, "closing band button edge"],
-  ]),
-  [
-    ["band-button-text", "band-button", "button on the closing band"],
-    ["band-button-text", "on-band-2", "button on the closing band, hovered"],
-  ],
-);
+  ["accent", bg, "links on the hero"],
+]);
 
 /** Parts of a control you need to see to use it: field edges and the keyboard focus ring. */
 const CONTROLS: readonly Pair[] = [
@@ -113,17 +103,11 @@ const CONTROLS: readonly Pair[] = [
   ["focus", "surface", "focus ring on a card"],
   ["focus", "bg", "focus ring on the page"],
   ["focus", "accent-soft", "focus ring on a checked choice card"],
-  ["on-band", "band-1", "focus ring on the closing band, left"],
-  ["on-band", "band-2", "focus ring on the closing band, middle"],
-  ["on-band", "band-3", "focus ring on the closing band, right"],
+  ["focus", "hero-1", "focus ring on the hero"],
+  ["focus", "hero-2", "focus ring on the hero, lower"],
 ];
 
-const THEMES = [
-  ["light", light],
-  ["dark", dark],
-] as const;
-
-describe.each(THEMES)("%s theme", (_name, theme) => {
+describe("the bright theme", () => {
   it.each([...TEXT, ...TONE_TEXT, ...SECTIONS])("%s on %s reaches 4.5:1 (%s)", (fg, bg) => {
     expect(contrast(theme[fg]!, theme[bg]!)).toBeGreaterThanOrEqual(4.5);
   });
@@ -133,11 +117,16 @@ describe.each(THEMES)("%s theme", (_name, theme) => {
   });
 });
 
+describe("the site stays one bright theme", () => {
+  it("does not switch palettes with the system's dark mode", () => {
+    expect(css).not.toMatch(/prefers-color-scheme:\s*dark/);
+  });
+});
+
 describe("the parser", () => {
-  it("finds the tokens in both themes", () => {
-    expect(light.ink).toMatch(/^#/);
-    expect(dark.ink).toMatch(/^#/);
-    expect(dark.ink).not.toBe(light.ink);
+  it("finds the tokens", () => {
+    expect(theme.ink).toMatch(/^#/);
+    expect(theme.accent).toMatch(/^#/);
   });
 
   it("matches the WCAG reference ratios", () => {

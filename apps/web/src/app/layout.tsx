@@ -22,10 +22,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f6ff" },
-    { media: "(prefers-color-scheme: dark)", color: "#090d1d" },
-  ],
+  themeColor: "#f6f8fc",
+  colorScheme: "light",
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
@@ -33,7 +31,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const meta = await load(getMeta());
 
   return (
-    <html lang="id" className={`${inter.variable} ${jakarta.variable}`}>
+    <html lang="id" data-scroll-behavior="smooth" className={`${inter.variable} ${jakarta.variable}`}>
       <body className="flex min-h-dvh flex-col">
         <a href="#isi" className="skip-link">
           Lewati ke isi halaman

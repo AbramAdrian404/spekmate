@@ -18,8 +18,8 @@ export function NavLinks() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-11 items-center rounded-lg px-3 text-[0.95rem] font-medium no-underline transition-colors",
-                  active ? "bg-accent-soft text-accent-strong" : "text-ink-2 hover:bg-surface-2 hover:text-ink",
+                  "nav-link inline-flex min-h-11 items-center rounded-lg px-3 text-[0.95rem] font-medium no-underline transition-colors",
+                  active ? "font-semibold text-accent-strong" : "text-ink-2 hover:bg-accent-soft/60 hover:text-ink",
                 )}
               >
                 {item.label}
