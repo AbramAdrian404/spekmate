@@ -1,24 +1,26 @@
 import { ArrowRight, CircleCheck, Store } from "lucide-react";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { formatDate, formatRupiahCompact, formatRupiahRange } from "@/lib/format";
 import { CONDITION_LABEL, priceFitLabel } from "@/lib/labels";
 import type { Recommendation } from "@/lib/types";
+import { CriteriaGlance } from "./criteria-glance";
 import { UpgradeFacts } from "./upgrade-facts";
 import { VerdictBadge } from "./verdict-badge";
 import { WarningList } from "./warning-list";
 
-export function RecommendationCard({ item }: { item: Recommendation }) {
+export function RecommendationCard({ item, index = 0 }: { item: Recommendation; index?: number }) {
   const { price } = item;
   const checked = formatDate(price.last_checked);
   const href = `/laptop/${encodeURIComponent(item.model_id)}#${encodeURIComponent(item.variant_id)}`;
   const headingId = `hasil-${item.rank}`;
 
   return (
-    <li>
+    <li className="reveal" style={{ "--reveal-delay": `${Math.min(index, 4) * 90}ms` } as CSSProperties}>
       <article
         aria-labelledby={headingId}
         data-verdict={item.verdict}
-        className="card card-edge grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_16rem]"
+        className="card card-edge card-hover grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_16rem]"
       >
         <div className="min-w-0 space-y-4">
           <header>
@@ -39,7 +41,18 @@ export function RecommendationCard({ item }: { item: Recommendation }) {
           <div className="space-y-2">
             <VerdictBadge verdict={item.verdict} label={item.verdict_label} />
             <p className="measure text-ink-2">{item.reason}</p>
+            {item.need_fit.length > 1 ? (
+              <ul aria-label="Kecocokan per kebutuhan yang dipilih" className="flex flex-wrap gap-1.5 pt-0.5">
+                {item.need_fit.map((fit) => (
+                  <li key={fit.need_id}>
+                    <VerdictBadge verdict={fit.verdict} label={`${fit.short_name}: ${fit.verdict_label}`} size="sm" />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
+
+          <CriteriaGlance criteria={item.criteria} />
 
           <UpgradeFacts upgrade={item.upgrade} />
 
@@ -58,7 +71,11 @@ export function RecommendationCard({ item }: { item: Recommendation }) {
           <WarningList warnings={item.warnings} />
         </div>
 
-        <aside aria-label="Harga" className="flex flex-col gap-4">
+        <aside aria-label="Harga dan perbandingan" className="flex flex-col gap-4">
+          <label className="inline-flex items-center gap-2 text-sm font-medium text-ink-2">
+            <input type="checkbox" data-compare="true" value={item.variant_id} className="size-4 rounded border-line-strong accent-accent" />
+            Bandingkan laptop ini
+          </label>
           <div className="rounded-xl bg-surface-2 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-ink-3">Harga acuan</p>
             <p className="font-display text-3xl font-extrabold tabular text-ink">{formatRupiahCompact(price.reference)}</p>

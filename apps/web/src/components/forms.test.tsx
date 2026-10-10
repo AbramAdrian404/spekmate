@@ -6,7 +6,7 @@ import { CatalogFilters } from "./catalog-filters";
 import { ConsultForm } from "./consult-form";
 import { QuickConsult } from "./quick-consult";
 
-const BLANK = { kebutuhan: "", anggaran: "", penyimpanan: "", kondisi: "semua" } as const;
+const BLANK = { kebutuhan: [] as string[], anggaran: "", penyimpanan: "", kondisi: "semua" } as const;
 
 describe("ConsultForm", () => {
   it("is a GET form to /konsultasi that jumps to the results, so answers live in the address", () => {
@@ -15,19 +15,27 @@ describe("ConsultForm", () => {
     expect(form).toHaveAttribute("action", "/konsultasi#hasil");
   });
 
-  it("offers every need as a required choice and says what each one means", () => {
+  it("offers every need as a checkbox (several can be picked at once) and says what each one means", () => {
     render(<ConsultForm needs={NEEDS} values={BLANK} />);
-    const group = screen.getByRole("radiogroup");
-    const radios = within(group).getAllByRole("radio");
-    expect(radios.map((radio) => (radio as HTMLInputElement).value)).toEqual(["kuliah-dan-kantor", "pemrograman"]);
-    expect(radios.every((radio) => (radio as HTMLInputElement).required)).toBe(true);
+    const group = screen.getByRole("group", { name: /Untuk apa laptopnya/ });
+    const boxes = within(group).getAllByRole("checkbox");
+    expect(boxes.map((box) => (box as HTMLInputElement).value)).toEqual(["kuliah-dan-kantor", "pemrograman"]);
+    expect(group).toHaveAttribute("aria-required", "true");
     expect(screen.getByText("Dokumen, rapat online, browsing.")).toBeInTheDocument();
   });
 
+  it("can have more than one need checked at once", () => {
+    render(<ConsultForm needs={NEEDS} values={{ ...BLANK, kebutuhan: ["kuliah-dan-kantor", "pemrograman"] }} />);
+    expect(screen.getByRole("checkbox", { name: /Pemrograman/ })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: /Kuliah dan kantor/ })).toBeChecked();
+  });
+
   it("remembers what was chosen", () => {
-    render(<ConsultForm needs={NEEDS} values={{ kebutuhan: "pemrograman", anggaran: "10 juta", penyimpanan: "512", kondisi: "bekas" }} />);
-    expect(screen.getByRole("radio", { name: /Pemrograman/ })).toBeChecked();
-    expect(screen.getByRole("radio", { name: /Kuliah dan kantor/ })).not.toBeChecked();
+    render(
+      <ConsultForm needs={NEEDS} values={{ kebutuhan: ["pemrograman"], anggaran: "10 juta", penyimpanan: "512", kondisi: "bekas" }} />,
+    );
+    expect(screen.getByRole("checkbox", { name: /Pemrograman/ })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: /Kuliah dan kantor/ })).not.toBeChecked();
     expect(screen.getByLabelText(/Anggaran maksimal/)).toHaveValue("10 juta");
     expect(screen.getByLabelText(/Penyimpanan/)).toHaveValue("512");
     expect(screen.getByRole("radio", { name: "Bekas" })).toBeChecked();
@@ -39,7 +47,9 @@ describe("ConsultForm", () => {
   });
 
   it("puts the problem next to the field and lets the error summary link to the field", () => {
-    const { container } = render(<ConsultForm needs={NEEDS} values={{ ...BLANK, kebutuhan: "pemrograman", anggaran: "banyak" }} errors={{ anggaran: "Anggaran belum terbaca." }} />);
+    const { container } = render(
+      <ConsultForm needs={NEEDS} values={{ ...BLANK, kebutuhan: ["pemrograman"], anggaran: "banyak" }} errors={{ anggaran: "Anggaran belum terbaca." }} />,
+    );
     expect(screen.getByRole("alert")).toHaveTextContent("Anggaran belum terbaca.");
     expect(container.querySelector("input#anggaran")).toHaveAttribute("aria-invalid", "true");
     expect(container.querySelector("fieldset#kebutuhan")).not.toBeNull();

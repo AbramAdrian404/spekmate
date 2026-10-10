@@ -8,7 +8,7 @@ from laptop_advisor.recommend import UnknownNeed, recommend
 
 
 def ask(catalog, **kw):
-    body = {"need": "kerja", "budget_max": 10_000_000, "condition": "semua", "limit": 10}
+    body = {"needs": ["kerja"], "budget_max": 10_000_000, "condition": "semua", "limit": 10}
     body.update(kw)
     return recommend(catalog, S.RecommendationRequest(**body))
 
@@ -19,7 +19,7 @@ def ids(resp):
 
 def test_unknown_need(catalog):
     with pytest.raises(UnknownNeed):
-        ask(catalog, need="tidak-ada")
+        ask(catalog, needs=["tidak-ada"])
 
 
 def test_ordering_and_exclusions_without_a_storage_request(catalog):
@@ -118,6 +118,61 @@ def test_recommendations_are_repeatable(catalog):
 
 
 def test_other_needs_use_their_own_rules(catalog):
-    resp = ask(catalog, need="game", budget_max=20_000_000)
+    resp = ask(catalog, needs=["game"], budget_max=20_000_000)
     assert ids(resp) == ["v-gaming"]
     assert resp.results[0].verdict == "cocok"
+
+
+# --------------------------------------------------------------------------- #
+# Picking several needs at once
+# --------------------------------------------------------------------------- #
+def test_multiple_needs_are_combined_not_just_the_first_one(catalog):
+    # v-cocok is "cocok" alone for kerja but only "bisa_dengan_catatan" combined with desain, so
+    # picking both must change its verdict, not silently keep scoring against "kerja" alone.
+    solo = ask(catalog, needs=["kerja"])
+    combo = ask(catalog, needs=["kerja", "desain"])
+    solo_item = next(r for r in solo.results if r.variant_id == "v-cocok")
+    combo_item = next(r for r in combo.results if r.variant_id == "v-cocok")
+    assert solo_item.verdict == "cocok"
+    assert combo_item.verdict == "bisa_dengan_catatan"
+
+
+def test_every_result_reports_fit_per_original_need(catalog):
+    resp = ask(catalog, needs=["kerja", "desain"], budget_max=20_000_000)
+    item = next(r for r in resp.results if r.variant_id == "v-cocok")
+    fit = {f.need_id: f.verdict for f in item.need_fit}
+    assert fit == {"kerja": "cocok", "desain": "bisa_dengan_catatan"}
+    # the combined verdict is at least as strict as the worst individual one
+    assert item.verdict == "bisa_dengan_catatan"
+
+
+def test_result_criteria_are_the_combined_assessment(catalog):
+    resp = ask(catalog, needs=["kerja", "desain"], budget_max=20_000_000)
+    item = next(r for r in resp.results if r.variant_id == "v-cocok")
+    statuses = {c.key: c.status for c in item.criteria}
+    assert statuses == {"cpu": "cukup", "gpu": "tidak_dinilai", "ram": "nyaman", "storage": "nyaman",
+                        "display": "cukup", "refresh": "tidak_dinilai"}
+
+
+def test_why_names_every_picked_need(catalog):
+    resp = ask(catalog, needs=["kerja", "desain"], budget_max=20_000_000)
+    item = next(r for r in resp.results if r.variant_id == "v-cocok")
+    assert item.why[0] == "Bisa untuk kerja kantor, dan desain, dengan catatan"
+
+
+def test_response_lists_every_picked_need(catalog):
+    resp = ask(catalog, needs=["kerja", "desain"])
+    assert [n.id for n in resp.needs] == ["kerja", "desain"]
+
+
+def test_duplicate_needs_are_folded_into_one(catalog):
+    # the two requests differ in `query` (the request is echoed back as submitted), so compare the
+    # parts that reflect the actual scoring instead of the whole response.
+    twice, once = ask(catalog, needs=["kerja", "kerja"]), ask(catalog, needs=["kerja"])
+    assert twice.results == once.results
+    assert [n.id for n in twice.needs] == [n.id for n in once.needs] == ["kerja"]
+
+
+def test_unknown_need_among_several_still_raises(catalog):
+    with pytest.raises(UnknownNeed):
+        ask(catalog, needs=["kerja", "tidak-ada"])
