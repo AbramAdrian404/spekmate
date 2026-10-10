@@ -22,12 +22,12 @@ describe("BudgetField", () => {
     expect(input).toHaveValue("8.000.000");
   });
 
-  it("leaves anything that is not plain digits exactly as typed", async () => {
+  it("drops anything that is not a digit, so the field only ever holds one format", async () => {
     const user = userEvent.setup();
     render(<BudgetField />);
     const input = screen.getByLabelText("Anggaran maksimal");
     await user.type(input, "8,5 jt");
-    expect(input).toHaveValue("8,5 jt");
+    expect(input).toHaveValue("85");
   });
 
   it("starts from the value in the address bar", () => {
@@ -48,7 +48,7 @@ describe("BudgetField", () => {
   });
 
   it("explains the problem to everyone, not only by color", () => {
-    render(<BudgetField error="Anggaran belum terbaca. Tulis seperti 8.000.000 atau 8 juta." />);
+    render(<BudgetField error="Anggaran belum terbaca. Tulis angkanya saja, misalnya 8.000.000." />);
     const input = screen.getByLabelText("Anggaran maksimal");
     const alert = screen.getByRole("alert");
     expect(alert).toHaveTextContent("Anggaran belum terbaca");

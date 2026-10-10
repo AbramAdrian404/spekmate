@@ -16,7 +16,7 @@
   --surface-2: #e7ecff;
   --ink: #161c41;
   --ink-2: #394165;
-  --ink-3: #545d7f;
+  --ink-3: #4a5370;
   --line: #d9dff4;
   --line-strong: #bdc6e5;
   /* Edge of form fields and choice cards: at least 3:1 against every surface it sits on. */
@@ -60,6 +60,14 @@
   --on-band-2: #e6eaff;
   --band-button: #ffffff;
   --band-button-text: #1b3bb1;
+
+  /* Decorative-only, high-saturation stripe colors (the thin brand trim). Never carries text, so the
+     4.5:1 rule above doesn't apply to it. Same values in both themes: it is meant to pop off either. */
+  --stripe-1: #2f6bff;
+  --stripe-2: #9a4df5;
+  --stripe-3: #ff5577;
+  --stripe-4: #ffb300;
+  --stripe-5: #12d99b;
 
   /* Verdict colors: text, background, border, and a solid edge. Never used without an icon and a label. */
   --cocok-fg: #166534;
@@ -183,6 +191,7 @@
        is two rows tall (logo, then menu); from the sm breakpoint it is one row. */
     scroll-padding-top: 7.5rem;
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   @media (min-width: 40rem) {
@@ -431,17 +440,36 @@
  * Color accents
  * ------------------------------------------------------------------ */
 @layer components {
-  /* Brand stripe: five tones, edge to edge. Sits on top of the header and the footer. */
+  /* Brand stripe: five vivid tones, edge to edge, with a glow and a one-time shine on load.
+     Sits on top of the header and the footer. Decorative only, so it can be far more saturated
+     than anything that carries text. */
   .brand-stripe {
-    height: 4px;
+    height: 5px;
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(
       90deg,
-      var(--blue) 0 20%,
-      var(--violet) 20% 40%,
-      var(--coral) 40% 60%,
-      var(--amber) 60% 80%,
-      var(--mint) 80% 100%
+      var(--stripe-1) 0 20%,
+      var(--stripe-2) 20% 40%,
+      var(--stripe-3) 40% 60%,
+      var(--stripe-4) 60% 80%,
+      var(--stripe-5) 80% 100%
     );
+    box-shadow: 0 0 18px -3px color-mix(in srgb, var(--stripe-2) 65%, transparent);
+  }
+  .brand-stripe::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, white 85%, transparent), transparent);
+    transform: translateX(-150%);
+    animation: stripe-shine 1.4s cubic-bezier(0.3, 0, 0.2, 1) 0.3s 1 both;
+  }
+  @keyframes stripe-shine {
+    to {
+      transform: translateX(350%);
+    }
   }
 
   /* Soft color clouds. .wash is for the hero, .wash-lite for page headers. */
@@ -561,5 +589,66 @@
   }
   .btn-band-outline:hover {
     background: color-mix(in srgb, var(--on-band) 16%, transparent);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Motion
+ *
+ * Two mechanisms. .rise-in is a one-shot CSS animation for content that is
+ * already on screen at load (the hero): it needs no JavaScript, so it still
+ * plays with scripts off. .reveal is for everything below the fold: it only
+ * starts hidden once <html> carries .js-reveal, which ScrollReveal adds solely
+ * when JavaScript runs and the person hasn't asked for reduced motion — so
+ * content a script never reaches, or a person who asked for less motion,
+ * simply stays visible. Reduced motion also collapses every duration here
+ * to near-zero through the global rule in the base layer above.
+ * ------------------------------------------------------------------ */
+@layer components {
+  .rise-in {
+    animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--rise-delay, 0ms);
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  html.js-reveal .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  html.js-reveal .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* A little life on hover: a card lifts toward you instead of just sitting there. */
+  .card-hover {
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+  .card-hover:hover,
+  .card-hover:focus-within {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 36px -22px var(--shadow-accent);
+  }
+
+  /* A soft tone wash as the card's own background, in place of a plain surface. */
+  .card-wash {
+    background: linear-gradient(165deg, var(--tone-soft), var(--surface) 62%);
+    border-color: color-mix(in srgb, var(--tone) 32%, var(--line));
   }
 }
