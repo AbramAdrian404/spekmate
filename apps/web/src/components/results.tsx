@@ -1,10 +1,11 @@
 import { SearchX } from "lucide-react";
 import Link from "next/link";
 import { ApiProblem } from "@/components/api-problem";
+import { ComparisonPanel } from "@/components/comparison-panel";
 import { ExclusionSummary } from "@/components/exclusion-summary";
 import { RecommendationCard } from "@/components/recommendation-card";
 import { getRecommendations, load } from "@/lib/api";
-import type { ConsultInput } from "@/lib/consult";
+import { type ConsultInput, joinNeeds } from "@/lib/consult";
 import { formatDateLong, formatRupiah, formatStorage } from "@/lib/format";
 import { CONDITION_LABEL } from "@/lib/labels";
 
@@ -13,7 +14,7 @@ const LIMIT = 5;
 export async function Results({ input, retryHref }: { input: ConsultInput; retryHref: string }) {
   const loaded = await load(
     getRecommendations({
-      need: input.need,
+      needs: input.needs,
       budget_max: input.budget,
       storage_min_gb: input.storageMinGb,
       condition: input.condition,
@@ -36,10 +37,10 @@ export async function Results({ input, retryHref }: { input: ConsultInput; retry
 
   return (
     <section aria-labelledby="hasil" className="mt-10 space-y-6">
-      <div className="space-y-2">
+      <div className="reveal space-y-2">
         <h2 id="hasil" className="text-2xl font-extrabold sm:text-3xl" tabIndex={-1}>
           {count === 0 ? "Belum ada yang cocok" : count === 1 ? "1 rekomendasi" : `${count} rekomendasi`} untuk{" "}
-          {response.need.name.toLowerCase()}
+          {joinNeeds(response.needs.map((need) => need.name)).toLowerCase()}
         </h2>
         <p className="text-ink-2">
           Anggaran sampai <strong className="tabular text-ink">{formatRupiah(input.budget)}</strong>, {conditionText}
@@ -53,7 +54,7 @@ export async function Results({ input, retryHref }: { input: ConsultInput; retry
       </div>
 
       {count === 0 ? (
-        <div className="callout" data-tone="info" role="status">
+        <div className="reveal callout" data-tone="info" role="status">
           <SearchX aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
           <div className="space-y-1">
             <p className="font-semibold">Tidak ada laptop di database kami yang memenuhi semua syarat.</p>
@@ -65,11 +66,13 @@ export async function Results({ input, retryHref }: { input: ConsultInput; retry
         </div>
       ) : (
         <ol className="space-y-5">
-          {response.results.map((item) => (
-            <RecommendationCard key={`${item.variant_id}-${item.condition}`} item={item} />
+          {response.results.map((item, index) => (
+            <RecommendationCard key={`${item.variant_id}-${item.condition}`} item={item} index={index} />
           ))}
         </ol>
       )}
+
+      {count > 1 ? <ComparisonPanel results={response.results} /> : null}
 
       <ExclusionSummary response={response} />
 

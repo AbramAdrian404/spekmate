@@ -14,6 +14,11 @@ export function recommendation(overrides: Partial<Recommendation> = {}): Recomme
     verdict: "cocok",
     verdict_label: "Cocok",
     reason: "Semua kriteria yang dinilai sudah nyaman: prosesor, RAM, penyimpanan.",
+    criteria: [
+      { key: "cpu", label: "Prosesor", status: "nyaman", status_label: "Nyaman", value_text: "Tingkat 3 dari 5", minimum_text: "Tingkat 2", comfortable_text: "Tingkat 3" },
+      { key: "ram", label: "RAM", status: "nyaman", status_label: "Nyaman", value_text: "16 GB", minimum_text: "8 GB", comfortable_text: "16 GB" },
+    ],
+    need_fit: [{ need_id: "pemrograman", short_name: "Pemrograman", verdict: "cocok", verdict_label: "Cocok" }],
     warnings: [],
     upgrade: {
       ram: { label: "Sebagian menempel, sebagian lewat slot", note: "sebagian menempel, sudah di batas maksimal 16 GB" },

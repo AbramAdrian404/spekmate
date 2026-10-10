@@ -49,7 +49,7 @@ describe("RecommendationCard", () => {
 
   it("shows the reference price, the range, how many notes it rests on and when it was checked", () => {
     renderCard();
-    const price = screen.getByRole("complementary", { name: "Harga" });
+    const price = screen.getByRole("complementary", { name: "Harga dan perbandingan" });
     expect(price).toHaveTextContent("Rp8,6 jt");
     expect(price).toHaveTextContent("Kisaran Rp7,7–9,4 jt");
     expect(price).toHaveTextContent("4 catatan harga, dicek 8 Okt 2026");
@@ -69,7 +69,7 @@ describe("RecommendationCard", () => {
 
   it("copes with a price that has no check date", () => {
     renderCard({ price: { condition: "bekas", low: 3_000_000, high: 3_099_000, reference: 3_050_000, observations: 1, last_checked: null } });
-    const price = screen.getByRole("complementary", { name: "Harga" });
+    const price = screen.getByRole("complementary", { name: "Harga dan perbandingan" });
     expect(price).toHaveTextContent("1 catatan harga. Harga berubah");
     expect(price).toHaveTextContent("Kisaran Rp3–3,1 jt");
   });
@@ -90,5 +90,22 @@ describe("RecommendationCard", () => {
   it("encodes ids that are not URL-safe", () => {
     renderCard({ model_id: "a b", variant_id: "c/d" });
     expect(screen.getAllByRole("link")[0]).toHaveAttribute("href", "/laptop/a%20b#c%2Fd");
+  });
+
+  it("stays quiet about per-need fit when only one need was asked about", () => {
+    renderCard(); // the fixture's need_fit has exactly one entry
+    expect(screen.queryByRole("list", { name: "Kecocokan per kebutuhan yang dipilih" })).toBeNull();
+  });
+
+  it("shows how the laptop fits each need on its own when several were picked at once", () => {
+    renderCard({
+      need_fit: [
+        { need_id: "kuliah-dan-kantor", short_name: "Kuliah & kantor", verdict: "cocok", verdict_label: "Cocok" },
+        { need_id: "desain-grafis", short_name: "Desain", verdict: "bisa_dengan_catatan", verdict_label: "Bisa, dengan catatan" },
+      ],
+    });
+    const list = screen.getByRole("list", { name: "Kecocokan per kebutuhan yang dipilih" });
+    expect(within(list).getByText("Kuliah & kantor: Cocok")).toBeInTheDocument();
+    expect(within(list).getByText("Desain: Bisa, dengan catatan")).toBeInTheDocument();
   });
 });

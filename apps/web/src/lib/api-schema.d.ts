@@ -114,7 +114,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Recommend laptops for a need and a budget */
+        /** Recommend laptops for one or more needs and a budget */
         post: operations["recommendations_api_recommendations_post"];
         delete?: never;
         options?: never;
@@ -382,6 +382,11 @@ export interface components {
             not_scored: components["schemas"]["NotScoredOut"][];
             /** Ranking Steps */
             ranking_steps: string[];
+            /**
+             * Multi Need Note
+             * @description How several needs picked at once are combined into one set of limits.
+             */
+            multi_need_note: string;
         };
         /** ModelDetailOut */
         ModelDetailOut: {
@@ -647,6 +652,16 @@ export interface components {
             verdict_label: string;
             /** Reason */
             reason: string;
+            /**
+             * Criteria
+             * @description The six criteria behind `verdict`, combined across every requested need -- 'nyaman' entries are this laptop's strengths for the combination, 'kurang' its weak points.
+             */
+            criteria: components["schemas"]["CriterionOut"][];
+            /**
+             * Need Fit
+             * @description How this laptop scores on each requested need on its own, before combining them.
+             */
+            need_fit: components["schemas"]["NeedVerdictOut"][];
             /** Warnings */
             warnings: components["schemas"]["WarningOut"][];
             upgrade: components["schemas"]["UpgradeBrief"];
@@ -664,10 +679,10 @@ export interface components {
         /** RecommendationRequest */
         RecommendationRequest: {
             /**
-             * Need
-             * @description Need id from /api/needs, e.g. 'pemrograman'.
+             * Needs
+             * @description One or more need ids from /api/needs, e.g. ['pemrograman'].
              */
-            need: string;
+            needs: string[];
             /**
              * Budget Max
              * @description Maximum budget in rupiah.
@@ -692,7 +707,8 @@ export interface components {
         };
         /** RecommendationResponse */
         RecommendationResponse: {
-            need: components["schemas"]["NeedInfo"];
+            /** Needs */
+            needs: components["schemas"]["NeedInfo"][];
             query: components["schemas"]["RecommendationRequest"];
             /** Results */
             results: components["schemas"]["RecommendationItem"][];
