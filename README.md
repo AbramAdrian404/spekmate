@@ -318,7 +318,7 @@ Yang diuji, singkatnya:
 - **API**: bentuk jawaban, validasi masukan, dan kontrak OpenAPI terhadap `apps/web/openapi.json`.
 - **Ekspor data** dan **skrip `smoke_test.py`** (diuji terhadap server palsu yang meniru tiap kegagalan: halaman login
   Vercel, rewrite hilang, API mati, dan seterusnya).
-- **Web**: komponen, format angka, pembacaan isian form, klien API, dan **kontras warna** terang dan gelap
+- **Web**: komponen, format angka, pembacaan isian form, klien API, dan **kontras warna** tema terang
   (teks minimal 4,5:1, tepi kolom isian dan cincin fokus minimal 3:1) dibaca langsung dari `globals.css`.
 
 ## Kalau ada yang tidak jalan

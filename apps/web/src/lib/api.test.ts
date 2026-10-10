@@ -7,6 +7,7 @@ import {
   getModel,
   getModels,
   getRecommendations,
+  getRecommendationsCached,
   load,
   modelsQuery,
 } from "./api";
@@ -52,6 +53,15 @@ describe("requests", () => {
     fetchMock.mockResolvedValue(json({}));
     await getModel("a/b?c");
     expect(fetchMock.mock.calls[0]![0]).toBe("https://api.example.test/api/models/a%2Fb%3Fc");
+  });
+
+  it("caches the fixed sample question for the home page, briefly, and nothing else about recommendations", async () => {
+    fetchMock.mockResolvedValue(json({ results: [] }));
+    await getRecommendationsCached({ needs: ["kuliah-dan-kantor"], budget_max: 9_000_000, condition: "semua", limit: 3 });
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe("https://api.example.test/api/recommendations");
+    expect(init).toMatchObject({ method: "POST", cache: "force-cache", next: { revalidate: DATA_REVALIDATE_SECONDS } });
+    expect(JSON.parse(String(init?.body))).toEqual({ needs: ["kuliah-dan-kantor"], budget_max: 9_000_000, condition: "semua", limit: 3 });
   });
 
   it("posts recommendations as JSON and never caches them", async () => {

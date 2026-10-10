@@ -168,6 +168,21 @@ export function getRecommendations(body: RecommendationRequest): Promise<Recomme
   });
 }
 
+/**
+ * The same question as getRecommendations, but answered from the web's cache for a few minutes. Only for a
+ * fixed question that every visitor shares -- the home page's sample result -- so the page stays prebuilt.
+ * (A visitor's own consultation must use getRecommendations: it is never cached.)
+ */
+export function getRecommendationsCached(body: RecommendationRequest): Promise<RecommendationResponse> {
+  return request<RecommendationResponse>("/api/recommendations", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+    cache: "force-cache",
+    next: { revalidate: DATA_REVALIDATE_SECONDS },
+  });
+}
+
 // --------------------------------------------------------------------------- //
 // Result helper: pages render a friendly panel instead of crashing
 // --------------------------------------------------------------------------- //
