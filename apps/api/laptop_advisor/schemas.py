@@ -269,7 +269,7 @@ class ModelList(BaseModel):
 # Recommendations
 # --------------------------------------------------------------------------- #
 class RecommendationRequest(BaseModel):
-    need: str = Field(description="Need id from /api/needs, e.g. 'pemrograman'.")
+    needs: list[str] = Field(min_length=1, description="One or more need ids from /api/needs, e.g. ['pemrograman'].")
     budget_max: int = Field(gt=0, le=1_000_000_000, description="Maximum budget in rupiah.")
     storage_min_gb: int | None = Field(None, ge=0, le=16000, description="Smallest storage wanted, in GB.")
     condition: ConditionFilter = "semua"
@@ -300,6 +300,11 @@ class RecommendationItem(BaseModel):
     verdict: VerdictCode
     verdict_label: str
     reason: str
+    criteria: list[CriterionOut] = Field(
+        description="The six criteria behind `verdict`, combined across every requested need -- "
+                    "'nyaman' entries are this laptop's strengths for the combination, 'kurang' its weak points.")
+    need_fit: list[NeedVerdictOut] = Field(
+        description="How this laptop scores on each requested need on its own, before combining them.")
     warnings: list[WarningOut]
     upgrade: UpgradeBrief
     storage_note: str | None = Field(None, description="Set when storage is below the request but can be replaced.")
@@ -318,7 +323,7 @@ class Exclusions(BaseModel):
 
 
 class RecommendationResponse(BaseModel):
-    need: NeedInfo
+    needs: list[NeedInfo]
     query: RecommendationRequest
     results: list[RecommendationItem]
     considered: int = Field(description="Options (configuration x condition) that had a price and were evaluated.")
@@ -385,3 +390,4 @@ class MethodologyOut(BaseModel):
     tiers: list[TierOut]
     not_scored: list[NotScoredOut]
     ranking_steps: list[str]
+    multi_need_note: str = Field(description="How several needs picked at once are combined into one set of limits.")

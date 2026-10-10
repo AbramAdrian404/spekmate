@@ -19,15 +19,42 @@ export const STORAGE_CHOICES: ReadonlyArray<{ value: string; label: string }> = 
 
 export const BUDGET_SUGGESTIONS = [5_000_000, 8_000_000, 10_000_000, 15_000_000, 20_000_000] as const;
 
+/**
+ * Join need names into one phrase for a sentence, e.g. "Rekomendasi untuk {joinNeeds(...)}".
+ * A comma before the final "dan" even for two names, since a need's own name can already contain
+ * "dan" (e.g. "Kuliah dan kantor") -- "A dan B" alone could misread as one longer need name.
+ */
+export function joinNeeds(names: readonly string[]): string {
+  if (names.length <= 1) return names[0] ?? "";
+  if (names.length === 2) return `${names[0]}, dan ${names[1]}`;
+  return `${names.slice(0, -1).join(", ")}, dan ${names[names.length - 1]}`;
+}
+
+/**
+ * The form's answers as a query string, e.g. for a "try again" link. `kebutuhan` needs one
+ * `kebutuhan=` pair per picked need -- `new URLSearchParams(Object.entries(form))` would instead
+ * coerce that array to a single comma-joined value, which the server would then read back as one
+ * unrecognised need id.
+ */
+export function formToSearchParams(form: ConsultForm): URLSearchParams {
+  const params = new URLSearchParams();
+  for (const id of form.kebutuhan) params.append("kebutuhan", id);
+  if (form.anggaran) params.append("anggaran", form.anggaran);
+  if (form.penyimpanan) params.append("penyimpanan", form.penyimpanan);
+  if (form.kondisi !== "semua") params.append("kondisi", form.kondisi);
+  return params;
+}
+
 export interface ConsultForm {
-  kebutuhan: string;
+  /** One or more need ids -- several checkboxes share this one name, see <ConsultForm/>. */
+  kebutuhan: string[];
   anggaran: string;
   penyimpanan: string;
   kondisi: ConditionFilter;
 }
 
 export interface ConsultInput {
-  need: string;
+  needs: string[];
   budget: number;
   storageMinGb: number | null;
   condition: ConditionFilter;
@@ -42,6 +69,13 @@ export type ConsultParse =
 
 const first = (value: string | string[] | undefined): string => (Array.isArray(value) ? (value[0] ?? "") : (value ?? "")).trim();
 
+/** Every value given for one field name, trimmed, emptied blanks dropped, duplicates folded (order kept) --
+ * for `kebutuhan`, which several checkboxes submit under the same name. */
+const all = (value: string | string[] | undefined): string[] => {
+  const raw = Array.isArray(value) ? value : value === undefined ? [] : [value];
+  return [...new Set(raw.map((v) => v.trim()).filter((v) => v !== ""))];
+};
+
 const BUDGET_ERRORS = {
   empty: "Isi anggaran maksimalmu dulu.",
   unreadable: "Anggaran belum terbaca. Tulis angkanya saja, misalnya 8.000.000.",
@@ -52,17 +86,18 @@ const BUDGET_ERRORS = {
 export function parseConsultParams(params: SearchParams, validNeeds: readonly string[]): ConsultParse {
   const conditionText = first(params.kondisi);
   const form: ConsultForm = {
-    kebutuhan: first(params.kebutuhan),
+    kebutuhan: all(params.kebutuhan),
     anggaran: first(params.anggaran),
     penyimpanan: first(params.penyimpanan),
     kondisi: conditionText === "baru" || conditionText === "bekas" ? conditionText : "semua",
   };
 
-  if (!form.kebutuhan && !form.anggaran) return { status: "empty", form };
+  if (form.kebutuhan.length === 0 && !form.anggaran) return { status: "empty", form };
 
   const errors: ConsultFieldErrors = {};
 
-  if (!validNeeds.includes(form.kebutuhan)) errors.kebutuhan = "Pilih salah satu kebutuhan.";
+  if (form.kebutuhan.length === 0) errors.kebutuhan = "Pilih minimal satu kebutuhan.";
+  else if (form.kebutuhan.some((id) => !validNeeds.includes(id))) errors.kebutuhan = "Pilih dari kebutuhan yang tersedia.";
 
   const budget = parseBudget(form.anggaran);
   if (!budget.ok) errors.anggaran = BUDGET_ERRORS[budget.reason];
@@ -75,7 +110,7 @@ export function parseConsultParams(params: SearchParams, validNeeds: readonly st
   }
 
   if (Object.keys(errors).length > 0 || !budget.ok) return { status: "invalid", form, errors };
-  return { status: "ready", form, input: { need: form.kebutuhan, budget: budget.value, storageMinGb, condition: form.kondisi } };
+  return { status: "ready", form, input: { needs: form.kebutuhan, budget: budget.value, storageMinGb, condition: form.kondisi } };
 }
 
 // --------------------------------------------------------------------------- //

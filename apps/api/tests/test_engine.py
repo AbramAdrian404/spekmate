@@ -148,6 +148,69 @@ def test_unknown_need_raises(ds):
 
 
 # --------------------------------------------------------------------------- #
+# Combining several needs at once (multi-select consultation)
+# --------------------------------------------------------------------------- #
+def test_combine_thresholds_takes_the_strictest_of_each_criterion(ds):
+    # kerja: cpu(1,2) ram(4,8) storage(128,256); desain: cpu(2,3) ram(8,16) display(3,4)
+    combined = engine.combine_thresholds(ds, ["kerja", "desain"])
+    assert combined[0] == {"minimum": 2, "comfortable": 3}        # cpu: desain is stricter than kerja
+    assert combined[1] == {"minimum": None, "comfortable": None}  # gpu: neither need assesses it
+    assert combined[2] == {"minimum": 8, "comfortable": 16}       # ram: desain is stricter than kerja
+    assert combined[3] == {"minimum": 128, "comfortable": 256}    # storage: only kerja assesses it
+    assert combined[4] == {"minimum": 3, "comfortable": 4}        # display: only desain assesses it
+    assert combined[5] == {"minimum": None, "comfortable": None}  # refresh: neither need assesses it
+
+
+def test_combine_thresholds_ignores_need_order(ds):
+    assert engine.combine_thresholds(ds, ["kerja", "desain"]) == engine.combine_thresholds(ds, ["desain", "kerja"])
+
+
+def test_combining_one_need_scores_the_same_as_assessing_it_alone(ds):
+    # need_id/need_name differ by design (assess_combined's are a synthetic, lowercase-first label,
+    # not the need's own display name), but the actual scoring must be identical.
+    v = ds.variant("v-cocok")
+    solo, combo = engine.assess(ds, v, "kerja"), engine.assess_combined(ds, v, ["kerja"])
+    assert (combo.verdict, combo.reason, combo.criteria) == (solo.verdict, solo.reason, solo.criteria)
+
+
+def test_assess_combined_inherits_the_weaker_of_two_otherwise_cocok_needs(ds):
+    # v-cocok is "cocok" for kerja alone and "bisa_dengan_catatan" for desain alone (cpu and display
+    # are only "cukup" there) -- combined, it must carry over that caveat, not average it away.
+    assert engine.assess(ds, ds.variant("v-cocok"), "kerja").verdict == "cocok"
+    assert engine.assess(ds, ds.variant("v-cocok"), "desain").verdict == "bisa_dengan_catatan"
+    a = engine.assess_combined(ds, ds.variant("v-cocok"), ["kerja", "desain"])
+    assert a.verdict == "bisa_dengan_catatan"
+    statuses = {c.key: c.status for c in a.criteria}
+    assert statuses == {"cpu": "cukup", "gpu": "tidak_dinilai", "ram": "nyaman", "storage": "nyaman",
+                        "display": "cukup", "refresh": "tidak_dinilai"}
+
+
+def test_assess_combined_can_fail_a_need_that_alone_looked_fine(ds):
+    # v-cocok is "cocok" for kerja alone but "kurang_cocok" for the much heavier game need -- picking
+    # both must not let the easy need paper over the one it fails.
+    assert engine.assess(ds, ds.variant("v-cocok"), "game").verdict == "kurang_cocok"
+    a = engine.assess_combined(ds, ds.variant("v-cocok"), ["kerja", "game"])
+    assert a.verdict == "kurang_cocok"
+
+
+def test_assess_combined_names_and_ids_identify_the_combination(ds):
+    a = engine.assess_combined(ds, ds.variant("v-cocok"), ["kerja", "desain"])
+    assert a.need_id == "kerja+desain"
+    assert a.need_name == "kerja kantor, dan desain"
+
+
+def test_assess_combined_unknown_need_raises(ds):
+    with pytest.raises(KeyError):
+        engine.assess_combined(ds, ds.variant("v-cocok"), ["kerja", "tidak-ada"])
+
+
+def test_join_needs():
+    assert texts.join_needs(["Kerja kantor"]) == "kerja kantor"
+    assert texts.join_needs(["Kerja kantor", "Desain"]) == "kerja kantor, dan desain"
+    assert texts.join_needs(["Kerja kantor", "Desain", "Game seru"]) == "kerja kantor, desain, dan game seru"
+
+
+# --------------------------------------------------------------------------- #
 # Thresholds can be edited in the workbook, so the engine must follow whatever they say
 # --------------------------------------------------------------------------- #
 def test_all_limits_blank_means_not_assessed():

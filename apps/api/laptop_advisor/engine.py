@@ -158,11 +158,10 @@ def build_reason(verdict: str, statuses: Sequence[str], values: Sequence[Any], l
     return reason
 
 
-def assess(ds: Dataset, v: Row, need_id: str) -> Assessment:
-    need = ds.need(need_id)
-    if need is None:
-        raise KeyError(need_id)
-    limits = ds.thresholds(need_id)
+def _build_assessment(ds: Dataset, v: Row, limits: Sequence[Row], need_id: str, need_name: str) -> Assessment:
+    """Shared by `assess` (one need) and `assess_combined` (several needs at once): everything after
+    the thresholds are known is identical, whether those thresholds came from one need's rules or
+    were combined from several."""
     values = criterion_values(ds, v)
     statuses = [classify(values[k], limits[k]["minimum"], limits[k]["comfortable"]) for k in range(6)]
     verdict = decide(statuses)
@@ -182,8 +181,47 @@ def assess(ds: Dataset, v: Row, need_id: str) -> Assessment:
             minimum_text=texts.threshold_text(key, minimum, ds.panel_name(minimum)) if assessed else None,
             comfortable_text=texts.threshold_text(key, comfortable, ds.panel_name(comfortable)) if assessed else None,
         ))
-    return Assessment(need_id=need.id, need_name=need.name, verdict=verdict,
+    return Assessment(need_id=need_id, need_name=need_name, verdict=verdict,
                       reason=build_reason(verdict, statuses, values, limits, v, ds), criteria=tuple(criteria))
+
+
+def assess(ds: Dataset, v: Row, need_id: str) -> Assessment:
+    need = ds.need(need_id)
+    if need is None:
+        raise KeyError(need_id)
+    return _build_assessment(ds, v, ds.thresholds(need_id), need.id, need.name)
+
+
+def combine_thresholds(ds: Dataset, need_ids: Sequence[str]) -> list[Row]:
+    """Combine several needs' thresholds into the six strictest limits a laptop must clear to
+    satisfy all of them at once.
+
+    Per criterion: the minimum is the highest minimum among the needs that assess it (ignoring
+    needs that leave it blank), and likewise for the comfortable level. A criterion stays
+    unassessed (both None) only if every given need leaves it unassessed -- so picking more needs
+    never silently drops a requirement, it can only add or raise one.
+    """
+    per_need = [ds.thresholds(need_id) for need_id in need_ids]
+    combined: list[Row] = []
+    for k in range(6):
+        minimums = [lim[k]["minimum"] for lim in per_need if lim[k]["minimum"] is not None]
+        comfortables = [lim[k]["comfortable"] for lim in per_need if lim[k]["comfortable"] is not None]
+        combined.append({"minimum": max(minimums) if minimums else None,
+                         "comfortable": max(comfortables) if comfortables else None})
+    return combined
+
+
+def assess_combined(ds: Dataset, v: Row, need_ids: Sequence[str]) -> Assessment:
+    """Like `assess`, but scores one laptop against several needs at once (see `combine_thresholds`).
+    `need_id`/`need_name` on the result identify the combination, not any single original need."""
+    names = []
+    for need_id in need_ids:
+        need = ds.need(need_id)
+        if need is None:
+            raise KeyError(need_id)
+        names.append(need.name)
+    limits = combine_thresholds(ds, need_ids)
+    return _build_assessment(ds, v, limits, "+".join(need_ids), texts.join_needs(names))
 
 
 def general_warnings(ds: Dataset, v: Row) -> list[GeneralWarning]:

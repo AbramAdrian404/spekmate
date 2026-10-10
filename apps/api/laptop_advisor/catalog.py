@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 import statistics
+from collections.abc import Sequence
 from functools import lru_cache
 from typing import Any
 
@@ -87,6 +88,13 @@ class Catalog:
     def assessments(self, v: Row) -> list[engine.Assessment]:
         return [self.assessment(v, n.id) for n in self.ds.needs]
 
+    def combined_assessment(self, v: Row, need_ids: Sequence[str]) -> engine.Assessment:
+        """Score one variant against several needs at once. Unlike `assessment`, this is computed
+        on request rather than precomputed -- the dataset is small enough that this stays cheap,
+        and precomputing every subset of needs would not scale the same way a single `need_id`
+        lookup does."""
+        return engine.assess_combined(self.ds, v, need_ids)
+
     def warnings(self, v: Row) -> list[engine.GeneralWarning]:
         return self._warnings[v["id"].lower()]
 
@@ -155,15 +163,17 @@ class Catalog:
             battery_warranty_months=v.get("battery_warranty_months"),
         )
 
-    def assessment_out(self, a: engine.Assessment) -> S.AssessmentOut:
-        criteria = [
+    def criteria_out(self, a: engine.Assessment) -> list[S.CriterionOut]:
+        return [
             S.CriterionOut(key=c.key, label=c.label, status=c.status, status_label=engine.STATUS_LABELS[c.status],
                            value_text=c.value_text, minimum_text=c.minimum_text, comfortable_text=c.comfortable_text)
             for c in a.criteria
         ]
+
+    def assessment_out(self, a: engine.Assessment) -> S.AssessmentOut:
         return S.AssessmentOut(
             need_id=a.need_id, need_name=a.need_name, verdict=a.verdict,
-            verdict_label=engine.VERDICT_LABELS[a.verdict], reason=a.reason, criteria=criteria)
+            verdict_label=engine.VERDICT_LABELS[a.verdict], reason=a.reason, criteria=self.criteria_out(a))
 
     def price_observations(self, v: Row) -> list[S.PriceObservationOut]:
         out = []
@@ -303,7 +313,7 @@ class Catalog:
             warnings=[S.WarningRuleOut(**w) for w in rules["warnings"]],
             tiers=[S.TierOut(**t) for t in rules["tiers"]],
             not_scored=[S.NotScoredOut(**n) for n in rules["not_scored"]],
-            ranking_steps=list(texts.RANKING_STEPS))
+            ranking_steps=list(texts.RANKING_STEPS), multi_need_note=texts.MULTI_NEED_NOTE)
 
 
 @lru_cache(maxsize=1)

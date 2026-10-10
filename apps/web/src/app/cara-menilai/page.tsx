@@ -24,6 +24,7 @@ const SECTIONS = [
   { id: "arti-penilaian", label: "Arti penilaian" },
   { id: "arti-status", label: "Arti status tiap kriteria" },
   { id: "batas", label: "Batas untuk tiap kebutuhan" },
+  { id: "gabungan", label: "Memilih lebih dari satu kebutuhan" },
   { id: "tingkat", label: "Tingkat prosesor dan grafis" },
   { id: "layar", label: "Peringkat jenis layar" },
   { id: "peringatan", label: "Peringatan umum" },
@@ -163,6 +164,14 @@ export default async function MethodologyPage() {
                 );
               })}
             </div>
+          </Section>
+
+          <Section id="gabungan" title="Memilih lebih dari satu kebutuhan">
+            <p className="measure text-ink-2">{rules.multi_need_note}</p>
+            <p className="text-sm text-ink-3">
+              Contoh: pilih &ldquo;Kuliah dan kantor&rdquo; serta &ldquo;Desain grafis&rdquo; sekaligus, dan RAM-nya akan memakai batas
+              yang lebih tinggi di antara keduanya -- bukan dirata-rata, dan bukan cuma salah satunya.
+            </p>
           </Section>
 
           <Section id="tingkat" title="Tingkat prosesor dan grafis" intro="Prosesor dan grafis kami golongkan ke dalam lima tingkat supaya mudah dibandingkan. Tingkat ini penilaian kami sendiri berdasarkan data pabrikan, bukan skor resmi.">

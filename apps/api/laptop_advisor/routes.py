@@ -67,12 +67,12 @@ def get_variant(variant_id: str, cat: CatalogDep) -> S.VariantOut:
 
 
 @router.post("/recommendations", response_model=S.RecommendationResponse, tags=["consultation"],
-             summary="Recommend laptops for a need and a budget")
+             summary="Recommend laptops for one or more needs and a budget")
 def recommendations(body: S.RecommendationRequest, cat: CatalogDep) -> S.RecommendationResponse:
     try:
         return recommend(cat, body)
-    except UnknownNeed:
-        raise HTTPException(status_code=404, detail=f"Kebutuhan '{body.need}' tidak dikenal.") from None
+    except UnknownNeed as exc:
+        raise HTTPException(status_code=404, detail=f"Kebutuhan '{exc.args[0]}' tidak dikenal.") from None
 
 
 @router.get("/methodology", response_model=S.MethodologyOut, tags=["transparency"],

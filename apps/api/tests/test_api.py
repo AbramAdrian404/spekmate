@@ -41,7 +41,7 @@ def test_get_responses_are_cacheable_but_posts_are_not(client):
     assert "s-maxage=300" in cache
     # No stale-while-revalidate: the CDN could hand out an old answer after a data update.
     assert "stale-while-revalidate" not in cache
-    post = client.post("/api/recommendations", json={"need": "pemrograman", "budget_max": 9_000_000})
+    post = client.post("/api/recommendations", json={"needs": ["pemrograman"], "budget_max": 9_000_000})
     assert "cache-control" not in post.headers
 
 
@@ -154,6 +154,7 @@ def test_methodology_is_complete(client, real_ds):
     assert len(body["needs"]) == len(real_ds.needs) and all(len(n["criteria"]) == 6 for n in body["needs"])
     assert [w["code"] for w in body["warnings"]] == ["P1", "P2", "P3", "P4", "P5", "P6"]
     assert len(body["ranking_steps"]) == 6 and body["not_scored"]
+    assert body["multi_need_note"]
     # at least one criterion per need is actually assessed, and says why
     for need in body["needs"]:
         assessed = [c for c in need["criteria"] if c["assessed"]]
@@ -165,8 +166,8 @@ def test_methodology_is_complete(client, real_ds):
 # --------------------------------------------------------------------------- #
 def test_recommendation_shape_on_real_data(client, real_ds):
     budget = 12_000_000
-    body = client.post("/api/recommendations", json={"need": real_ds.needs[0].id, "budget_max": budget}).json()
-    assert body["need"]["id"] == real_ds.needs[0].id
+    body = client.post("/api/recommendations", json={"needs": [real_ds.needs[0].id], "budget_max": budget}).json()
+    assert [n["id"] for n in body["needs"]] == [real_ds.needs[0].id]
     assert body["query"]["condition"] == "semua" and body["query"]["limit"] == 5
     assert len(body["results"]) <= 5
     assert [r["rank"] for r in body["results"]] == list(range(1, len(body["results"]) + 1))
@@ -180,22 +181,36 @@ def test_recommendation_shape_on_real_data(client, real_ds):
             assert r["price_fit"] == "tergantung_toko"
             assert price["low"] <= budget < price["reference"]
         assert r["why"] and r["reason"]
+        assert len(r["criteria"]) == 6 and {c["status"] for c in r["criteria"]} <= STATUSES
+        assert [f["need_id"] for f in r["need_fit"]] == [real_ds.needs[0].id]
+        assert {f["verdict"] for f in r["need_fit"]} <= VERDICTS
         for part in ("ram", "storage"):
             assert r["upgrade"][part]["label"] and r["upgrade"][part]["note"]
     assert body["notes"] and body["considered"] >= len(body["results"])
 
 
+def test_recommendation_shape_with_several_needs_on_real_data(client, real_ds):
+    picked = [n.id for n in real_ds.needs[:2]]
+    body = client.post("/api/recommendations", json={"needs": picked, "budget_max": 15_000_000}).json()
+    assert [n["id"] for n in body["needs"]] == picked
+    for r in body["results"]:
+        assert [f["need_id"] for f in r["need_fit"]] == picked
+
+
 def test_recommendation_validation(client):
-    ok = {"need": "pemrograman", "budget_max": 9_000_000}
+    ok = {"needs": ["pemrograman"], "budget_max": 9_000_000}
     assert client.post("/api/recommendations", json={**ok, "budget_max": 0}).status_code == 422
     assert client.post("/api/recommendations", json={**ok, "budget_max": -5}).status_code == 422
     assert client.post("/api/recommendations", json={**ok, "condition": "rusak"}).status_code == 422
     assert client.post("/api/recommendations", json={**ok, "limit": 0}).status_code == 422
     assert client.post("/api/recommendations", json={**ok, "limit": 99}).status_code == 422
     assert client.post("/api/recommendations", json={**ok, "storage_min_gb": -1}).status_code == 422
-    assert client.post("/api/recommendations", json={"need": "pemrograman"}).status_code == 422
-    unknown = client.post("/api/recommendations", json={**ok, "need": "tidak-ada"})
+    assert client.post("/api/recommendations", json={**ok, "needs": []}).status_code == 422
+    assert client.post("/api/recommendations", json={"budget_max": 9_000_000}).status_code == 422
+    unknown = client.post("/api/recommendations", json={**ok, "needs": ["tidak-ada"]})
     assert unknown.status_code == 404 and "tidak dikenal" in unknown.json()["detail"]
+    unknown_among_several = client.post("/api/recommendations", json={**ok, "needs": ["pemrograman", "tidak-ada"]})
+    assert unknown_among_several.status_code == 404 and "tidak-ada" in unknown_among_several.json()["detail"]
 
 
 # --------------------------------------------------------------------------- #
@@ -214,8 +229,17 @@ def test_made_up_catalog_over_http(synthetic_client):
 
 
 def test_made_up_recommendation_over_http(synthetic_client):
-    r = synthetic_client.post("/api/recommendations", json={"need": "kerja", "budget_max": 10_000_000, "limit": 3})
+    r = synthetic_client.post("/api/recommendations", json={"needs": ["kerja"], "budget_max": 10_000_000, "limit": 3})
     body = r.json()
     assert [x["variant_id"] for x in body["results"]] == ["v-upgradeable", "v-cocok", "v-tua"]
     assert body["excluded"] == {"no_price": 1, "wrong_condition": 0, "not_suitable": 1, "storage_too_small": 0,
                                 "storage_unknown": 0, "over_budget": 1}
+
+
+def test_made_up_recommendation_with_several_needs_over_http(synthetic_client):
+    r = synthetic_client.post("/api/recommendations",
+                              json={"needs": ["kerja", "desain"], "budget_max": 20_000_000, "limit": 10})
+    body = r.json()
+    item = next(x for x in body["results"] if x["variant_id"] == "v-cocok")
+    assert item["verdict"] == "bisa_dengan_catatan"   # "cocok" alone for kerja, but desain adds a caveat
+    assert {f["need_id"]: f["verdict"] for f in item["need_fit"]} == {"kerja": "cocok", "desain": "bisa_dengan_catatan"}

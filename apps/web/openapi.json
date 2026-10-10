@@ -268,7 +268,7 @@
         "tags": [
           "consultation"
         ],
-        "summary": "Recommend laptops for a need and a budget",
+        "summary": "Recommend laptops for one or more needs and a budget",
         "operationId": "recommendations_api_recommendations_post",
         "requestBody": {
           "content": {
@@ -1041,6 +1041,11 @@
             },
             "type": "array",
             "title": "Ranking Steps"
+          },
+          "multi_need_note": {
+            "type": "string",
+            "title": "Multi Need Note",
+            "description": "How several needs picked at once are combined into one set of limits."
           }
         },
         "type": "object",
@@ -1052,7 +1057,8 @@
           "warnings",
           "tiers",
           "not_scored",
-          "ranking_steps"
+          "ranking_steps",
+          "multi_need_note"
         ],
         "title": "MethodologyOut"
       },
@@ -1976,6 +1982,22 @@
             "type": "string",
             "title": "Reason"
           },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionOut"
+            },
+            "type": "array",
+            "title": "Criteria",
+            "description": "The six criteria behind `verdict`, combined across every requested need -- 'nyaman' entries are this laptop's strengths for the combination, 'kurang' its weak points."
+          },
+          "need_fit": {
+            "items": {
+              "$ref": "#/components/schemas/NeedVerdictOut"
+            },
+            "type": "array",
+            "title": "Need Fit",
+            "description": "How this laptop scores on each requested need on its own, before combining them."
+          },
           "warnings": {
             "items": {
               "$ref": "#/components/schemas/WarningOut"
@@ -2020,6 +2042,8 @@
           "verdict",
           "verdict_label",
           "reason",
+          "criteria",
+          "need_fit",
           "warnings",
           "upgrade",
           "why"
@@ -2028,10 +2052,14 @@
       },
       "RecommendationRequest": {
         "properties": {
-          "need": {
-            "type": "string",
-            "title": "Need",
-            "description": "Need id from /api/needs, e.g. 'pemrograman'."
+          "needs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Needs",
+            "description": "One or more need ids from /api/needs, e.g. ['pemrograman']."
           },
           "budget_max": {
             "type": "integer",
@@ -2074,15 +2102,19 @@
         },
         "type": "object",
         "required": [
-          "need",
+          "needs",
           "budget_max"
         ],
         "title": "RecommendationRequest"
       },
       "RecommendationResponse": {
         "properties": {
-          "need": {
-            "$ref": "#/components/schemas/NeedInfo"
+          "needs": {
+            "items": {
+              "$ref": "#/components/schemas/NeedInfo"
+            },
+            "type": "array",
+            "title": "Needs"
           },
           "query": {
             "$ref": "#/components/schemas/RecommendationRequest"
@@ -2124,7 +2156,7 @@
         },
         "type": "object",
         "required": [
-          "need",
+          "needs",
           "query",
           "results",
           "considered",

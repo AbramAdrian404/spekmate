@@ -11,6 +11,7 @@ export type ModelDetail = Schemas["ModelDetailOut"];
 export type Variant = Schemas["VariantOut"];
 export type Assessment = Schemas["AssessmentOut"];
 export type Criterion = Schemas["CriterionOut"];
+export type NeedFit = Schemas["NeedVerdictOut"];
 export type Warning = Schemas["WarningOut"];
 export type PriceSummary = Schemas["PriceSummaryOut"];
 export type PriceObservation = Schemas["PriceObservationOut"];
@@ -27,7 +28,7 @@ export type ConditionFilter = Schemas["RecommendationRequest"]["condition"];
 
 /** The request as the frontend writes it: fields the API defaults for us are optional. */
 export type RecommendationRequest = {
-  need: string;
+  needs: string[];
   budget_max: number;
   storage_min_gb?: number | null;
   condition?: ConditionFilter;
