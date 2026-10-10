@@ -3,11 +3,11 @@ import { NEEDS } from "@/test/fixtures";
 import { HOME_SAMPLE, homeSampleRequest } from "./home-sample";
 
 describe("homeSampleRequest", () => {
-  it("asks one fixed, ordinary question: a single need, any condition, a handful of results", () => {
+  it("asks one fixed, ordinary question: a single need, new laptops, a handful of results", () => {
     expect(homeSampleRequest(NEEDS)).toEqual({
       needs: [HOME_SAMPLE.needId],
       budget_max: HOME_SAMPLE.budget,
-      condition: "semua",
+      condition: "baru",
       limit: 3,
     });
   });
