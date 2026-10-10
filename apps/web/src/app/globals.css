@@ -1,0 +1,654 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Design tokens. Light is the default; dark follows the system.
+ * Every text color pair below was picked for at least 4.5:1 contrast.
+ *
+ * The palette: a cool, slightly violet paper and ink (so greys feel part of the brand), one strong
+ * brand blue for actions, and four companion tones (violet, coral, amber, mint) for decoration.
+ * Verdict colors (green, amber, teal, rose, grey) keep their meaning and are never used as decoration.
+ * ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  --bg: #f4f6ff;
+  --surface: #ffffff;
+  --surface-2: #e7ecff;
+  --ink: #161c41;
+  --ink-2: #394165;
+  --ink-3: #4a5370;
+  --line: #d9dff4;
+  --line-strong: #bdc6e5;
+  /* Edge of form fields and choice cards: at least 3:1 against every surface it sits on. */
+  --control-line: #717a9d;
+
+  --accent: #2a51d4;
+  --accent-strong: #1b3bb1;
+  --accent-soft: #dee9ff;
+  --on-accent: #ffffff;
+  --focus: #2a51d4;
+  --shadow-accent: color-mix(in srgb, var(--accent) 70%, transparent);
+
+  /* Companion tones. solid = shapes and the top stripe; soft = tinted background; fg = text on soft or white. */
+  --blue: #5b85f2;
+  --blue-soft: #e0ebff;
+  --blue-fg: #2344ab;
+  --violet: #9f75e1;
+  --violet-soft: #f2e7ff;
+  --violet-fg: #6635a3;
+  --coral: #f37d65;
+  --coral-soft: #ffe8e0;
+  --coral-fg: #a43427;
+  --amber: #f7c041;
+  --amber-soft: #fef2cc;
+  --amber-fg: #7c4b02;
+  --mint: #40c59b;
+  --mint-soft: #d5f8ea;
+  --mint-fg: #006647;
+
+  /* Soft color clouds behind the hero and page headers. */
+  --wash-1: #bfd2ff;
+  --wash-2: #ffc6a8;
+  --wash-3: #bdeedb;
+  --hero-1: #dde7ff;
+  --hero-2: #ebe5ff;
+  --hero-3: #ffe6d9;
+  --band-1: #2a3fb5;
+  --band-2: #4745c2;
+  --band-3: #6a46c0;
+  --on-band: #ffffff;
+  --on-band-2: #e6eaff;
+  --band-button: #ffffff;
+  --band-button-text: #1b3bb1;
+
+  /* Decorative-only, high-saturation stripe colors (the thin brand trim). Never carries text, so the
+     4.5:1 rule above doesn't apply to it. Same values in both themes: it is meant to pop off either. */
+  --stripe-1: #2f6bff;
+  --stripe-2: #9a4df5;
+  --stripe-3: #ff5577;
+  --stripe-4: #ffb300;
+  --stripe-5: #12d99b;
+
+  /* Verdict colors: text, background, border, and a solid edge. Never used without an icon and a label. */
+  --cocok-fg: #166534;
+  --cocok-bg: #e6f4ea;
+  --cocok-line: #b4dcbf;
+  --cocok-edge: #3fae6a;
+  --bisa-fg: #8a3b0a;
+  --bisa-bg: #fcf0d4;
+  --bisa-line: #e8cf8c;
+  --bisa-edge: #e2a72c;
+  --data-fg: #0b5a74;
+  --data-bg: #e0f2f8;
+  --data-line: #a6d4e4;
+  --data-edge: #3ba4c5;
+  --kurang-fg: #9f1239;
+  --kurang-bg: #fce8ec;
+  --kurang-line: #f0b6c3;
+  --kurang-edge: #e05b75;
+  --netral-fg: #4b5563;
+  --netral-bg: #eef0f3;
+  --netral-line: #d3d8e0;
+  --netral-edge: #9aa3b5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --bg: #090d1d;
+    --surface: #111629;
+    --surface-2: #191f36;
+    --ink: #e7ebf6;
+    --ink-2: #c1c7db;
+    --ink-3: #9fa7c2;
+    --line: #292f48;
+    --line-strong: #39415d;
+    --control-line: #6e789e;
+
+    --accent: #8daffe;
+    --accent-strong: #b2cdff;
+    --accent-soft: #1a274f;
+    --on-accent: #0a0e21;
+    --focus: #9cbcff;
+    --shadow-accent: color-mix(in srgb, var(--accent) 28%, transparent);
+
+    --blue: #7ea2f6;
+    --blue-soft: #1b274d;
+    --blue-fg: #afcaff;
+    --violet: #b191ea;
+    --violet-soft: #312046;
+    --violet-fg: #d3befd;
+    --coral: #f3947f;
+    --coral-soft: #431e15;
+    --coral-fg: #febbad;
+    --amber: #efc469;
+    --amber-soft: #372709;
+    --amber-fg: #f3d392;
+    --mint: #68ceaa;
+    --mint-soft: #083124;
+    --mint-fg: #93e1c0;
+
+    --wash-1: #222968;
+    --wash-2: #45203a;
+    --wash-3: #0b3b35;
+    --hero-1: #10173f;
+    --hero-2: #181438;
+    --hero-3: #2a1428;
+    --band-1: #1d2a73;
+    --band-2: #2f2e82;
+    --band-3: #44307f;
+
+    --cocok-fg: #8ee0a6;
+    --cocok-bg: #12281a;
+    --cocok-line: #24523a;
+    --cocok-edge: #4dbb7c;
+    --bisa-fg: #f7cd6b;
+    --bisa-bg: #2b2210;
+    --bisa-line: #5c4a18;
+    --bisa-edge: #d9a63a;
+    --data-fg: #8ed3ea;
+    --data-bg: #0e2a36;
+    --data-line: #235a70;
+    --data-edge: #4aaecb;
+    --kurang-fg: #fdabbd;
+    --kurang-bg: #3a121c;
+    --kurang-line: #702636;
+    --kurang-edge: #e8657f;
+    --netral-fg: #bcc5d1;
+    --netral-bg: #1c222b;
+    --netral-line: #344050;
+    --netral-edge: #7a8499;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-control: var(--control-line);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+@layer base {
+  html {
+    background: var(--bg);
+    /* Keeps anchors (#hasil, #cara-kerja) from hiding under the sticky header. On phones the header
+       is two rows tall (logo, then menu); from the sm breakpoint it is one row. */
+    scroll-padding-top: 7.5rem;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  @media (min-width: 40rem) {
+    html {
+      scroll-padding-top: 5rem;
+    }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  a {
+    text-underline-offset: 3px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  summary {
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Components
+ * ------------------------------------------------------------------ */
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-surface;
+  }
+
+  .panel {
+    @apply rounded-2xl border border-line bg-surface-2;
+  }
+
+  .eyebrow {
+    @apply text-sm font-semibold uppercase tracking-wider text-accent;
+  }
+
+  /* Buttons ---------------------------------------------------------- */
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-[0.95rem] font-semibold no-underline transition-colors;
+  }
+  .btn-primary {
+    @apply bg-accent text-on-accent hover:bg-accent-strong;
+    box-shadow: 0 8px 18px -10px var(--shadow-accent);
+  }
+  .btn-secondary {
+    @apply border border-line-strong bg-surface text-ink hover:bg-surface-2;
+  }
+  .btn-quiet {
+    @apply text-accent hover:bg-accent-soft;
+  }
+
+  /* Form fields ------------------------------------------------------ */
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-ink;
+  }
+  .field-hint {
+    @apply mt-1.5 text-sm text-ink-3;
+  }
+  .field-error {
+    @apply mt-1.5 flex items-start gap-1.5 text-sm font-medium;
+    color: var(--kurang-fg);
+  }
+  .field-input {
+    @apply min-h-12 w-full rounded-xl border border-control bg-surface px-3.5 py-2.5 text-base text-ink placeholder:text-ink-3;
+  }
+  .field-input[aria-invalid="true"] {
+    border-color: var(--kurang-fg);
+  }
+
+  /* Choice cards (radio) -------------------------------------------- */
+  .choice {
+    @apply relative block h-full cursor-pointer rounded-xl border border-control bg-surface p-3.5 transition-colors hover:bg-surface-2;
+  }
+  .choice-input:checked + .choice {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+  .choice-input:focus-visible + .choice {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Small labels ----------------------------------------------------- */
+  .tag {
+    @apply inline-flex items-center gap-1 rounded-full border border-line bg-surface-2 px-2.5 py-0.5 text-xs font-semibold text-ink-2;
+  }
+  .tag-accent {
+    @apply border-transparent bg-accent-soft text-accent;
+  }
+
+  /* Verdict badge ---------------------------------------------------- */
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-semibold leading-tight;
+  }
+  .badge-sm {
+    @apply px-2.5 py-0.5 text-xs;
+  }
+  .badge[data-tone="cocok"] {
+    color: var(--cocok-fg);
+    background: var(--cocok-bg);
+    border-color: var(--cocok-line);
+  }
+  .badge[data-tone="bisa"] {
+    color: var(--bisa-fg);
+    background: var(--bisa-bg);
+    border-color: var(--bisa-line);
+  }
+  .badge[data-tone="data"] {
+    color: var(--data-fg);
+    background: var(--data-bg);
+    border-color: var(--data-line);
+    border-style: dashed;
+  }
+  .badge[data-tone="kurang"] {
+    color: var(--kurang-fg);
+    background: var(--kurang-bg);
+    border-color: var(--kurang-line);
+  }
+  .badge[data-tone="netral"] {
+    color: var(--netral-fg);
+    background: var(--netral-bg);
+    border-color: var(--netral-line);
+  }
+
+  /* Callouts --------------------------------------------------------- */
+  .callout {
+    @apply flex gap-3 rounded-xl border p-4 text-[0.95rem];
+  }
+  .callout[data-tone="info"] {
+    color: var(--data-fg);
+    background: var(--data-bg);
+    border-color: var(--data-line);
+  }
+  .callout[data-tone="warn"] {
+    color: var(--bisa-fg);
+    background: var(--bisa-bg);
+    border-color: var(--bisa-line);
+  }
+  .callout[data-tone="bad"] {
+    color: var(--kurang-fg);
+    background: var(--kurang-bg);
+    border-color: var(--kurang-line);
+  }
+  .callout[data-tone="ok"] {
+    color: var(--cocok-fg);
+    background: var(--cocok-bg);
+    border-color: var(--cocok-line);
+  }
+
+  /* Prose-ish text blocks ------------------------------------------- */
+  .measure {
+    max-width: 68ch;
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-surface-2;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Responsive tables become stacked cards on narrow screens. */
+@layer components {
+  .table-wrap {
+    @apply overflow-x-auto rounded-xl border border-line;
+  }
+  .data-table {
+    @apply w-full min-w-[34rem] border-collapse text-left text-sm;
+  }
+  .data-table th {
+    @apply bg-surface-2 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-2;
+  }
+  .data-table td {
+    @apply border-t border-line px-3.5 py-3 align-top;
+  }
+}
+
+@layer components {
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold focus:text-on-accent;
+  }
+}
+
+@layer components {
+  .choice-mark {
+    opacity: 0;
+    transition: opacity 120ms;
+  }
+  .choice-input:checked + .choice .choice-mark {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Color accents
+ * ------------------------------------------------------------------ */
+@layer components {
+  /* Brand stripe: five vivid tones, edge to edge, with a glow and a one-time shine on load.
+     Sits on top of the header and the footer. Decorative only, so it can be far more saturated
+     than anything that carries text. */
+  .brand-stripe {
+    height: 5px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      90deg,
+      var(--stripe-1) 0 20%,
+      var(--stripe-2) 20% 40%,
+      var(--stripe-3) 40% 60%,
+      var(--stripe-4) 60% 80%,
+      var(--stripe-5) 80% 100%
+    );
+    box-shadow: 0 0 18px -3px color-mix(in srgb, var(--stripe-2) 65%, transparent);
+  }
+  .brand-stripe::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, white 85%, transparent), transparent);
+    transform: translateX(-150%);
+    animation: stripe-shine 1.4s cubic-bezier(0.3, 0, 0.2, 1) 0.3s 1 both;
+  }
+  @keyframes stripe-shine {
+    to {
+      transform: translateX(350%);
+    }
+  }
+
+  /* Soft color clouds. .wash is for the hero, .wash-lite for page headers. */
+  .wash {
+    background:
+      radial-gradient(62rem 28rem at -8% -25%, var(--wash-1), transparent 72%),
+      radial-gradient(48rem 26rem at 108% -10%, var(--wash-2), transparent 72%),
+      radial-gradient(40rem 16rem at 45% 118%, var(--wash-3), transparent 72%),
+      linear-gradient(112deg, var(--hero-1) 0%, var(--hero-2) 55%, var(--hero-3) 100%);
+  }
+  .wash-lite {
+    background:
+      radial-gradient(44rem 16rem at -5% -30%, var(--wash-1), transparent 72%),
+      radial-gradient(34rem 14rem at 105% -20%, var(--wash-2), transparent 72%), var(--bg);
+  }
+
+  /* Tones: put .tone-* on a parent, then .tone-chip (tinted background, readable text) or .card-tone
+     (a colored top edge) on the element that should carry the color. */
+  .tone-blue {
+    --tone: var(--blue);
+    --tone-soft: var(--blue-soft);
+    --tone-fg: var(--blue-fg);
+  }
+  .tone-violet {
+    --tone: var(--violet);
+    --tone-soft: var(--violet-soft);
+    --tone-fg: var(--violet-fg);
+  }
+  .tone-coral {
+    --tone: var(--coral);
+    --tone-soft: var(--coral-soft);
+    --tone-fg: var(--coral-fg);
+  }
+  .tone-amber {
+    --tone: var(--amber);
+    --tone-soft: var(--amber-soft);
+    --tone-fg: var(--amber-fg);
+  }
+  .tone-mint {
+    --tone: var(--mint);
+    --tone-soft: var(--mint-soft);
+    --tone-fg: var(--mint-fg);
+  }
+  .tone-chip {
+    background: var(--tone-soft);
+    color: var(--tone-fg);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 55%, transparent);
+  }
+  .card-tone {
+    border-top: 4px solid var(--tone);
+  }
+
+  /* A recommendation card gets the color of its verdict on top. The badge inside still says it in words. */
+  .card-edge {
+    border-top: 4px solid var(--netral-edge);
+  }
+  .card-edge[data-verdict="cocok"] {
+    border-top-color: var(--cocok-edge);
+  }
+  .card-edge[data-verdict="bisa_dengan_catatan"] {
+    border-top-color: var(--bisa-edge);
+  }
+  .card-edge[data-verdict="data_belum_lengkap"] {
+    border-top-color: var(--data-edge);
+  }
+  .card-edge[data-verdict="kurang_cocok"] {
+    border-top-color: var(--kurang-edge);
+  }
+
+  /* The card in the hero sits on a soft blue-to-coral glow. */
+  .glow-card {
+    isolation: isolate;
+  }
+  .glow-card .card {
+    position: relative;
+    box-shadow: 0 24px 48px -24px var(--shadow-accent);
+  }
+  .glow-card .card::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -0.25rem;
+    border-radius: 2rem;
+    background: linear-gradient(135deg, var(--blue), var(--violet) 50%, var(--coral));
+    filter: blur(28px);
+    opacity: 0.6;
+  }
+  @media (prefers-color-scheme: dark) {
+    .glow-card .card::before {
+      opacity: 0.3;
+    }
+  }
+
+  /* The closing band: a deep blue-to-violet panel with white text and its own buttons. */
+  .band {
+    --focus: var(--on-band);
+    color: var(--on-band);
+    background: linear-gradient(115deg, var(--band-1) 0%, var(--band-2) 55%, var(--band-3) 100%);
+    box-shadow: 0 28px 48px -28px var(--band-2);
+  }
+  .band :is(h2, h3, strong) {
+    color: var(--on-band);
+  }
+  .band-text {
+    color: var(--on-band-2);
+  }
+  .btn-band {
+    background: var(--band-button);
+    color: var(--band-button-text);
+  }
+  .btn-band:hover {
+    background: var(--on-band-2);
+  }
+  .btn-band-outline {
+    color: var(--on-band);
+    border: 1.5px solid color-mix(in srgb, var(--on-band) 70%, transparent);
+  }
+  .btn-band-outline:hover {
+    background: color-mix(in srgb, var(--on-band) 16%, transparent);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Motion
+ *
+ * Two mechanisms. .rise-in is a one-shot CSS animation for content that is
+ * already on screen at load (the hero): it needs no JavaScript, so it still
+ * plays with scripts off. .reveal is for everything below the fold: it only
+ * starts hidden once <html> carries .js-reveal, which ScrollReveal adds solely
+ * when JavaScript runs and the person hasn't asked for reduced motion — so
+ * content a script never reaches, or a person who asked for less motion,
+ * simply stays visible. Reduced motion also collapses every duration here
+ * to near-zero through the global rule in the base layer above.
+ * ------------------------------------------------------------------ */
+@layer components {
+  .rise-in {
+    animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--rise-delay, 0ms);
+  }
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  html.js-reveal .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  html.js-reveal .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* A little life on hover: a card lifts toward you instead of just sitting there. */
+  .card-hover {
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+  .card-hover:hover,
+  .card-hover:focus-within {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 36px -22px var(--shadow-accent);
+  }
+
+  /* A soft tone wash as the card's own background, in place of a plain surface. */
+  .card-wash {
+    background: linear-gradient(165deg, var(--tone-soft), var(--surface) 62%);
+    border-color: color-mix(in srgb, var(--tone) 32%, var(--line));
+  }
+}

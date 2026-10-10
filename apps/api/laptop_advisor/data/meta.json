@@ -1,0 +1,15 @@
+{
+  "source_file": "data-laptop.xlsx",
+  "source_sha256": "1867c3fb0e97cfba2c01f8d3cd819210acc2ee3a94daae56e7fb27626c6e80d5",
+  "generated_at": "2026-10-07T20:28:07+00:00",
+  "last_checked": "2026-10-08",
+  "counts": {
+    "models": 5,
+    "variants": 8,
+    "cpus": 6,
+    "gpus": 4,
+    "prices": 15,
+    "needs": 5
+  },
+  "issues": []
+}

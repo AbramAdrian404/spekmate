@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node and Next.js (apps/web has its own .gitignore as well)
+node_modules/
+.next/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment files: the .example files are committed, real values are not
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Excel and LibreOffice lock files that appear while the workbook is open
+~$*
+.~lock.*#
