@@ -1,14 +1,14 @@
 {
   "source_file": "data-laptop.xlsx",
-  "source_sha256": "12d730d4af10e27663b999abc493a1c5d94b8280594267df0c2d95788bd54e69",
-  "generated_at": "2026-10-10T16:33:23+00:00",
+  "source_sha256": "9d0d5370615088e3aa0911639f95c0c203fa599e86429d796204a1cd866478f5",
+  "generated_at": "2026-10-10T20:23:46+00:00",
   "last_checked": "2026-10-10",
   "counts": {
-    "models": 21,
-    "variants": 33,
-    "cpus": 21,
-    "gpus": 16,
-    "prices": 90,
+    "models": 30,
+    "variants": 42,
+    "cpus": 28,
+    "gpus": 22,
+    "prices": 122,
     "needs": 5
   },
   "issues": []
