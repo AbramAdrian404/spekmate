@@ -206,5 +206,83 @@
     "plain": "Pengolah gambar dasar yang menyatu dengan prosesor. Cukup untuk tampilan, dokumen, dan menonton video; tidak untuk game berat.",
     "source": "https://www.intel.com/content/www/us/en/products/sku/201892/intel-core-i510310u-processor-6m-cache-up-to-4-40-ghz/specifications.html ; Lenovo PSREF: https://psref.lenovo.com/syspool/Sys/PDF/ThinkPad/ThinkPad_T14_Gen_1_Intel/ThinkPad_T14_Gen_1_Intel_Spec.PDF",
     "checked_on": "2026-10-10"
+  },
+  {
+    "name": "NVIDIA GeForce RTX 3050 Laptop (6 GB)",
+    "maker": "NVIDIA",
+    "kind": "terpisah",
+    "architecture": "Ampere",
+    "year": 2023,
+    "vram_gb": 6,
+    "tier": 3,
+    "tier_reason": "2.560 inti CUDA, memori grafis 6 GB GDDR6 (jalur 96-bit), daya grafis 35-80 W menurut Notebookcheck. Kelas pemula untuk game Full HD di pengaturan sedang sampai tinggi; ray tracing (efek cahaya realistis) terbatas.",
+    "plain": "Kartu grafis terpisah tingkat pemula; cukup untuk game populer di layar Full HD, tetapi bukan untuk game terberat.",
+    "source": "Notebookcheck: https://www.notebookcheck.net/NVIDIA-GeForce-RTX-3050-6GB-Laptop-GPU-GPU-Benchmarks-and-Specs.692276.0.html",
+    "checked_on": "2026-10-10"
+  },
+  {
+    "name": "NVIDIA GeForce RTX 3050 Laptop (4 GB)",
+    "maker": "NVIDIA",
+    "kind": "terpisah",
+    "architecture": "Ampere",
+    "year": 2021,
+    "vram_gb": 4,
+    "tier": 3,
+    "tier_reason": "2.048 inti CUDA, memori grafis 4 GB GDDR6 (jalur 128-bit), daya grafis 35-80 W menurut Notebookcheck; di MSI Thin 15 B13UC dibatasi 45 W termasuk Dynamic Boost. Kelas pemula untuk game Full HD; memori 4 GB mulai sempit untuk game baru dengan tekstur tinggi.",
+    "plain": "Kartu grafis terpisah tingkat pemula; cukup untuk game populer di pengaturan sedang, tetapi memorinya kecil untuk game terbaru.",
+    "source": "Notebookcheck: https://www.notebookcheck.com/NVIDIA-GeForce-RTX-3050-Mobile-Grafikkarte-Benchmarks-und-Spezifikationen.509230.0.html ; MSI: https://id.msi.com/Laptop/Thin-15-B13UX/Specification",
+    "checked_on": "2026-10-10"
+  },
+  {
+    "name": "NVIDIA GeForce RTX 5060 Laptop",
+    "maker": "NVIDIA",
+    "kind": "terpisah",
+    "architecture": "Blackwell",
+    "year": 2025,
+    "vram_gb": 8,
+    "tier": 4,
+    "tier_reason": "3.328 inti CUDA, memori grafis 8 GB GDDR7 (jalur 128-bit), daya grafis 45-100 W menurut Notebookcheck (ASUS menulis 115 W dengan ROG Boost). Di uji sintetis sedikit di atas RTX 4070 Laptop; sasarannya game QHD.",
+    "plain": "Kartu grafis terpisah kelas menengah generasi terbaru; kuat untuk game berat di layar 2,5K.",
+    "source": "Notebookcheck: https://www.notebookcheck.net/Nvidia-GeForce-RTX-5060-Laptop-Benchmarks-and-Specs.934941.0.html",
+    "checked_on": "2026-10-10"
+  },
+  {
+    "name": "Intel Graphics (Twin Lake, 32 EU)",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": "Intel Xe-LP (Twin Lake)",
+    "year": 2025,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "32 unit pemroses grafis (EU) dengan kecepatan sampai 1,35 GHz, memakai RAM bersama dan hanya 1 jalur memori. Satu keluarga dengan Iris Xe tetapi hanya 32 dari 80 unit, jadi berada di bagian bawah tingkat 2 (grafis bawaan generasi baru).",
+    "plain": "Grafis bawaan sederhana: cukup untuk video, dokumen, dan game ringan, tidak untuk game berat atau edit video besar.",
+    "source": "Intel ARK: https://www.intel.com/content/www/us/en/products/sku/241639/intel-core-3-processor-n355-6m-cache-up-to-3-90-ghz/specifications.html",
+    "checked_on": "2026-10-10"
+  },
+  {
+    "name": "AMD Radeon 780M",
+    "maker": "AMD",
+    "kind": "bawaan",
+    "architecture": "RDNA 3",
+    "year": 2023,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "Grafis bawaan dengan 12 unit hitung (768 shader) dan kecepatan sampai sekitar 2.600 MHz, salah satu grafis bawaan terkuat; tetap memakai RAM biasa sehingga masuk tingkat 2, bukan GPU terpisah.",
+    "plain": "Grafis bawaan yang cukup kuat untuk game ringan dan video, tapi bukan untuk game berat.",
+    "source": "https://www.notebookcheck.com/AMD-Ryzen-7-255-Prozessor-Benchmarks-und-Specs.1169505.0.html",
+    "checked_on": "2026-10-10"
+  },
+  {
+    "name": "Intel UHD Graphics (Raptor Lake-U, 64 EU)",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": "Xe-LP (Gen12)",
+    "year": 2023,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "Grafis bawaan dengan 64 unit eksekusi (EU), sama generasi dengan Iris Xe tapi lebih sedikit unitnya (Iris Xe 80 EU), memakai RAM biasa, jadi masuk tingkat 2 seperti grafis bawaan baru lainnya.",
+    "plain": "Grafis bawaan cukup untuk menonton video dan kerja kantor, tapi tidak untuk game berat.",
+    "source": "https://techpowerup.com/cpu-specs/core-i3-1315u.c3063",
+    "checked_on": "2026-10-10"
   }
 ]
