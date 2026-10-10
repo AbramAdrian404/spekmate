@@ -5,6 +5,7 @@ tests/test_golden_workbook.py checks that the two produce identical text.
 """
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any
 
 # --------------------------------------------------------------------------- #
@@ -65,6 +66,25 @@ NEED_SHORT_NAMES = {
 
 def need_short_name(need_id: str, name: str) -> str:
     return NEED_SHORT_NAMES.get(need_id, name)
+
+
+def join_needs(names: Sequence[str]) -> str:
+    """Join one or more need names into a phrase, e.g. for "Cocok untuk {phrase}".
+
+    Comma-separated with a comma before the final "dan", even for two names -- several need names
+    already contain their own "dan" (e.g. "Kuliah dan kantor"), so "A dan B" alone could misread as
+    one longer need name instead of two joined names.
+
+    Each name is lowercased at its own start (not just the very first letter of the whole phrase):
+    every joined name sits mid-sentence here, including the ones after "dan", the same way a single
+    need name would be lowercased by `verdict_line` if used on its own.
+    """
+    lowered = [n[:1].lower() + n[1:] for n in names]
+    if len(lowered) == 1:
+        return lowered[0]
+    if len(lowered) == 2:
+        return f"{lowered[0]}, dan {lowered[1]}"
+    return ", ".join(lowered[:-1]) + f", dan {lowered[-1]}"
 
 
 # --------------------------------------------------------------------------- #
@@ -225,3 +245,10 @@ RANKING_STEPS = (
 DATABASE_SCOPE_NOTE = "Rekomendasi dipilih dari {n} konfigurasi laptop di database kami, bukan dari seluruh pasar."
 EMPTY_RESULT_NOTE = ("Belum ada laptop di database kami yang cocok dengan semua syarat. Coba naikkan anggaran, "
                      "turunkan syarat penyimpanan, atau pilih baru dan bekas sekaligus.")
+MULTI_NEED_NOTE = (
+    "Pilih lebih dari satu kebutuhan? Setiap kriteria (prosesor, grafis, RAM, penyimpanan, layar, refresh rate) "
+    "dinilai memakai batas paling tinggi di antara kebutuhan yang kamu pilih untuk kriteria itu. Jadi laptop yang "
+    "lolos sudah memenuhi semua kebutuhanmu sekaligus, bukan cuma salah satu. Kebutuhan yang tidak menilai suatu "
+    "kriteria tidak ikut menaikkan batasnya -- lebih banyak kebutuhan hanya bisa menambah atau menaikkan syarat, "
+    "tidak pernah menurunkannya."
+)

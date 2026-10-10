@@ -56,11 +56,11 @@ describe("requests", () => {
 
   it("posts recommendations as JSON and never caches them", async () => {
     fetchMock.mockResolvedValue(json({ results: [] }));
-    await getRecommendations({ need: "pemrograman", budget_max: 10_000_000, storage_min_gb: 512 });
+    await getRecommendations({ needs: ["pemrograman"], budget_max: 10_000_000, storage_min_gb: 512 });
     const [url, init] = fetchMock.mock.calls[0]!;
     expect(url).toBe("https://api.example.test/api/recommendations");
     expect(init).toMatchObject({ method: "POST", cache: "no-store" });
-    expect(JSON.parse(String(init?.body))).toEqual({ need: "pemrograman", budget_max: 10_000_000, storage_min_gb: 512 });
+    expect(JSON.parse(String(init?.body))).toEqual({ needs: ["pemrograman"], budget_max: 10_000_000, storage_min_gb: 512 });
     expect(init?.headers).toMatchObject({ "content-type": "application/json" });
   });
 
@@ -106,7 +106,7 @@ describe("failures become ApiError with a visitor-safe message", () => {
 
   it("422 validation error", async () => {
     fetchMock.mockResolvedValue(json({ detail: [{ loc: ["body", "budget_max"], msg: "x" }] }, { status: 422 }));
-    await expect(getRecommendations({ need: "a", budget_max: 0 })).rejects.toMatchObject({ kind: "invalid_request", status: 422 });
+    await expect(getRecommendations({ needs: ["a"], budget_max: 0 })).rejects.toMatchObject({ kind: "invalid_request", status: 422 });
   });
 
   it("500 from the API", async () => {

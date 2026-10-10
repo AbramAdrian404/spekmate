@@ -6,8 +6,9 @@ import { FormProblems } from "@/components/form-problems";
 import { PageHeader } from "@/components/page-header";
 import { Results } from "@/components/results";
 import { ResultsSkeleton } from "@/components/results-skeleton";
+import { SpecEducation } from "@/components/spec-education";
 import { getNeeds, load } from "@/lib/api";
-import { parseConsultParams, type SearchParams } from "@/lib/consult";
+import { formToSearchParams, parseConsultParams, type SearchParams } from "@/lib/consult";
 
 export const metadata: Metadata = {
   title: "Konsultasi laptop",
@@ -30,9 +31,7 @@ export default async function KonsultasiPage({ searchParams }: { searchParams: P
   }
 
   const parsed = parseConsultParams(params, needs.data.map((need) => need.id));
-  const retryHref = `/konsultasi?${new URLSearchParams(
-    Object.entries(parsed.form).filter(([, value]) => value !== ""),
-  ).toString()}`;
+  const retryHref = `/konsultasi?${formToSearchParams(parsed.form).toString()}`;
 
   return (
     <>
@@ -61,6 +60,10 @@ export default async function KonsultasiPage({ searchParams }: { searchParams: P
             <Results input={parsed.input} retryHref={retryHref} />
           </Suspense>
         ) : null}
+
+        <div className="mt-10">
+          <SpecEducation />
+        </div>
       </div>
     </>
   );

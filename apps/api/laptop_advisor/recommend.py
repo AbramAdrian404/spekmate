@@ -1,13 +1,17 @@
-"""Filter and rank laptop offers for one need and one budget.
+"""Filter and rank laptop offers for one or more needs and one budget.
 
 An "offer" is a configuration in one condition (new or used) with a reference price. The steps are
 deliberately plain and are published word for word on the methodology page (texts.RANKING_STEPS):
 
-  1. Drop offers that have no price, are the wrong condition, or are Kurang cocok for the need.
+  1. Drop offers that have no price, are the wrong condition, or are Kurang cocok for the needs.
   2. Apply the storage request. Smaller-but-replaceable storage stays in, flagged.
   3. Apply the budget. Median price within budget is a firm fit; if only the cheapest seller is
      within budget it stays in as "tergantung toko".
   4. Sort by the tuple in `sort_key`.
+
+Picking several needs at once does not run several searches and merge them -- it scores every
+offer once against the combined thresholds of all the picked needs (engine.assess_combined), so a
+laptop that makes the list genuinely satisfies every picked need together, not just the easiest one.
 """
 from __future__ import annotations
 
@@ -53,9 +57,14 @@ def sort_key(o: Offer) -> tuple:
 
 def recommend(cat: Catalog, req: S.RecommendationRequest) -> S.RecommendationResponse:
     ds = cat.ds
-    need = ds.need(req.need)
-    if need is None:
-        raise UnknownNeed(req.need)
+    needs = []
+    for need_id in dict.fromkeys(req.needs):  # de-duplicate, keep first-picked order
+        need = ds.need(need_id)
+        if need is None:
+            raise UnknownNeed(need_id)
+        needs.append(need)
+    need_ids = [n.id for n in needs]
+    combined_name = texts.join_needs([n.name for n in needs])
 
     wanted = CONDITIONS if req.condition == "semua" else (req.condition,)
     excluded = S.Exclusions()
@@ -72,8 +81,9 @@ def recommend(cat: Catalog, req: S.RecommendationRequest) -> S.RecommendationRes
             excluded.wrong_condition += 1
             continue
         model = ds.model(v["model_id"]) if v.get("model_id") else None
+        assessment = cat.combined_assessment(v, need_ids)
         for condition, summary in found:
-            offers.append(Offer(v, model, condition, summary, cat.assessment(v, need.id), cat.warnings(v)))
+            offers.append(Offer(v, model, condition, summary, assessment, cat.warnings(v)))
 
     kept: list[Offer] = []
     for o in offers:
@@ -106,7 +116,7 @@ def recommend(cat: Catalog, req: S.RecommendationRequest) -> S.RecommendationRes
     for rank, o in enumerate(kept[: req.limit], start=1):
         verdict = o.assessment.verdict
         why = [
-            texts.verdict_line(verdict, need.name),
+            texts.verdict_line(verdict, combined_name),
             texts.price_line(o.fit, o.price.reference, o.price.low, req.budget_max),
             texts.warning_line(len(o.warnings)),
         ]
@@ -114,6 +124,11 @@ def recommend(cat: Catalog, req: S.RecommendationRequest) -> S.RecommendationRes
         if o.storage_upgrade:
             storage_note = texts.storage_upgrade_line(o.variant["storage_gb"], req.storage_min_gb or 0)
             why.append(storage_note)
+        need_fit = []
+        for n in needs:
+            nv = cat.assessment(o.variant, n.id).verdict
+            need_fit.append(S.NeedVerdictOut(need_id=n.id, short_name=texts.need_short_name(n.id, n.name),
+                                             verdict=nv, verdict_label=engine.VERDICT_LABELS[nv]))
         results.append(S.RecommendationItem(
             rank=rank,
             model_id=o.variant.get("model_id") or "",
@@ -126,6 +141,8 @@ def recommend(cat: Catalog, req: S.RecommendationRequest) -> S.RecommendationRes
             verdict=verdict,
             verdict_label=engine.VERDICT_LABELS[verdict],
             reason=o.assessment.reason,
+            criteria=cat.criteria_out(o.assessment),
+            need_fit=need_fit,
             warnings=[S.WarningOut(code=w.code, text=w.text) for w in o.warnings],
             upgrade=S.UpgradeBrief(
                 ram=S.UpgradeFact(label=texts.ram_layout_label(o.variant.get("ram_layout")),
@@ -148,5 +165,5 @@ def recommend(cat: Catalog, req: S.RecommendationRequest) -> S.RecommendationRes
                      "Periksa langsung sebelum membeli.")
 
     return S.RecommendationResponse(
-        need=cat.need_info(need), query=req, results=results, considered=len(offers), excluded=excluded, notes=notes,
-        data_last_checked=ds.meta.get("last_checked"))
+        needs=[cat.need_info(n) for n in needs], query=req, results=results, considered=len(offers),
+        excluded=excluded, notes=notes, data_last_checked=ds.meta.get("last_checked"))
