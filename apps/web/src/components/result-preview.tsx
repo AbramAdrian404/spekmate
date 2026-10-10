@@ -3,13 +3,15 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { formatDate, formatRupiah, formatRupiahCompact, formatRupiahRange } from "@/lib/format";
 import { CONDITION_LABEL, priceFitLabel, sentenceCase } from "@/lib/labels";
-import type { Recommendation } from "@/lib/types";
+import type { ConditionFilter, Recommendation } from "@/lib/types";
 import { StatusBadge, VerdictBadge } from "./verdict-badge";
 
 interface ResultPreviewProps {
   results: Recommendation[];
   needName: string;
   budget: number;
+  /** The condition the sample question asked for; "semua" says nothing extra. */
+  condition?: ConditionFilter;
   /** When the newest price in the database was checked. */
   checked: string | null;
 }
@@ -19,7 +21,7 @@ interface ResultPreviewProps {
  * Nothing here is typed in by hand: names, prices, verdicts and upgrade facts come from the API response, and the
  * label above it says so. If the database ever has no match for the sample question, the home page leaves this out.
  */
-export function ResultPreview({ results, needName, budget, checked }: ResultPreviewProps) {
+export function ResultPreview({ results, needName, budget, condition, checked }: ResultPreviewProps) {
   const checkedText = formatDate(checked);
 
   return (
@@ -40,7 +42,7 @@ export function ResultPreview({ results, needName, budget, checked }: ResultPrev
             style={{ "--reveal-delay": "140ms" } as CSSProperties}
           >
             <span>
-              <span className="font-bold text-ink">Contoh nyata:</span> {needName.toLowerCase()}, anggaran {formatRupiah(budget)}
+              <span className="font-bold text-ink">Contoh nyata:</span> {needName.toLowerCase()}{condition && condition !== "semua" ? `, laptop ${condition}` : null}, anggaran {formatRupiah(budget)}
               {checkedText ? `, data dicek ${checkedText}` : null}
             </span>
           </p>

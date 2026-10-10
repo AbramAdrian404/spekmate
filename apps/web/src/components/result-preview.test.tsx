@@ -24,6 +24,11 @@ describe("ResultPreview", () => {
     expect(screen.getByText(/Contoh nyata:/).closest("p")).toHaveTextContent("Contoh nyata: kuliah dan kantor, anggaran Rp9.000.000, data dicek 8 Okt 2026");
   });
 
+  it("says when the sample was asked for new laptops only", () => {
+    render(<ResultPreview results={RESULTS} needName="Kuliah dan kantor" budget={9_000_000} condition="baru" checked={null} />);
+    expect(screen.getByText(/Contoh nyata:/).closest("p")).toHaveTextContent("Contoh nyata: kuliah dan kantor, laptop baru, anggaran Rp9.000.000");
+  });
+
   it("shows one card per result, each linking to that laptop's own page", () => {
     render(<ResultPreview results={RESULTS} needName="Kuliah dan kantor" budget={9_000_000} checked={null} />);
     const first = screen.getByRole("article", { name: "Dell Latitude 5400" });

@@ -172,7 +172,7 @@ export default async function HomePage() {
       <HowItWorks />
 
       {sampleNeed && sampleResults.length > 0 ? (
-        <ResultPreview results={sampleResults} needName={sampleNeed.name} budget={sampleRequest!.budget_max} checked={sample?.data_last_checked ?? null} />
+        <ResultPreview results={sampleResults} needName={sampleNeed.name} budget={sampleRequest!.budget_max} condition={sampleRequest!.condition} checked={sample?.data_last_checked ?? null} />
       ) : null}
 
       <section aria-labelledby="beda" className="container-page py-16 sm:py-20">
