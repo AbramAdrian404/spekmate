@@ -25,10 +25,10 @@ export function RecommendationCard({ item, index = 0 }: { item: Recommendation; 
         <div className="min-w-0 space-y-4">
           <header>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-sm font-bold text-on-accent tabular">
+              <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-sm font-semibold text-on-accent tabular">
                 {item.rank}
               </span>
-              <h3 id={headingId} className="text-xl font-bold sm:text-2xl">
+              <h3 id={headingId} className="text-xl font-semibold sm:text-2xl">
                 <Link href={href} className="text-ink no-underline hover:underline">
                   {item.model_name}
                 </Link>
@@ -78,7 +78,7 @@ export function RecommendationCard({ item, index = 0 }: { item: Recommendation; 
           </label>
           <div className="rounded-xl bg-surface-2 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-ink-3">Harga acuan</p>
-            <p className="font-display text-3xl font-extrabold tabular text-ink">{formatRupiahCompact(price.reference)}</p>
+            <p className="font-display text-3xl font-semibold tabular text-ink">{formatRupiahCompact(price.reference)}</p>
             <p className="mt-0.5 text-sm text-ink-2">
               Kisaran <span className="tabular">{formatRupiahRange(price.low, price.high)}</span>
             </p>

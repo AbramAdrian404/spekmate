@@ -51,7 +51,7 @@ export function QuickConsult({ needs }: { needs: NeedInfo[] }) {
     <Form
       action="/konsultasi#hasil"
       onSubmit={onSubmit}
-      className="card grid gap-6 p-5 sm:p-7 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-10"
+      className="grid gap-8 rounded-3xl bg-surface-2 p-6 sm:p-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-14"
       aria-label="Konsultasi cepat"
     >
       <fieldset ref={fieldsetRef} aria-required="true" aria-describedby={missing ? `${statusId} ${errorId}` : statusId} className="min-w-0">
@@ -88,7 +88,7 @@ export function QuickConsult({ needs }: { needs: NeedInfo[] }) {
         {missing ? (
           <p id={errorId} className="field-error" role="alert">
             <CircleAlert aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-            Pilih minimal satu kebutuhan dulu, ya.
+            Pilih minimal satu kebutuhan.
           </p>
         ) : null}
       </fieldset>

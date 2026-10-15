@@ -99,7 +99,7 @@ describe("QuickConsult", () => {
     const form = screen.getByRole("form", { name: "Konsultasi cepat" });
     const notPrevented = fireEvent.submit(form);
     expect(notPrevented).toBe(false);
-    expect(screen.getByRole("alert")).toHaveTextContent("Pilih minimal satu kebutuhan dulu");
+    expect(screen.getByRole("alert")).toHaveTextContent("Pilih minimal satu kebutuhan.");
     expect(screen.getByRole("checkbox", { name: /Kuliah dan kantor/ })).toHaveFocus();
   });
 
@@ -114,32 +114,48 @@ describe("QuickConsult", () => {
 });
 
 describe("CatalogFilters", () => {
-  const empty = { q: "", kebutuhan: "", kondisi: "", urut: "" };
+  const BRANDS = [
+    { name: "ASUS", slug: "asus", models: 3 },
+    { name: "HP", slug: "hp", models: 2 },
+  ];
+  const empty = { q: "", merek: "", kebutuhan: "", kondisi: "", urut: "" };
 
   it("is a GET form to /laptop", () => {
-    render(<CatalogFilters needs={NEEDS} values={empty} />);
+    render(<CatalogFilters needs={NEEDS} brands={BRANDS} values={empty} />);
     expect(screen.getByRole("form", { name: "Saring daftar laptop" })).toHaveAttribute("action", "/laptop");
   });
 
   it("starts from the current filters", () => {
-    render(<CatalogFilters needs={NEEDS} values={{ q: "thinkpad", kebutuhan: "pemrograman", kondisi: "bekas", urut: "harga" }} />);
+    render(<CatalogFilters needs={NEEDS} brands={BRANDS} values={{ q: "thinkpad", merek: "HP", kebutuhan: "pemrograman", kondisi: "bekas", urut: "harga" }} />);
     expect(screen.getByLabelText("Cari nama")).toHaveValue("thinkpad");
+    expect(screen.getByLabelText("Merek")).toHaveValue("HP");
     expect(screen.getByLabelText("Cocok untuk")).toHaveValue("pemrograman");
     expect(screen.getByLabelText("Kondisi")).toHaveValue("bekas");
     expect(screen.getByLabelText("Urutkan")).toHaveValue("harga");
   });
 
   it("calls the unfiltered choices what they are", () => {
-    render(<CatalogFilters needs={NEEDS} values={empty} />);
+    render(<CatalogFilters needs={NEEDS} brands={BRANDS} values={empty} />);
     expect(within(screen.getByLabelText("Kondisi")).getAllByRole("option")[0]).toHaveTextContent("Semua kondisi");
     expect(within(screen.getByLabelText("Cocok untuk")).getAllByRole("option")[0]).toHaveTextContent("Semua kebutuhan");
+    expect(within(screen.getByLabelText("Merek")).getAllByRole("option")[0]).toHaveTextContent("Semua merek");
+  });
+
+  it("lists every brand in the database as a choice", () => {
+    render(<CatalogFilters needs={NEEDS} brands={BRANDS} values={empty} />);
+    expect(within(screen.getByLabelText("Merek")).getAllByRole("option").map((option) => option.textContent)).toEqual(["Semua merek", "ASUS", "HP"]);
+  });
+
+  it("keeps a brand from the address bar selectable even when the database has no such brand", () => {
+    render(<CatalogFilters needs={NEEDS} brands={BRANDS} values={{ ...empty, merek: "Samsung" }} />);
+    expect(screen.getByLabelText("Merek")).toHaveValue("Samsung");
   });
 
   it("offers to reset only when something is filtered", () => {
-    const { unmount } = render(<CatalogFilters needs={NEEDS} values={empty} />);
+    const { unmount } = render(<CatalogFilters needs={NEEDS} brands={BRANDS} values={empty} />);
     expect(screen.queryByRole("link", { name: "Atur ulang" })).toBeNull();
     unmount();
-    render(<CatalogFilters needs={NEEDS} values={{ ...empty, q: "dell" }} />);
+    render(<CatalogFilters needs={NEEDS} brands={BRANDS} values={{ ...empty, q: "dell" }} />);
     expect(screen.getByRole("link", { name: "Atur ulang" })).toHaveAttribute("href", "/laptop");
   });
 });

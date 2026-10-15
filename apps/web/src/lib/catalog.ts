@@ -5,13 +5,14 @@ import type { SearchParams } from "./consult";
 export interface CatalogParse {
   filters: ModelFilters;
   /** What to put back into the form fields. */
-  values: { q: string; kebutuhan: string; kondisi: string; urut: string };
+  values: { q: string; merek: string; kebutuhan: string; kondisi: string; urut: string };
 }
 
 const first = (value: string | string[] | undefined): string => (Array.isArray(value) ? (value[0] ?? "") : (value ?? "")).trim();
 
 export function parseCatalogParams(params: SearchParams, validNeeds: readonly string[]): CatalogParse {
   const q = first(params.q).slice(0, 80);
+  const merek = first(params.merek).slice(0, 40);
   const kebutuhanRaw = first(params.kebutuhan);
   const kondisiRaw = first(params.kondisi);
   const urutRaw = first(params.urut);
@@ -22,9 +23,10 @@ export function parseCatalogParams(params: SearchParams, validNeeds: readonly st
 
   const filters: ModelFilters = {};
   if (q) filters.q = q;
+  if (merek) filters.brand = merek;
   if (kebutuhan) filters.need = kebutuhan;
   if (kondisi) filters.condition = kondisi;
   if (urut === "harga") filters.sort = "price";
 
-  return { filters, values: { q, kebutuhan, kondisi, urut } };
+  return { filters, values: { q, merek, kebutuhan, kondisi, urut } };
 }

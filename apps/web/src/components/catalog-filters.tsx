@@ -1,24 +1,41 @@
 import { Search } from "lucide-react";
 import Form from "next/form";
 import Link from "next/link";
+import type { BrandEntry } from "@/lib/brands";
 import type { NeedInfo } from "@/lib/types";
 
 export interface CatalogValues {
   q: string;
+  merek: string;
   kebutuhan: string;
   kondisi: string;
   urut: string;
 }
 
-export function CatalogFilters({ needs, values }: { needs: NeedInfo[]; values: CatalogValues }) {
-  const active = Boolean(values.q || values.kebutuhan || values.kondisi || values.urut);
+export function CatalogFilters({ needs, brands, values }: { needs: NeedInfo[]; brands: BrandEntry[]; values: CatalogValues }) {
+  const active = Boolean(values.q || values.merek || values.kebutuhan || values.kondisi || values.urut);
   return (
-    <Form action="/laptop" className="card grid items-end gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4" aria-label="Saring daftar laptop">
+    <Form action="/laptop" className="grid items-end gap-4 rounded-3xl bg-surface-2 p-6 sm:grid-cols-2 lg:grid-cols-5" aria-label="Saring daftar laptop">
       <div className="sm:col-span-2 lg:col-span-1">
         <label htmlFor="cari" className="field-label">
           Cari nama
         </label>
         <input id="cari" name="q" type="search" defaultValue={values.q} placeholder="Contoh: thinkpad" className="field-input" maxLength={80} />
+      </div>
+
+      <div>
+        <label htmlFor="merek" className="field-label">
+          Merek
+        </label>
+        <select id="merek" name="merek" defaultValue={values.merek} className="field-input">
+          <option value="">Semua merek</option>
+          {values.merek && !brands.some((brand) => brand.name === values.merek) ? <option value={values.merek}>{values.merek}</option> : null}
+          {brands.map((brand) => (
+            <option key={brand.slug} value={brand.name}>
+              {brand.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>

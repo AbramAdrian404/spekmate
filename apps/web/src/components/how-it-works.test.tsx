@@ -7,26 +7,26 @@ describe("HowItWorks", () => {
   it("is a numbered list of three steps, in the order a visitor does them", () => {
     render(<HowItWorks />);
     const list = screen.getByRole("list");
+    expect(list.tagName).toBe("OL");
     const steps = within(list).getAllByRole("listitem");
     expect(steps).toHaveLength(3);
     expect(steps.map((step) => within(step).getByRole("heading").textContent)).toEqual(["Pilih kebutuhan", "Isi anggaran", "Baca alasannya"]);
   });
 
-  it("gives each step its own picture, hidden from screen readers (the text says the same thing)", () => {
+  it("hides the big numerals from screen readers, since the list already numbers the steps", () => {
     const { container } = render(<HowItWorks />);
-    const pictures = container.querySelectorAll("li svg");
-    expect(pictures).toHaveLength(3);
-    pictures.forEach((svg) => expect(svg).toHaveAttribute("aria-hidden", "true"));
+    const numerals = container.querySelectorAll("li > span");
+    expect([...numerals].map((span) => span.textContent)).toEqual(["1", "2", "3"]);
+    numerals.forEach((span) => expect(span).toHaveAttribute("aria-hidden", "true"));
   });
 
-  it("draws a connecting line after every step except the last", () => {
+  it("marks every step for the scroll observer, so each fades in when it comes into view", () => {
     const { container } = render(<HowItWorks />);
-    expect(container.querySelectorAll(".flow-line")).toHaveLength(2);
-    expect(container.querySelectorAll(".flow-node")).toHaveLength(3);
+    expect(container.querySelectorAll("li.reveal")).toHaveLength(3);
   });
 
-  it("marks every step for the scroll observer, so each animates when it comes into view", () => {
+  it("writes in plain standard Indonesian: no long dashes and no curly quotes", () => {
     const { container } = render(<HowItWorks />);
-    expect(container.querySelectorAll("li.reveal.flow-step")).toHaveLength(3);
+    expect(container.textContent).not.toMatch(/[—“”]| -- /);
   });
 });

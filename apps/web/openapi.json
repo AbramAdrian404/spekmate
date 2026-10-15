@@ -141,6 +141,25 @@
             "description": "Words that must appear in the name or summary."
           },
           {
+            "name": "brand",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 40
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only models of this brand (exact name, any letter case).",
+              "title": "Brand"
+            },
+            "description": "Only models of this brand (exact name, any letter case)."
+          },
+          {
             "name": "sort",
             "in": "query",
             "required": false,

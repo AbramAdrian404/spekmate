@@ -964,6 +964,8 @@ export interface operations {
                 need?: string | null;
                 /** @description Words that must appear in the name or summary. */
                 q?: string | null;
+                /** @description Only models of this brand (exact name, any letter case). */
+                brand?: string | null;
                 sort?: "name" | "price";
             };
             header?: never;

@@ -36,7 +36,7 @@ function Section({ id, title, intro, children }: { id: string; title: string; in
   return (
     <section id={id} aria-labelledby={`${id}-judul`} className="scroll-mt-24 space-y-4">
       <div className="space-y-1.5">
-        <h2 id={`${id}-judul`} className="text-2xl font-extrabold">
+        <h2 id={`${id}-judul`} className="text-2xl font-semibold">
           {title}
         </h2>
         {intro ? <p className="measure text-ink-2">{intro}</p> : null}
@@ -84,7 +84,7 @@ export default async function MethodologyPage() {
               {rules.verdicts.map((verdict, index) => (
                 <li key={verdict.code} className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-start sm:gap-4">
                   <span className="flex items-center gap-3 sm:w-64 sm:shrink-0">
-                    <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-surface-2 text-xs font-bold tabular text-ink-2">
+                    <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-surface-2 text-xs font-semibold tabular text-ink-2">
                       {index + 1}
                     </span>
                     {isVerdict(verdict.code) ? <VerdictBadge verdict={verdict.code} label={verdict.label} /> : <span className="tag">{verdict.label}</span>}
@@ -120,7 +120,7 @@ export default async function MethodologyPage() {
                 return (
                   <article key={need.id} aria-labelledby={`batas-${need.id}`} className="space-y-3">
                     <div>
-                      <h3 id={`batas-${need.id}`} className="text-xl font-bold">
+                      <h3 id={`batas-${need.id}`} className="text-xl font-semibold">
                         {need.name}
                       </h3>
                       {need.description ? <p className="measure text-ink-2">{need.description}</p> : null}
@@ -169,8 +169,8 @@ export default async function MethodologyPage() {
           <Section id="gabungan" title="Memilih lebih dari satu kebutuhan">
             <p className="measure text-ink-2">{rules.multi_need_note}</p>
             <p className="text-sm text-ink-3">
-              Contoh: pilih &ldquo;Kuliah dan kantor&rdquo; serta &ldquo;Desain grafis&rdquo; sekaligus, dan RAM-nya akan memakai batas
-              yang lebih tinggi di antara keduanya -- bukan dirata-rata, dan bukan cuma salah satunya.
+              Contoh: bila Kuliah dan kantor serta Desain grafis dipilih sekaligus, RAM memakai batas yang lebih tinggi di antara
+              keduanya, bukan dirata-rata dan bukan salah satunya saja.
             </p>
           </Section>
 
@@ -234,7 +234,7 @@ export default async function MethodologyPage() {
             <ul className="space-y-3">
               {rules.warnings.map((warning) => (
                 <li key={warning.code} className="card flex gap-4 p-4">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-sm font-bold tabular text-ink-2">{warning.code}</span>
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-sm font-semibold tabular text-ink-2">{warning.code}</span>
                   <div className="space-y-1">
                     {warning.when ? <p className="text-sm font-semibold text-ink">Muncul kalau: {warning.when}</p> : null}
                     <p className="text-ink-2">{warning.text}</p>
@@ -259,7 +259,7 @@ export default async function MethodologyPage() {
             <ol className="space-y-2.5">
               {rules.ranking_steps.map((step, index) => (
                 <li key={step} className="card flex gap-4 p-4">
-                  <span aria-hidden="true" className="grid size-7 shrink-0 place-items-center rounded-full bg-accent-soft text-sm font-extrabold tabular text-accent-strong">
+                  <span aria-hidden="true" className="grid size-7 shrink-0 place-items-center rounded-full bg-accent-soft text-sm font-semibold tabular text-accent-strong">
                     {index + 1}
                   </span>
                   <span className="text-ink-2">{step}</span>

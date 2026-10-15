@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getMeta, load } from "@/lib/api";
 import { SITE, siteOrigin } from "@/lib/site";
-import { inter, jakarta } from "./fonts";
+import { inter } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f6f8fc",
+  themeColor: "#ffffff",
   colorScheme: "light",
 };
 
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const meta = await load(getMeta());
 
   return (
-    <html lang="id" data-scroll-behavior="smooth" className={`${inter.variable} ${jakarta.variable}`}>
+    <html lang="id" data-scroll-behavior="smooth" className={inter.variable}>
       <body className="flex min-h-dvh flex-col">
         <a href="#isi" className="skip-link">
           Lewati ke isi halaman

@@ -18,7 +18,7 @@ export function ComparisonScale({ steps, tone }: { steps: ScaleStep[]; tone: Nee
     <div className={`tone-${tone} grid grid-cols-[repeat(auto-fit,minmax(9.5rem,1fr))] gap-3`}>
       {steps.map((step) => (
         <div key={step.label} className="rounded-xl border border-line bg-surface p-3.5">
-          <p className="text-sm font-bold text-ink">{step.label}</p>
+          <p className="text-sm font-semibold text-ink">{step.label}</p>
           <div aria-hidden="true" className="mt-2 h-2 overflow-hidden rounded-full bg-surface-2">
             <div className="h-full rounded-full" style={{ width: `${step.fill}%`, background: "var(--tone)" }} />
           </div>

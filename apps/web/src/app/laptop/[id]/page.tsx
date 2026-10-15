@@ -58,7 +58,7 @@ export default async function ModelPage({ params }: Props) {
               </li>
             </ol>
           </nav>
-          <h1 className="text-3xl font-extrabold sm:text-4xl">{model.name}</h1>
+          <h1 className="text-3xl font-semibold sm:text-4xl">{model.name}</h1>
           <p className="flex flex-wrap items-center gap-2 text-ink-2">
             {model.year ? <span>Rilis {model.year}</span> : null}
             {status ? <span className="tag">{status}</span> : null}
@@ -88,7 +88,7 @@ export default async function ModelPage({ params }: Props) {
 
         <aside aria-label="Ringkasan" className="space-y-5 lg:sticky lg:top-24">
           <section className="card space-y-3 p-5">
-            <h2 className="font-display text-lg font-bold">Ringkasan</h2>
+            <h2 className="font-display text-lg font-semibold">Ringkasan</h2>
             <dl className="space-y-2">
               {groups.map((group) => (
                 <div key={group.verdict} className="space-y-1">
@@ -104,11 +104,11 @@ export default async function ModelPage({ params }: Props) {
 
           {model.price_ranges.length > 0 ? (
             <section className="card space-y-2 p-5">
-              <h2 className="font-display text-lg font-bold">Kisaran harga</h2>
+              <h2 className="font-display text-lg font-semibold">Kisaran harga</h2>
               {model.price_ranges.map((range) => (
                 <p key={range.condition} className="flex flex-wrap items-baseline gap-x-2">
                   <span className="tag">{CONDITION_LABEL[range.condition]}</span>
-                  <span className="font-display text-lg font-bold tabular">{formatRupiahRange(range.low, range.high)}</span>
+                  <span className="font-display text-lg font-semibold tabular">{formatRupiahRange(range.low, range.high)}</span>
                 </p>
               ))}
             </section>
@@ -116,7 +116,7 @@ export default async function ModelPage({ params }: Props) {
 
           {model.variants.length > 1 ? (
             <nav aria-label="Konfigurasi" className="card p-5">
-              <h2 className="mb-2 font-display text-lg font-bold">Konfigurasi</h2>
+              <h2 className="mb-2 font-display text-lg font-semibold">Konfigurasi</h2>
               <ul className="space-y-1.5 text-sm">
                 {model.variants.map((variant) => (
                   <li key={variant.id}>
