@@ -39,7 +39,7 @@ bertanggal, dan jawaban jujur soal RAM dan SSD: bisa ditambah atau tidak.
 - **Jujur soal upgrade.** Untuk tiap konfigurasi: RAM menempel di papan, ada slot, atau setengah-setengah,
   dan SSD-nya bisa diganti atau tidak.
 - **Daftar laptop.** Semua laptop di database, dengan penilaian per kebutuhan dan rincian per konfigurasi.
-- **Data masih terbatas**: 30 model dan 42 konfigurasi, dan terus bertambah bertahap. Itu disengaja; lebih baik
+- **Data masih terbatas**: 40 model dan 52 konfigurasi, dan terus bertambah bertahap. Itu disengaja; lebih baik
   sedikit dan dicek daripada banyak dan asal. Data baru ditambah lewat spreadsheet ([Memperbarui data](#memperbarui-data)).
 
 ## Arsitektur
@@ -347,7 +347,7 @@ Mulai dari `python scripts/smoke_test.py …`. Ia membaca pola lulus dan gagalny
   `scripts/smoke_test.py` ada untuk membuktikannya di deploy pertamamu.
 - **Hasil konsultasi butuh JavaScript.** Hasilnya dimuat bertahap (streaming). Tanpa JavaScript, form tetap terkirim
   dan halaman terbuka, tetapi daftar hasilnya tidak tampil.
-- **Data kecil dan harga berubah.** Rekomendasi hanya berasal dari 30 model di database, bukan dari seluruh pasar.
+- **Data kecil dan harga berubah.** Rekomendasi hanya berasal dari 40 model di database, bukan dari seluruh pasar.
   Harga bertanggal dan bisa sudah basi; web selalu mengingatkan untuk mengecek di toko.
 - **Ketersediaan nama "SpekMate" belum diperiksa tuntas.** Pencarian web singkat tidak menemukan produk dengan nama
   itu, tetapi domain, akun media sosial, dan merek dagangnya belum dicek. Kalau nama diganti lagi: nama dan slogan
