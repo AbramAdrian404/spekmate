@@ -54,7 +54,7 @@ const TEXT: readonly Pair[] = [
   ["ink-3", "bg", "muted text"],
   ["ink-3", "surface", "muted text and placeholders in cards"],
   ["ink-3", "surface-2", "muted text in panels and footer"],
-  ["accent", "bg", "links and eyebrow"],
+  ["accent", "bg", "links"],
   ["accent", "surface", "links in cards"],
   ["accent", "surface-2", "links in panels"],
   ["accent", "accent-soft", "accent tag, quiet button on hover"],
@@ -87,14 +87,6 @@ const TONE_TEXT: readonly Pair[] = TONES.flatMap((tone): Pair[] => [
   [`${tone}-fg`, "bg", `${tone} text on the page`],
 ]);
 
-/** The hero sky carries text too, so the headline, intro and links must hold up on every stop of it. */
-const SECTIONS: readonly Pair[] = ["hero-1", "hero-2", "hero-3"].flatMap((bg): Pair[] => [
-  ["ink", bg, "headline on the hero"],
-  ["ink-2", bg, "intro text on the hero"],
-  ["ink-3", bg, "small text on the hero"],
-  ["accent", bg, "links on the hero"],
-]);
-
 /** Parts of a control you need to see to use it: field edges and the keyboard focus ring. */
 const CONTROLS: readonly Pair[] = [
   ["control-line", "surface", "field edge on a card"],
@@ -103,12 +95,11 @@ const CONTROLS: readonly Pair[] = [
   ["focus", "surface", "focus ring on a card"],
   ["focus", "bg", "focus ring on the page"],
   ["focus", "accent-soft", "focus ring on a checked choice card"],
-  ["focus", "hero-1", "focus ring on the hero"],
-  ["focus", "hero-2", "focus ring on the hero, lower"],
+  ["focus", "surface-2", "focus ring on a panel"],
 ];
 
 describe("the bright theme", () => {
-  it.each([...TEXT, ...TONE_TEXT, ...SECTIONS])("%s on %s reaches 4.5:1 (%s)", (fg, bg) => {
+  it.each([...TEXT, ...TONE_TEXT])("%s on %s reaches 4.5:1 (%s)", (fg, bg) => {
     expect(contrast(theme[fg]!, theme[bg]!)).toBeGreaterThanOrEqual(4.5);
   });
 

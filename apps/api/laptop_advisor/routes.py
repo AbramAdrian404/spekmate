@@ -42,11 +42,12 @@ def list_models(
         Query(description="Need id. Keeps models with a variant rated Cocok or Bisa, dengan catatan."),
     ] = None,
     q: Annotated[str | None, Query(max_length=80, description="Words that must appear in the name or summary.")] = None,
+    brand: Annotated[str | None, Query(max_length=40, description="Only models of this brand (exact name, any letter case).")] = None,
     sort: Annotated[Literal["name", "price"], Query()] = "name",
 ) -> S.ModelList:
     if need is not None and cat.ds.need(need) is None:
         raise HTTPException(status_code=404, detail=f"Kebutuhan '{need}' tidak dikenal.")
-    return cat.list_models(condition=condition, need=need, q=q, sort=sort)
+    return cat.list_models(condition=condition, need=need, q=q, brand=brand, sort=sort)
 
 
 @router.get("/models/{model_id}", response_model=S.ModelDetailOut, tags=["catalog"],

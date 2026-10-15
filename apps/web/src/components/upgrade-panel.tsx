@@ -30,7 +30,7 @@ export function UpgradePanel({ variant }: { variant: Variant }) {
       <div className="grid gap-4 md:grid-cols-2">
         {blocks.map(({ key, title, Icon, label, note, facts }) => (
           <div key={key} className="card space-y-2.5 p-4">
-            <p className="flex items-center gap-2 font-display font-bold">
+            <p className="flex items-center gap-2 font-display font-semibold">
               <Icon aria-hidden="true" className="size-5 text-accent" />
               {title}
             </p>

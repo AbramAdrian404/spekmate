@@ -4,6 +4,7 @@ import { CatalogFilters } from "@/components/catalog-filters";
 import { ModelCard } from "@/components/model-card";
 import { PageHeader } from "@/components/page-header";
 import { getModels, getNeeds, load } from "@/lib/api";
+import { brandsFrom } from "@/lib/brands";
 import { parseCatalogParams } from "@/lib/catalog";
 import type { SearchParams } from "@/lib/consult";
 
@@ -28,7 +29,8 @@ export default async function LaptopListPage({ searchParams }: { searchParams: P
   }
 
   const { filters, values } = parseCatalogParams(params, needs.data.map((need) => need.id));
-  const models = await load(getModels(filters));
+  const [models, everything] = await Promise.all([load(getModels(filters)), load(getModels())]);
+  const brands = everything.ok ? brandsFrom(everything.data.items) : [];
   const filtered = Object.keys(filters).length > 0;
 
   return (
@@ -40,7 +42,7 @@ export default async function LaptopListPage({ searchParams }: { searchParams: P
       </PageHeader>
 
       <div className="container-page space-y-8 py-8 sm:py-10">
-        <CatalogFilters needs={needs.data} values={values} />
+        <CatalogFilters needs={needs.data} brands={brands} values={values} />
 
         {!models.ok ? (
           <ApiProblem error={models.error} retryHref="/laptop" />

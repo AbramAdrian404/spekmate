@@ -26,7 +26,7 @@ export function ModelCard({ model }: { model: ModelSummary }) {
     <li className="@container">
       <article aria-labelledby={headingId} className="card flex h-full flex-col gap-4 p-5 sm:p-6">
         <header className="space-y-2">
-          <h2 id={headingId} className="text-xl font-bold">
+          <h2 id={headingId} className="text-xl font-semibold">
             <Link href={href} className="text-ink no-underline hover:underline">
               {model.name}
             </Link>
@@ -45,7 +45,7 @@ export function ModelCard({ model }: { model: ModelSummary }) {
             model.price_ranges.map((range) => (
               <p key={range.condition} className="flex flex-wrap items-baseline gap-x-2 text-ink">
                 <span className="tag">{CONDITION_LABEL[range.condition]}</span>
-                <span className="font-display text-lg font-bold tabular">{formatRupiahRange(range.low, range.high)}</span>
+                <span className="font-display text-lg font-semibold tabular">{formatRupiahRange(range.low, range.high)}</span>
               </p>
             ))
           ) : (

@@ -25,24 +25,23 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
   const checkedText = formatDate(checked);
 
   return (
-    <section id="contoh-hasil" aria-labelledby="contoh-judul" className="relative overflow-hidden border-y border-line bg-surface">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-32 size-[28rem] rounded-full bg-[radial-gradient(closest-side,var(--cyan-soft),transparent)] opacity-80" />
-      <div className="container-page relative py-16 sm:py-20">
+    <section id="contoh-hasil" aria-labelledby="contoh-judul" className="py-20 sm:py-28">
+      <div className="container-page">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <h2 id="contoh-judul" className="reveal text-3xl font-extrabold sm:text-4xl">
-              Seperti ini hasilnya
+            <h2 id="contoh-judul" className="reveal section-title">
+              Contoh hasil konsultasi.
             </h2>
-            <p className="reveal mt-3 text-lg text-ink-2" style={{ "--reveal-delay": "80ms" } as CSSProperties}>
-              Bukan tampilan rekaan: ini jawaban sungguhan dari database kami untuk satu pertanyaan contoh.
+            <p className="reveal section-lead" style={{ "--reveal-delay": "80ms" } as CSSProperties}>
+              Bukan tampilan rekaan. Ini jawaban sungguhan dari database untuk satu pertanyaan contoh.
             </p>
           </div>
           <p
-            className="reveal tag w-fit max-w-full self-start !rounded-xl border-dashed py-1.5 text-[0.8rem] lg:max-w-sm lg:self-end"
+            className="reveal tag w-fit max-w-full self-start !rounded-2xl py-2 text-[0.8rem] lg:max-w-sm lg:self-end"
             style={{ "--reveal-delay": "140ms" } as CSSProperties}
           >
             <span>
-              <span className="font-bold text-ink">Contoh nyata:</span> {needName.toLowerCase()}{condition && condition !== "semua" ? `, laptop ${condition}` : null}, anggaran {formatRupiah(budget)}
+              <span className="font-semibold text-ink">Contoh nyata:</span> {needName.toLowerCase()}{condition && condition !== "semua" ? `, laptop ${condition}` : null}, anggaran {formatRupiah(budget)}
               {checkedText ? `, data dicek ${checkedText}` : null}
             </span>
           </p>
@@ -58,16 +57,16 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
                 <article
                   aria-labelledby={headingId}
                   data-verdict={item.verdict}
-                  className="card card-edge card-hover flex w-full flex-col gap-4 p-5"
+                  className="card card-edge card-hover flex w-full flex-col gap-4 p-6"
                 >
                   <header className="space-y-1.5">
                     <div className="flex items-center gap-2.5">
-                      <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-sm font-bold text-on-accent tabular">
+                      <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-sm font-semibold text-on-accent tabular">
                         {item.rank}
                       </span>
                       <span className="tag">{CONDITION_LABEL[item.condition]}</span>
                     </div>
-                    <h3 id={headingId} className="text-lg font-bold leading-snug">
+                    <h3 id={headingId} className="text-lg font-semibold leading-snug">
                       <Link href={href} className="text-ink no-underline hover:underline">
                         {item.model_name}
                       </Link>
@@ -111,9 +110,9 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
                   </dl>
 
                   <div className="mt-auto space-y-3 pt-1">
-                    <div className="rounded-xl bg-surface-2 p-3.5">
+                    <div className="rounded-2xl bg-surface-2 p-4">
                       <p className="text-xs font-semibold text-ink-3">Harga acuan</p>
-                      <p className="font-display text-2xl font-extrabold tabular text-ink">{formatRupiahCompact(item.price.reference)}</p>
+                      <p className="font-display text-2xl font-semibold tabular text-ink">{formatRupiahCompact(item.price.reference)}</p>
                       <p className="text-sm text-ink-2">
                         Kisaran <span className="tabular">{formatRupiahRange(item.price.low, item.price.high)}</span>
                       </p>
@@ -144,10 +143,10 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
 
         <div className="reveal mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between" style={{ "--reveal-delay": "120ms" } as CSSProperties}>
           <p className="measure text-sm text-ink-2">
-            Dihitung dengan aturan yang sama seperti di halaman konsultasi. Harga berubah dan stok berbeda-beda; cek lagi di toko sebelum membeli.
+            Dihitung dengan aturan yang sama seperti di halaman konsultasi. Harga berubah dan stok berbeda-beda. Periksa kembali di toko sebelum membeli.
           </p>
           <a href="#mulai" className="btn btn-primary shrink-0">
-            Coba dengan kebutuhanmu
+            Coba dengan kebutuhan sendiri
             <ArrowRight aria-hidden="true" className="size-4" />
           </a>
         </div>

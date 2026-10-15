@@ -16,7 +16,7 @@ export function PriceSummaries({ summaries }: { summaries: PriceSummary[] }) {
             <span className="tag">{CONDITION_LABEL[summary.condition]}</span>
             Harga acuan
           </p>
-          <p className="mt-1 font-display text-3xl font-extrabold tabular text-ink">{formatRupiahCompact(summary.reference)}</p>
+          <p className="mt-1 font-display text-3xl font-semibold tabular text-ink">{formatRupiahCompact(summary.reference)}</p>
           <p className="text-sm text-ink-2">
             Kisaran <span className="tabular">{formatRupiahRange(summary.low, summary.high)}</span>
           </p>
@@ -50,7 +50,7 @@ export function PriceList({ prices }: { prices: PriceObservation[] }) {
           <li key={index} className="space-y-1.5 px-4 py-3.5">
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="tag">{CONDITION_LABEL[price.condition]}</span>
-              <span className="font-display text-lg font-bold tabular text-ink">{rangeText(price)}</span>
+              <span className="font-display text-lg font-semibold tabular text-ink">{rangeText(price)}</span>
             </p>
             <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-2">
               <Store aria-hidden="true" className="size-4 shrink-0 text-ink-3" />

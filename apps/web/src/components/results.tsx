@@ -38,7 +38,7 @@ export async function Results({ input, retryHref }: { input: ConsultInput; retry
   return (
     <section aria-labelledby="hasil" className="mt-10 space-y-6">
       <div className="reveal space-y-2">
-        <h2 id="hasil" className="text-2xl font-extrabold sm:text-3xl" tabIndex={-1}>
+        <h2 id="hasil" className="text-2xl font-semibold sm:text-3xl" tabIndex={-1}>
           {count === 0 ? "Belum ada yang cocok" : count === 1 ? "1 rekomendasi" : `${count} rekomendasi`} untuk{" "}
           {joinNeeds(response.needs.map((need) => need.name)).toLowerCase()}
         </h2>
