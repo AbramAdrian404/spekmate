@@ -284,5 +284,83 @@
     "plain": "Grafis bawaan cukup untuk menonton video dan kerja kantor, tapi tidak untuk game berat.",
     "source": "https://techpowerup.com/cpu-specs/core-i3-1315u.c3063",
     "checked_on": "2026-10-10"
+  },
+  {
+    "name": "Apple M1 GPU (7 atau 8 inti)",
+    "maker": "Apple",
+    "kind": "bawaan",
+    "architecture": "Grafis Apple generasi M1 (rincian arsitektur tidak dijelaskan di halaman spek Apple)",
+    "year": 2020,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "Grafis bawaan dengan 7 atau 8 inti; halaman spek Apple menulis kedua pilihan tanpa memetakannya ke kapasitas SSD, jadi unit bekas bisa salah satunya. Berbagi memori gabungan dengan CPU (bandwidth 68,3 GB/s menurut Wikipedia). Masuk tingkat 2 karena bukan kartu grafis terpisah; belum ada data uji kecepatan yang dipakai di sini.",
+    "plain": "Pengolah gambar yang menyatu dengan chip dan berbagi memori dengan RAM. Cukup untuk menonton video, desain, dan edit foto atau video ringan.",
+    "source": "Apple Support: https://support.apple.com/en-us/111883 ; Wikipedia Apple M1: https://en.wikipedia.org/wiki/Apple_M1",
+    "checked_on": "2026-10-15"
+  },
+  {
+    "name": "Intel HD Graphics 620",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": null,
+    "year": 2016,
+    "vram_gb": 0,
+    "tier": 1,
+    "tier_reason": "Grafis bawaan prosesor Core generasi ke-7 (i5-7200U), tanpa kartu grafis terpisah dan memakai RAM bersama. Untuk tampilan, dokumen, dan video biasa.",
+    "plain": "Pengolah gambar dasar yang menyatu dengan prosesor. Cukup untuk tampilan, dokumen, dan menonton video; tidak untuk game berat.",
+    "source": "Intel ARK i5-7200U: https://www.intel.com/content/www/us/en/products/sku/95443/intel-core-i57200u-processor-3m-cache-up-to-3-10-ghz/specifications.html ; Dell XPS 13 9360 Setup and Specifications: https://dl.dell.com/topicspdf/xps-13-9360-laptop_setup-guide_en-us.pdf",
+    "checked_on": "2026-10-15"
+  },
+  {
+    "name": "Intel Graphics (Raptor Lake-U Refresh, 64 EU)",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": "Grafis bawaan Intel dengan 64 unit eksekusi (nama arsitektur tidak disebut di Intel ARK)",
+    "year": 2024,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "64 unit grafis (EU) dengan kecepatan maksimal 1,25 GHz menurut Intel ARK, memakai RAM sistem sebagai memori grafis. Unitnya lebih sedikit daripada Iris Xe 80 atau 96 EU, jadi berada di batas bawah tingkat 2 seperti grafis bawaan lain.",
+    "plain": "Grafis bawaan untuk tampilan, video, dan aplikasi kantor; bukan untuk game berat.",
+    "source": "https://www.intel.com/content/www/us/en/products/sku/236776/intel-core-3-processor-100u-10m-cache-up-to-4-70-ghz/specifications.html",
+    "checked_on": "2026-10-15"
+  },
+  {
+    "name": "Intel Iris Xe Graphics (96 EU)",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": "Intel Xe, kelas Iris Xe (96 EU)",
+    "year": 2023,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "96 unit grafis (EU) dengan kecepatan maksimal 1,3 GHz menurut Intel ARK, memakai RAM sistem sebagai memori grafis. Grafis bawaan terkuat di kelas U ini, tetapi tetap tingkat 2 karena masih grafis bawaan.",
+    "plain": "Grafis bawaan yang cukup untuk video, desain ringan, dan game ringan; paling lancar bila RAM terpasang dua keping.",
+    "source": "https://www.intel.com/content/www/us/en/products/sku/232160/intel-core-i71355u-processor-12m-cache-up-to-5-00-ghz/specifications.html",
+    "checked_on": "2026-10-15"
+  },
+  {
+    "name": "Qualcomm Adreno X1-45",
+    "maker": "Qualcomm",
+    "kind": "bawaan",
+    "architecture": "Adreno X1",
+    "year": 2025,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "Grafis bawaan di prosesor Snapdragon X, sekitar 1,7 TFLOPS dengan kecepatan sampai 1.250 MHz; di uji Notebookcheck sedikit di bawah GeForce MX350 lama dan hanya cukup untuk game lama di bawah resolusi 900p. Grafis bawaan maksimal tingkat 2. Halaman ASUS hanya menulis 'Qualcomm Adreno GPU' tanpa nomor model; nama X1-45 dari Notebookcheck.",
+    "plain": "Grafis bawaan yang cukup untuk video, kantor, dan game ringan; bukan untuk game berat atau edit video besar.",
+    "source": "https://www.notebookcheck.com/Qualcomm-Snapdragon-X1-26-100-Prozessor-Benchmarks-und-Specs.942258.0.html",
+    "checked_on": "2026-10-15"
+  },
+  {
+    "name": "Intel Arc Graphics 140V (8 inti Xe2)",
+    "maker": "Intel",
+    "kind": "bawaan",
+    "architecture": "Xe2 (Lunar Lake)",
+    "year": 2024,
+    "vram_gb": 0,
+    "tier": 2,
+    "tier_reason": "Grafis bawaan di prosesor dengan 8 inti Xe2 dan kecepatan sampai sekitar 1,95 GHz. Menurut uji Notebookcheck umumnya mengungguli Radeon 890M pada daya yang sama. Tetap grafis bawaan yang memakai RAM utama, jadi tingkat 2 (maksimal untuk bawaan).",
+    "plain": "Grafis bawaan yang cukup kuat untuk video, edit foto ringan, dan game ringan; bukan pengganti kartu grafis terpisah.",
+    "source": "https://www.notebookcheck.net/Intel-Lunar-Lake-iGPU-analysis-Arc-Graphics-140V-is-faster-and-more-efficient-than-Radeon-890M.894167.0.html",
+    "checked_on": "2026-10-15"
   }
 ]
