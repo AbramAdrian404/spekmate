@@ -15,7 +15,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
         <span aria-hidden="true" className="mx-auto grid size-14 place-items-center rounded-2xl" style={{ background: "var(--kurang-bg)", color: "var(--kurang-fg)" }}>
           <TriangleAlert className="size-7" />
         </span>
-        <h1 className="text-3xl font-extrabold">Halaman ini belum bisa dimuat</h1>
+        <h1 className="text-3xl font-semibold">Halaman ini belum bisa dimuat</h1>
         <p className="text-ink-2">
           Biasanya karena layanan datanya sedang tidak terjangkau. Itu bukan salahmu. Coba lagi sebentar lagi.
         </p>

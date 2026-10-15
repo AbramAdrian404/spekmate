@@ -1,39 +1,35 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ *
- * Design tokens. One bright theme: SpekMate is a light, premium-tech surface.
- * It does not follow the system's dark mode, so the page always looks the way it was designed.
- * Every text color pair below was picked for at least 4.5:1 contrast (design-tokens.test.ts checks it).
+ * Design tokens. One bright theme, in the manner of a product page: white and a pale grey in alternating
+ * bands, near-black ink, and a single blue for actions and links. It does not follow the system's dark mode,
+ * so the page always looks the way it was designed. Every text color pair below was picked for at least
+ * 4.5:1 contrast (design-tokens.test.ts checks it).
  *
- * The palette: a cool off-white paper with deep navy ink, one electric blue for actions, and a cyan
- * that only ever appears as light (glows, shapes), never as text. Violet, coral, amber and mint are
- * the companion tones for need cards and decoration. Verdict colors (green, amber, teal, rose, grey)
- * keep their meaning and are never used as decoration.
+ * Violet, coral, amber and mint remain only as companion tones for the need pictures and verdict colors.
+ * Verdict colors (green, amber, teal, rose, grey) keep their meaning and are never used as decoration.
  * ------------------------------------------------------------------ */
 :root {
   color-scheme: light;
 
-  --bg: #f6f8fc;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-2: #edf2fb;
-  --ink: #0b1b3f;
-  --ink-2: #33415f;
-  --ink-3: #4a5876;
-  --line: #dde4f2;
-  --line-strong: #c3cde3;
+  --surface-2: #f5f5f7;
+  --ink: #1d1d1f;
+  --ink-2: #424245;
+  --ink-3: #6e6e73;
+  --line: #e5e5ea;
+  --line-strong: #d2d2d7;
   /* Edge of form fields and choice cards: at least 3:1 against every surface it sits on. */
-  --control-line: #6c7a9b;
+  --control-line: #86868b;
 
   --accent: #1d5cf0;
   --accent-strong: #1342c4;
-  --accent-soft: #e4eeff;
+  --accent-soft: #eaf1fe;
   --on-accent: #ffffff;
   --focus: #1d5cf0;
   --shadow-accent: color-mix(in srgb, var(--accent) 55%, transparent);
 
-  /* Cyan: light only (glows, gradients, shapes). Never carries text. */
-  --cyan: #19c2ea;
-  --cyan-soft: #d8f6fd;
 
   /* Companion tones. solid = shapes and the top stripe; soft = tinted background; fg = text on soft or white. */
   --blue: #5b85f2;
@@ -52,19 +48,7 @@
   --mint-soft: #d5f8ea;
   --mint-fg: #006647;
 
-  /* Soft color clouds behind the hero and page headers: cyan and blue light on a near-white sky. */
-  --wash-1: #cfe1ff;
-  --wash-2: #cdf3fc;
-  --wash-3: #e6defd;
-  --hero-1: #f8faff;
-  --hero-2: #eef4ff;
-  --hero-3: #f4f8ff;
 
-  /* Decorative-only, high-saturation hairline colors (the thin brand trim). Never carries text, so the
-     4.5:1 rule above doesn't apply to it. */
-  --stripe-1: #1d5cf0;
-  --stripe-2: #19c2ea;
-  --stripe-3: #8b5cf6;
 
   /* Verdict colors: text, background, border, and a solid edge. Never used without an icon and a label. */
   --cocok-fg: #166534;
@@ -105,7 +89,8 @@
   --color-on-accent: var(--on-accent);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* One family for everything. Headings differ by size and weight, not by typeface. */
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* ------------------------------------------------------------------ *
@@ -143,7 +128,8 @@
   h4 {
     font-family: var(--font-display);
     color: var(--ink);
-    letter-spacing: -0.015em;
+    font-weight: 600;
+    letter-spacing: 0;
     text-wrap: balance;
   }
 
@@ -191,56 +177,39 @@
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
 
-  /* One card language everywhere: same radius, same hairline border, same soft navy-tinted shadow. */
+  /* One card language everywhere: same generous radius and the same hairline border. No shadows at rest. */
   .card {
-    @apply rounded-2xl border border-line bg-surface;
-    box-shadow:
-      0 1px 2px rgb(11 27 63 / 0.04),
-      0 10px 28px -16px rgb(11 27 63 / 0.16);
+    @apply rounded-3xl border border-line bg-surface;
   }
 
   .panel {
-    @apply rounded-2xl border border-line bg-surface-2;
+    @apply rounded-2xl bg-surface-2;
   }
 
   .eyebrow {
-    @apply text-sm font-semibold uppercase tracking-wider text-accent;
+    @apply text-base font-semibold text-ink-3;
   }
 
   /* Buttons ---------------------------------------------------------- */
   .btn {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-[0.95rem] font-semibold no-underline;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-2.5 text-[0.95rem] font-medium no-underline;
     transition:
       background-color 160ms,
       color 160ms,
       border-color 160ms,
-      box-shadow 200ms,
       transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .btn:active {
-    transform: translateY(1px) scale(0.985);
+    transform: scale(0.98);
   }
   .btn-primary {
     @apply bg-accent text-on-accent hover:bg-accent-strong;
-    box-shadow: 0 10px 22px -12px var(--shadow-accent);
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 26px -12px var(--shadow-accent);
-  }
-  .btn-primary:active {
-    transform: translateY(1px) scale(0.985);
-    box-shadow: 0 4px 10px -6px var(--shadow-accent);
   }
   .btn-lg {
-    @apply min-h-12 rounded-2xl px-6 text-base;
+    @apply min-h-12 px-7 text-base;
   }
   .btn-secondary {
-    @apply border border-line-strong bg-surface text-ink hover:border-accent hover:text-accent-strong;
-  }
-  .btn-secondary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 20px -14px var(--shadow-accent);
+    @apply border border-line-strong bg-surface text-ink hover:border-ink-3;
   }
   .btn-quiet {
     @apply text-accent hover:bg-accent-soft;
@@ -258,7 +227,7 @@
     color: var(--kurang-fg);
   }
   .field-input {
-    @apply min-h-12 w-full rounded-xl border border-control bg-surface px-3.5 py-2.5 text-base text-ink placeholder:text-ink-3;
+    @apply min-h-12 w-full rounded-xl border border-control bg-surface px-4 py-2.5 text-base text-ink placeholder:text-ink-3;
   }
   .field-input[aria-invalid="true"] {
     border-color: var(--kurang-fg);
@@ -282,10 +251,10 @@
 
   /* Small labels ----------------------------------------------------- */
   .tag {
-    @apply inline-flex items-center gap-1 rounded-full border border-line bg-surface-2 px-2.5 py-0.5 text-xs font-semibold text-ink-2;
+    @apply inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-0.5 text-xs font-medium text-ink-2;
   }
   .tag-accent {
-    @apply border-transparent bg-accent-soft text-accent;
+    @apply bg-accent-soft text-accent;
   }
 
   /* Verdict badge ---------------------------------------------------- */
@@ -370,7 +339,7 @@
     @apply w-full min-w-[34rem] border-collapse text-left text-sm;
   }
   .data-table th {
-    @apply bg-surface-2 px-3.5 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-2;
+    @apply bg-surface-2 px-3.5 py-2.5 text-sm font-semibold text-ink-2;
   }
   .data-table td {
     @apply border-t border-line px-3.5 py-3 align-top;
@@ -396,48 +365,10 @@
 }
 
 /* ------------------------------------------------------------------ *
- * Color accents
+ * Tones and edges
  * ------------------------------------------------------------------ */
 @layer components {
-  /* Brand hairline: electric blue to cyan to violet, edge to edge, with a one-time shine on load.
-     Sits on top of the header and the footer. Decorative only. */
-  .brand-stripe {
-    height: 3px;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(90deg, var(--stripe-1) 0%, var(--stripe-2) 55%, var(--stripe-3) 100%);
-  }
-  .brand-stripe::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    width: 40%;
-    background: linear-gradient(90deg, transparent, color-mix(in srgb, white 85%, transparent), transparent);
-    transform: translateX(-150%);
-    animation: stripe-shine 1.4s cubic-bezier(0.3, 0, 0.2, 1) 0.3s 1 both;
-  }
-  @keyframes stripe-shine {
-    to {
-      transform: translateX(350%);
-    }
-  }
-
-  /* Soft light clouds. .wash is for the hero, .wash-lite for page headers. */
-  .wash {
-    background:
-      radial-gradient(58rem 30rem at 82% -10%, var(--wash-2), transparent 70%),
-      radial-gradient(52rem 28rem at -6% -20%, var(--wash-1), transparent 72%),
-      radial-gradient(36rem 18rem at 52% 118%, var(--wash-3), transparent 74%),
-      linear-gradient(180deg, var(--hero-1) 0%, var(--hero-2) 70%, var(--hero-3) 100%);
-  }
-  .wash-lite {
-    background:
-      radial-gradient(44rem 16rem at -5% -30%, var(--wash-1), transparent 72%),
-      radial-gradient(34rem 14rem at 105% -20%, var(--wash-2), transparent 72%), var(--bg);
-  }
-
-  /* Tones: put .tone-* on a parent, then .tone-chip (tinted background, readable text) or .card-tone
-     (a colored top edge) on the element that should carry the color. */
+  /* Tones: put .tone-* on a parent, then .card-tone (a colored top edge) on the element that should carry the color. */
   .tone-blue {
     --tone: var(--blue);
     --tone-soft: var(--blue-soft);
@@ -463,10 +394,11 @@
     --tone-soft: var(--mint-soft);
     --tone-fg: var(--mint-fg);
   }
+  /* Icons sit on a plain pale disc in the ink color. The tone is kept for the few places that still need to tell
+     things apart by color, but never paints an icon: no tinted boxes, no colored outlines. */
   .tone-chip {
-    background: var(--tone-soft);
-    color: var(--tone-fg);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 55%, transparent);
+    background: var(--surface-2);
+    color: var(--ink);
   }
   .card-tone {
     border-top: 4px solid var(--tone);
@@ -488,88 +420,21 @@
   .card-edge[data-verdict="kurang_cocok"] {
     border-top-color: var(--kurang-edge);
   }
-
-  /* The consultation card that rises into the hero: a soft blue-to-cyan halo behind a white card. */
-  .glow-card {
-    isolation: isolate;
-    position: relative;
-  }
-  .glow-card > .card {
-    position: relative;
-    border-color: color-mix(in srgb, var(--accent) 14%, var(--line));
-    box-shadow:
-      0 1px 2px rgb(11 27 63 / 0.05),
-      0 30px 60px -30px var(--shadow-accent);
-  }
-  .glow-card::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: 0.75rem 1.5rem -0.75rem;
-    border-radius: 2rem;
-    background: linear-gradient(110deg, var(--accent), var(--cyan) 60%, var(--violet));
-    filter: blur(34px);
-    opacity: 0.28;
-  }
-
-  /* Closing panel: a bright card with a blue-to-cyan hairline and a soft glow, dark text on white. */
-  .closing {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    background:
-      radial-gradient(34rem 16rem at 100% 0%, var(--cyan-soft), transparent 70%),
-      radial-gradient(30rem 16rem at 0% 100%, var(--accent-soft), transparent 70%), var(--surface);
-    border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
-    box-shadow:
-      0 1px 2px rgb(11 27 63 / 0.04),
-      0 34px 60px -38px var(--shadow-accent);
-  }
 }
 
 /* ------------------------------------------------------------------ *
  * Header
  * ------------------------------------------------------------------ */
 @layer components {
+  /* A thin translucent bar that always carries its hairline, like a product site's global navigation. */
   .site-header {
-    background: color-mix(in srgb, var(--surface) 70%, transparent);
-    -webkit-backdrop-filter: saturate(1.6) blur(14px);
-    backdrop-filter: saturate(1.6) blur(14px);
-    border-bottom: 1px solid transparent;
-    transition:
-      background-color 260ms,
-      border-color 260ms,
-      box-shadow 260ms;
+    background: color-mix(in srgb, var(--surface) 78%, transparent);
+    -webkit-backdrop-filter: saturate(1.8) blur(20px);
+    backdrop-filter: saturate(1.8) blur(20px);
+    border-bottom: 1px solid var(--line);
   }
   .site-header[data-scrolled="true"] {
-    background: color-mix(in srgb, var(--surface) 90%, transparent);
-    border-bottom-color: var(--line);
-    box-shadow: 0 12px 28px -24px rgb(11 27 63 / 0.5);
-  }
-
-  /* The active page keeps a blue bar under its name. When you move to another page, the old bar
-     shrinks away and the new one grows in, so the change reads as one gesture. */
-  .nav-link {
-    position: relative;
-  }
-  .nav-link::after {
-    content: "";
-    position: absolute;
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0.4rem;
-    height: 2px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--cyan));
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  .nav-link:hover::after {
-    transform: scaleX(0.4);
-  }
-  .nav-link[aria-current="page"]::after {
-    transform: scaleX(1);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
   }
 }
 
@@ -578,40 +443,26 @@
  * ------------------------------------------------------------------ */
 @layer components {
   .chip {
-    @apply relative inline-flex min-h-12 cursor-pointer select-none items-center gap-2.5 rounded-full border border-control bg-surface py-1.5 pl-1.5 pr-4 font-semibold text-ink;
+    @apply relative inline-flex min-h-12 cursor-pointer select-none items-center gap-2.5 rounded-full border border-control bg-surface py-1.5 pl-1.5 pr-5 font-medium text-ink;
     transition:
       border-color 160ms,
       background-color 160ms,
-      box-shadow 200ms,
-      transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .chip:hover {
-    border-color: var(--accent);
     background: var(--surface-2);
-    transform: translateY(-1px);
   }
   .chip:active {
-    transform: translateY(0) scale(0.98);
+    transform: scale(0.98);
   }
   .chip-input:checked + .chip {
     border-color: var(--accent);
     background: var(--accent-soft);
-    box-shadow:
-      inset 0 0 0 1px var(--accent),
-      0 10px 20px -14px var(--shadow-accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
   }
   .chip-input:focus-visible + .chip {
     outline: 2px solid var(--focus);
     outline-offset: 2px;
-  }
-  .chip-icon {
-    transition: transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .chip:hover .chip-icon {
-    transform: rotate(-6deg) scale(1.08);
-  }
-  .chip-input:checked + .chip .chip-icon {
-    transform: scale(1.08);
   }
   /* A small blue check pops onto the icon when the chip is picked. It sits on the icon, not beside the label,
      so picking a chip never changes its width and the chips around it never jump. */
@@ -647,49 +498,14 @@
     position: relative;
     isolation: isolate;
   }
-  /* A dotted grid and a cyan-blue halo behind the laptop, fading toward the edges. */
-  .hero-stage::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: -8% -6% -4%;
-    background:
-      radial-gradient(closest-side, color-mix(in srgb, var(--cyan) 38%, transparent), transparent 78%),
-      radial-gradient(closest-side at 70% 30%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
-    filter: blur(6px);
-  }
-  .hero-stage::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: 0 -4%;
-    background-image: radial-gradient(color-mix(in srgb, var(--accent) 26%, transparent) 1.2px, transparent 1.4px);
-    background-size: 22px 22px;
-    -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent 88%);
-    mask-image: radial-gradient(closest-side, #000 30%, transparent 88%);
-  }
 
   .float-card {
-    background: color-mix(in srgb, var(--surface) 94%, transparent);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border: 1px solid color-mix(in srgb, var(--surface) 70%, var(--line));
-    border-radius: 1rem;
-    box-shadow:
-      0 1px 2px rgb(11 27 63 / 0.05),
-      0 22px 40px -22px rgb(11 27 63 / 0.38);
-  }
-  .float-bob {
-    animation: float-bob 7s ease-in-out var(--bob-delay, 0s) infinite;
-  }
-  @keyframes float-bob {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-7px);
-    }
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    -webkit-backdrop-filter: saturate(1.6) blur(16px);
+    backdrop-filter: saturate(1.6) blur(16px);
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+    box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.28);
   }
 
   /* Bars on the laptop's screen grow once, left to right, after the laptop has landed. */
@@ -741,147 +557,6 @@
 }
 
 /* ------------------------------------------------------------------ *
- * "Cara kerjanya": three connected steps, each with its own small picture
- *
- * Everything animates only once its step scrolls into view (.is-visible, set by ScrollReveal),
- * and only when <html> carries .js-reveal. Without JavaScript, or with reduced motion requested,
- * the pictures simply sit in their finished state.
- * ------------------------------------------------------------------ */
-@layer components {
-  .flow-line {
-    background: linear-gradient(90deg, var(--accent), var(--cyan));
-    transform-origin: left center;
-  }
-  @media (max-width: 63.99rem) {
-    .flow-line {
-      background: linear-gradient(180deg, var(--accent), var(--cyan));
-      transform-origin: center top;
-    }
-  }
-  /* Each step is observed on its own (so a tall column on a phone animates as you reach each step),
-     but only its parts animate, so the step must not fade as a whole. On a wide screen the three steps
-     arrive together and --base staggers them left to right. */
-  .flow-step {
-    --base: 0ms;
-  }
-  @media (min-width: 64rem) {
-    .flow-step {
-      --base: calc(var(--i, 0) * 450ms);
-    }
-  }
-  html.js-reveal .reveal.flow-step {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  html.js-reveal .flow-step .flow-line {
-    transform: scale(0);
-    transition: transform 900ms cubic-bezier(0.5, 0, 0.2, 1);
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .flow-line {
-    transform: scale(1);
-  }
-  html.js-reveal .flow-step .flow-node {
-    opacity: 0;
-    transform: scale(0.5);
-    transition:
-      opacity 400ms,
-      transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .flow-node {
-    opacity: 1;
-    transform: none;
-  }
-  html.js-reveal .flow-step .flow-card {
-    opacity: 0;
-    transform: translateY(20px);
-    transition:
-      opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .flow-card {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* Pieces inside the pictures. --d is each piece's own delay. */
-  .il-part {
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-  html.js-reveal .flow-step .il-pop {
-    opacity: 0;
-    transform: scale(0.8);
-    transition:
-      opacity 400ms,
-      transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .il-pop {
-    opacity: 1;
-    transform: none;
-  }
-  html.js-reveal .flow-step .il-draw {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    transition: stroke-dashoffset 500ms ease-out;
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .il-draw {
-    stroke-dashoffset: 0;
-  }
-  html.js-reveal .flow-step .il-grow {
-    transform: scaleY(0.05);
-    transform-origin: bottom;
-    transition: transform 700ms cubic-bezier(0.2, 0.9, 0.2, 1);
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .il-grow {
-    transform: none;
-  }
-  html.js-reveal .flow-step .il-select {
-    opacity: 0;
-    transition: opacity 300ms;
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .il-select {
-    opacity: 1;
-  }
-  html.js-reveal .flow-step .il-cursor {
-    transform: translate(34px, 30px);
-    opacity: 0;
-    transition:
-      transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1),
-      opacity 300ms;
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .il-cursor {
-    transform: none;
-    opacity: 1;
-  }
-  html.js-reveal .flow-step .il-type {
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 900ms steps(9, end);
-    transition-delay: calc(var(--base, 0ms) + var(--d, 0ms));
-  }
-  html.js-reveal .flow-step.is-visible .il-type {
-    transform: none;
-  }
-  .il-caret {
-    animation: caret-blink 1.1s steps(1, end) infinite;
-  }
-  @keyframes caret-blink {
-    50% {
-      opacity: 0;
-    }
-  }
-}
-
-/* ------------------------------------------------------------------ *
  * Motion
  *
  * Two mechanisms. .rise-in is a one-shot CSS animation for content that is
@@ -922,22 +597,46 @@
     transform: none;
   }
 
-  /* A little life on hover: a card lifts toward you instead of just sitting there. */
+  /* Tiles answer the pointer with a soft shadow, and nothing else moves. */
   .card-hover {
-    transition:
-      transform 220ms ease,
-      box-shadow 220ms ease,
-      border-color 220ms ease;
+    transition: box-shadow 220ms ease;
   }
   .card-hover:hover,
   .card-hover:focus-within {
-    transform: translateY(-4px);
-    box-shadow: 0 22px 38px -22px var(--shadow-accent);
+    box-shadow: 0 20px 44px -26px rgb(0 0 0 / 0.3);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Search field and section headings
+ * ------------------------------------------------------------------ */
+@layer components {
+  /* A pill with the input inside it. The pill carries the focus ring, so the input itself draws none. */
+  .search-field {
+    @apply flex items-center gap-2 rounded-full border border-control bg-surface text-ink;
+    transition:
+      border-color 160ms,
+      box-shadow 160ms;
+  }
+  .search-field:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+  .search-field input {
+    @apply h-full min-w-0 flex-1 bg-transparent text-ink outline-none placeholder:text-ink-3;
+  }
+  .search-field input:focus-visible {
+    outline: none;
   }
 
-  /* A soft tone wash as the card's own background, in place of a plain surface. */
-  .card-wash {
-    background: linear-gradient(165deg, var(--tone-soft), var(--surface) 62%);
-    border-color: color-mix(in srgb, var(--tone) 32%, var(--line));
+  /* Headings of the home page's sections: large, plain, sentence case, a hair tighter only because they are large. */
+  .section-title {
+    @apply text-4xl font-semibold sm:text-5xl;
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+  }
+  .section-lead {
+    @apply mt-4 max-w-2xl text-xl text-ink-3 sm:text-2xl;
+    line-height: 1.4;
   }
 }

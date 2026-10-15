@@ -30,7 +30,7 @@ export function SpecGroups({ groups, idPrefix }: { groups: SpecGroup[]; idPrefix
           const headingId = `${idPrefix}-spec-${group.id}`;
           return (
             <section key={group.id} aria-labelledby={headingId} className="@container space-y-2.5">
-              <h4 id={headingId} className="flex items-center gap-2 font-display text-base font-bold">
+              <h4 id={headingId} className="flex items-center gap-2 font-display text-base font-semibold">
                 <Icon aria-hidden="true" className="size-4.5 text-accent" />
                 {group.title}
               </h4>

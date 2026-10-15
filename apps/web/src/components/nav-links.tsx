@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
-export function NavLinks() {
+export function NavLinks({ className }: { className?: string }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Menu utama">
+    <nav aria-label="Menu utama" className={className}>
       <ul className="flex flex-wrap items-center gap-1">
         {NAV.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -18,8 +18,8 @@ export function NavLinks() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "nav-link inline-flex min-h-11 items-center rounded-lg px-3 text-[0.95rem] font-medium no-underline transition-colors",
-                  active ? "font-semibold text-accent-strong" : "text-ink-2 hover:bg-accent-soft/60 hover:text-ink",
+                  "inline-flex min-h-11 items-center rounded-full px-3.5 text-[0.95rem] no-underline transition-colors",
+                  active ? "font-semibold text-ink" : "text-ink-3 hover:text-ink",
                 )}
               >
                 {item.label}

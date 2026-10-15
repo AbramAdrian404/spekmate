@@ -13,7 +13,7 @@ function Subsection({ id, title, hint, children }: { id: string; title: string; 
   return (
     <section aria-labelledby={id} className="space-y-3">
       <div>
-        <h3 id={id} className="text-xl font-bold">
+        <h3 id={id} className="text-xl font-semibold">
           {title}
         </h3>
         {hint ? <p className="mt-0.5 text-sm text-ink-3">{hint}</p> : null}
@@ -36,7 +36,7 @@ export function VariantSection({ variant, model }: { variant: Variant; model: Mo
   return (
     <section id={variant.id} aria-labelledby={headingId} className="card scroll-mt-24 space-y-8 p-5 sm:p-7">
       <header className="space-y-2">
-        <h2 id={headingId} className="text-2xl font-extrabold">
+        <h2 id={headingId} className="text-2xl font-semibold">
           {variant.title}
         </h2>
         <p className="flex flex-wrap items-center gap-2">

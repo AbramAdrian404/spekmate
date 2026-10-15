@@ -13,23 +13,23 @@ import type { NeedTone } from "@/lib/need-visuals";
  */
 export function SpecEducation() {
   return (
-    <section aria-labelledby="edukasi-judul" className="reveal card space-y-5 p-5 sm:p-7">
+    <section aria-labelledby="edukasi-judul" className="reveal space-y-5 rounded-3xl bg-surface-2 p-6 sm:p-10">
       <div className="space-y-1.5">
-        <h2 id="edukasi-judul" className="text-xl font-extrabold sm:text-2xl">
+        <h2 id="edukasi-judul" className="text-xl font-semibold sm:text-2xl">
           Belum paham istilahnya?
         </h2>
         <p className="measure text-ink-2">
-          RAM, SSD, &ldquo;Core i5&rdquo;, &ldquo;Ryzen 5&rdquo; -- istilah di spesifikasi laptop gampang bikin bingung. Buka salah
-          satu di bawah ini untuk penjelasan singkatnya, tanpa jargon.
+          Istilah seperti RAM, SSD, Core i5, dan Ryzen 5 sering membingungkan. Buka salah satu topik di bawah untuk penjelasan
+          singkat tanpa jargon.
         </p>
       </div>
 
       <div className="space-y-3">
         <Topic id="ram" tone="blue" Icon={MemoryStick} title="RAM" teaser="Kenapa laptop bisa lemot kalau buka banyak aplikasi">
           <p>
-            RAM menyimpan data dari aplikasi yang sedang <strong className="text-ink">aktif kamu pakai</strong>, supaya prosesor
-            bisa mengambilnya dengan cepat. Semakin banyak aplikasi dan tab yang terbuka bersamaan, semakin banyak RAM yang
-            dipakai. Kalau RAM-nya penuh, laptop mulai terasa tersendat setiap pindah aplikasi.
+            RAM menyimpan data dari aplikasi yang <strong className="text-ink">sedang aktif dipakai</strong>, supaya prosesor
+            dapat mengambilnya dengan cepat. Semakin banyak aplikasi dan tab yang terbuka bersamaan, semakin banyak RAM yang
+            terpakai. Bila RAM penuh, laptop mulai terasa tersendat setiap berpindah aplikasi.
           </p>
           <ComparisonScale
             tone="blue"
@@ -40,40 +40,41 @@ export function SpecEducation() {
             ]}
           />
           <Caveat>
-            Angka di atas cuma gambaran kasar. Kebutuhan RAM yang sebenarnya tergantung aplikasi apa saja yang kamu jalankan
-            bersamaan, bukan cuma satu angka yang cocok untuk semua orang.
+            Angka di atas hanya gambaran kasar. Kebutuhan RAM yang sebenarnya bergantung pada aplikasi yang dijalankan
+            bersamaan, bukan satu angka yang cocok untuk semua orang.
           </Caveat>
         </Topic>
 
         <Topic id="storage" tone="violet" Icon={HardDrive} title="Penyimpanan (storage)" teaser="SSD, HDD, dan beda 256 GB / 512 GB / 1 TB">
           <p>
-            Kalau RAM itu seperti <strong className="text-ink">meja kerja</strong> -- tempat naruh yang lagi dipakai, cepat
-            diambil, tapi “dibersihkan” tiap laptop mati -- penyimpanan itu seperti <strong className="text-ink">lemari arsip</strong>:
-            menyimpan semua file, aplikasi, dan sistem operasi secara permanen, walau laptopnya mati sekalipun.
+            RAM ibarat <strong className="text-ink">meja kerja</strong>: tempat meletakkan apa yang sedang dipakai, cepat
+            dijangkau, tetapi dikosongkan setiap laptop dimatikan. Penyimpanan ibarat <strong className="text-ink">lemari arsip</strong>:
+            menyimpan semua file, aplikasi, dan sistem operasi secara permanen, termasuk saat laptop mati.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
-            <MiniCompare title="SSD" tone="violet" points={["Jauh lebih cepat: laptop nyala dan buka aplikasi hitungan detik", "Tidak ada bagian berputar, lebih tahan guncangan", "Harga per GB lebih mahal -- tapi sudah jadi standar laptop baru"]} />
-            <MiniCompare title="HDD" tone="violet" points={["Jauh lebih lambat dari SSD", "Ada piringan berputar, lebih rentan kalau terguncang", "Harga per GB jauh lebih murah, kini jarang dipakai sebagai drive utama"]} />
+            <MiniCompare title="SSD" tone="violet" points={["Jauh lebih cepat: laptop nyala dan buka aplikasi hitungan detik", "Tidak ada bagian berputar, lebih tahan guncangan", "Harga per GB lebih mahal, tetapi sudah menjadi standar laptop baru"]} />
+            <MiniCompare title="HDD" tone="violet" points={["Jauh lebih lambat dari SSD", "Ada piringan berputar, lebih rentan bila terguncang", "Harga per GB jauh lebih murah, kini jarang dipakai sebagai drive utama"]} />
           </div>
           <ComparisonScale
             tone="violet"
             steps={[
-              { label: "256 GB", fill: 25, note: "Sistem + aplikasi dasar + dokumen. Cepat penuh kalau sering simpan video atau game." },
+              { label: "256 GB", fill: 25, note: "Sistem + aplikasi dasar + dokumen. Cepat penuh bila sering menyimpan video atau game." },
               { label: "512 GB", fill: 50, note: "Pilihan paling umum: aplikasi + beberapa game/software desain + file pribadi." },
               { label: "1 TB", fill: 100, note: "Banyak file besar tersimpan lokal: game AAA, footage video, aset desain." },
             ]}
           />
           <Caveat>
-            Kalau bawaannya lebih kecil tapi bisa diganti, kami tetap tampilkan dengan catatan -- kebutuhan storage yang pas
-            tergantung ukuran file/aplikasi/game yang kamu pakai dan kebiasaanmu menyimpan (lokal atau cloud).
+            Bila kapasitas bawaan lebih kecil tetapi dapat diganti, laptop tetap ditampilkan dengan catatan. Kebutuhan
+            penyimpanan yang pas bergantung pada ukuran file, aplikasi, dan game yang dipakai, serta kebiasaan menyimpan secara
+            lokal atau di cloud.
           </Caveat>
         </Topic>
 
-        <Topic id="os" tone="mint" Icon={AppWindow} title="Sistem operasi: Windows" teaser="Beda Windows 11 Home dan Pro -- dan kenapa bukan soal performa">
+        <Topic id="os" tone="mint" Icon={AppWindow} title="Sistem operasi: Windows" teaser="Beda Windows 11 Home dan Pro, dan mengapa bukan soal performa">
           <p>
-            Sistem operasi adalah penghubung antara hardware laptop dan aplikasi yang kamu pakai -- dia yang mengatur file,
-            koneksi internet, tampilan, dan menjalankan semua software. Windows adalah sistem operasi paling umum dipakai di
-            laptop non-Apple.
+            Sistem operasi adalah penghubung antara perangkat keras laptop dan aplikasi yang dipakai. Sistem operasi mengatur
+            file, koneksi internet, dan tampilan, serta menjalankan semua perangkat lunak. Windows adalah sistem operasi yang
+            paling umum di laptop non-Apple.
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <MiniCompare
@@ -84,12 +85,12 @@ export function SpecEducation() {
             <MiniCompare
               title="Windows 11 Pro"
               tone="mint"
-              points={["Menambah BitLocker (enkripsi penuh) dan Remote Desktop", "Bisa bergabung ke domain/jaringan kantor (Active Directory/Azure AD)", "Penting kalau laptop dikelola tim IT perusahaan"]}
+              points={["Menambah BitLocker (enkripsi penuh) dan Remote Desktop", "Bisa bergabung ke domain/jaringan kantor (Active Directory/Azure AD)", "Penting bila laptop dikelola tim IT perusahaan"]}
             />
           </div>
           <Caveat tone="warn">
-            Edisi Windows <strong className="text-ink">tidak menentukan performa</strong> laptop. Home dan Pro bisa dipasang di
-            hardware yang persis sama dan akan terasa sama cepatnya -- performa ditentukan oleh prosesor, RAM, dan
+            Edisi Windows <strong className="text-ink">tidak menentukan performa</strong> laptop. Home dan Pro dapat dipasang pada
+            perangkat keras yang persis sama dan terasa sama cepat. Performa ditentukan oleh prosesor, RAM, dan
             penyimpanan, bukan edisi sistem operasinya.
           </Caveat>
         </Topic>
@@ -107,14 +108,14 @@ export function SpecEducation() {
           <p>
             <strong className="text-ink">Core Ultra</strong> adalah keluarga prosesor Intel yang lebih baru, hadir dalam varian
             Ultra 5/7/9 yang levelnya kurang lebih sejalan dengan i5/i7/i9. Core Ultra menggabungkan performa CPU, grafis
-            terintegrasi yang lebih kuat, efisiensi daya, dan pada sebagian model dilengkapi NPU -- chip khusus yang
+            terintegrasi yang lebih kuat, efisiensi daya, dan pada sebagian model dilengkapi NPU, yaitu chip khusus yang
             mempercepat tugas AI tertentu, seperti pengolahan gambar/video otomatis di beberapa aplikasi.
           </p>
           <Caveat tone="warn">
-            Core Ultra <strong className="text-ink">tidak otomatis berarti &ldquo;lebih cepat&rdquo;</strong> dibanding Core i.
-            Performa sebenarnya tergantung generasi, model spesifiknya, batas daya yang diizinkan laptopnya, sistem
-            pendinginan, dan konfigurasi laptop itu sendiri. Dua laptop sama-sama berlabel &ldquo;Core Ultra 7&rdquo; belum
-            tentu performanya sama -- jangan anggap semua chip Core Ultra punya spesifikasi yang seragam.
+            Core Ultra <strong className="text-ink">tidak otomatis lebih cepat</strong> daripada Core i. Performa sebenarnya
+            bergantung pada generasi, model spesifiknya, batas daya yang diizinkan laptopnya, sistem pendinginan, dan
+            konfigurasi laptop itu sendiri. Dua laptop berlabel Core Ultra 7 belum tentu berperforma sama. Jangan menganggap
+            semua chip Core Ultra memiliki spesifikasi yang seragam.
           </Caveat>
         </Topic>
 
@@ -134,28 +135,27 @@ export function SpecEducation() {
             <MiniCompare title="Akhiran HX" tone="coral" points={["Performa maksimal, daya lebih besar", "Laptop gaming/workstation dengan pendinginan lebih besar"]} />
           </div>
           <p>
-            Generasi dan model spesifik sangat menentukan performa -- &ldquo;Ryzen 5&rdquo; generasi lama bisa jauh lebih lemah
-            dari &ldquo;Ryzen 5&rdquo; generasi baru. Bandingkan model lengkapnya (misalnya Ryzen 5 7430U dengan Ryzen 5
-            5500U), bukan cuma angka &ldquo;5&rdquo;-nya. Begitu juga membandingkan Intel dengan AMD: yang berarti adalah
-            model spesifik lawan model spesifik (misalnya Core i5-1335U dengan Ryzen 5 7430U) -- kadang Intel unggul di satu
-            generasi, kadang AMD unggul di generasi lain.
+            Generasi dan model spesifik sangat menentukan performa. Ryzen 5 generasi lama bisa jauh lebih lemah daripada Ryzen 5
+            generasi baru, sehingga yang dibandingkan sebaiknya model lengkapnya (misalnya Ryzen 5 7430U dengan Ryzen 5
+            5500U), bukan hanya angka 5. Hal yang sama berlaku untuk Intel dan AMD: bandingkan model dengan model (misalnya
+            Core i5-1335U dengan Ryzen 5 7430U). Pada satu generasi Intel bisa unggul, pada generasi lain AMD.
           </p>
           <div className="grid gap-2.5 sm:grid-cols-2">
             <ExampleUser name="Mahasiswa, cuma kerja dokumen" need="i3/Ryzen 3 atau i5/Ryzen 5 seri U sudah lebih dari cukup." />
-            <ExampleUser name="Mahasiswa desain" need="i5/Ryzen 5 ke atas -- prioritaskan RAM dan grafis, bukan cuma “naik kelas” prosesor." />
+            <ExampleUser name="Mahasiswa desain" need="i5/Ryzen 5 ke atas. Prioritaskan RAM dan grafis, bukan hanya prosesor yang lebih tinggi." />
             <ExampleUser name="Gamer" need="Seri HS/HX atau i7/i9 dengan GPU terpisah jauh lebih menentukan dibanding nama prosesornya." />
-            <ExampleUser name="Sering buka banyak aplikasi sekaligus" need="Prioritaskan RAM besar + minimal i5/Ryzen 5 -- multitasking lebih bergantung pada RAM." />
+            <ExampleUser name="Sering buka banyak aplikasi sekaligus" need="Prioritaskan RAM besar dan minimal i5/Ryzen 5. Multitasking lebih bergantung pada RAM." />
           </div>
           <Caveat>
-            Intel dan AMD sama-sama punya generasi yang kuat dan yang biasa saja. Tidak ada merek yang selalu unggul secara
-            mutlak -- semua tergantung generasi, model, dan kebutuhanmu.
+            Intel dan AMD sama-sama memiliki generasi yang kuat dan yang biasa saja. Tidak ada merek yang selalu unggul secara
+            mutlak. Semuanya bergantung pada generasi, model, dan kebutuhan.
           </Caveat>
         </Topic>
       </div>
 
       <p className="text-sm text-ink-3">
-        Supaya kamu tidak perlu menghafal semua nama di atas, SpekMate juga punya sistem tingkat 1-5 sendiri untuk prosesor dan
-        grafis, dihitung dari data yang sama untuk semua laptop di database kami.{" "}
+        Agar tidak perlu menghafal semua nama di atas, SpekMate juga memiliki sistem tingkat 1 sampai 5 untuk prosesor dan
+        grafis, dihitung dari data yang sama untuk semua laptop di database.{" "}
         <a href="/cara-menilai#tingkat">Lihat cara kami menilai</a>.
       </p>
     </section>
@@ -184,7 +184,7 @@ function Topic({
           <Icon aria-hidden="true" className="size-5" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block font-bold text-ink">{title}</span>
+          <span className="block font-semibold text-ink">{title}</span>
           <span className="block truncate text-sm text-ink-2">{teaser}</span>
         </span>
         <ChevronDown aria-hidden="true" className="size-5 shrink-0 text-ink-3 transition-transform group-open:rotate-180" />
@@ -197,7 +197,7 @@ function Topic({
 function MiniCompare({ title, tone, points }: { title: string; tone: NeedTone; points: string[] }) {
   return (
     <div className={`tone-${tone} rounded-xl border border-line bg-surface p-4`}>
-      <p className="font-bold text-ink">{title}</p>
+      <p className="font-semibold text-ink">{title}</p>
       <ul className="mt-2 space-y-1.5 text-sm text-ink-2">
         {points.map((point) => (
           <li key={point} className="flex gap-2">

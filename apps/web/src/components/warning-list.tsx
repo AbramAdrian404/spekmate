@@ -12,7 +12,7 @@ export function WarningList({ warnings, note = true }: { warnings: Warning[]; no
       <ul className="space-y-1.5 pl-1">
         {warnings.map((warning) => (
           <li key={warning.code} className="flex gap-2">
-            <span className="mt-0.5 shrink-0 rounded bg-surface/60 px-1.5 text-xs font-bold tabular">{warning.code}</span>
+            <span className="mt-0.5 shrink-0 rounded bg-surface/60 px-1.5 text-xs font-semibold tabular">{warning.code}</span>
             <span>{warning.text}</span>
           </li>
         ))}

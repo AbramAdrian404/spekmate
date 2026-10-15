@@ -46,7 +46,7 @@ export function ComparisonPanel({ results }: { results: Recommendation[] }) {
   return (
     <section aria-labelledby="perbandingan-judul" className="reveal card space-y-4 p-5 sm:p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="perbandingan-judul" className="text-xl font-extrabold sm:text-2xl">
+        <h2 id="perbandingan-judul" className="text-xl font-semibold sm:text-2xl">
           Membandingkan {items.length} laptop
         </h2>
         <button type="button" onClick={clearAll} className="btn btn-secondary">

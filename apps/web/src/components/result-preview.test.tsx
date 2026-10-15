@@ -20,7 +20,7 @@ const RESULTS = [
 describe("ResultPreview", () => {
   it("says plainly that this is a real sample question run on the database, with its budget and date", () => {
     render(<ResultPreview results={RESULTS} needName="Kuliah dan kantor" budget={9_000_000} checked="2026-10-08" />);
-    expect(screen.getByRole("heading", { name: "Seperti ini hasilnya" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Contoh hasil konsultasi." })).toBeInTheDocument();
     expect(screen.getByText(/Contoh nyata:/).closest("p")).toHaveTextContent("Contoh nyata: kuliah dan kantor, anggaran Rp9.000.000, data dicek 8 Okt 2026");
   });
 
@@ -57,6 +57,6 @@ describe("ResultPreview", () => {
 
   it("offers to try the form with the visitor's own needs", () => {
     render(<ResultPreview results={RESULTS} needName="Kuliah dan kantor" budget={9_000_000} checked={null} />);
-    expect(screen.getByRole("link", { name: /Coba dengan kebutuhanmu/ })).toHaveAttribute("href", "#mulai");
+    expect(screen.getByRole("link", { name: /Coba dengan kebutuhan sendiri/ })).toHaveAttribute("href", "#mulai");
   });
 });

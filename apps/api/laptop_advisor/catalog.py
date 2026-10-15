@@ -250,7 +250,7 @@ class Catalog:
             variants=[self.variant_out(v) for v in self.ds.variants_of(model["id"])])
 
     def list_models(self, condition: str | None = None, need: str | None = None, q: str | None = None,
-                    sort: str = "name") -> S.ModelList:
+                    brand: str | None = None, sort: str = "name") -> S.ModelList:
         items = []
         for model in self.ds.models:
             summary = self.model_summary(model)
@@ -260,6 +260,8 @@ class Catalog:
                 verdict = next((b.verdict for b in summary.best_verdicts if b.need_id == need), None)
                 if verdict not in GOOD_ENOUGH:
                     continue
+            if brand and (summary.brand or "").lower() != brand.strip().lower():
+                continue
             if q:
                 haystack = " ".join(filter(None, [summary.name, summary.summary])).lower()
                 if not all(word in haystack for word in q.lower().split()):

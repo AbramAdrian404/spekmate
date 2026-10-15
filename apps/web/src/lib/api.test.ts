@@ -77,8 +77,8 @@ describe("requests", () => {
   it("builds the model list query from filters", () => {
     expect(modelsQuery()).toBe("");
     expect(modelsQuery({ sort: "name" })).toBe("");
-    expect(modelsQuery({ condition: "bekas", need: "pemrograman", q: "dell latitude", sort: "price" })).toBe(
-      "?condition=bekas&need=pemrograman&q=dell+latitude&sort=price",
+    expect(modelsQuery({ condition: "bekas", need: "pemrograman", q: "dell latitude", brand: "Dell", sort: "price" })).toBe(
+      "?condition=bekas&need=pemrograman&q=dell+latitude&brand=Dell&sort=price",
     );
   });
 

@@ -21,8 +21,8 @@ export function FormProblems({ errors }: { errors: ConsultFieldErrors }) {
     <div id="hasil" role="alert" className="callout mt-10" data-tone="bad">
       <CircleAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
       <div className="space-y-2">
-        <h2 className="font-display text-lg font-bold">Belum bisa mencari laptop</h2>
-        <p>Periksa isian ini, lalu tekan “Cari laptop” lagi:</p>
+        <h2 className="font-display text-lg font-semibold">Belum bisa mencari laptop</h2>
+        <p>Periksa isian berikut, lalu tekan tombol Cari laptop lagi:</p>
         <ul className="list-disc space-y-1 pl-5">
           {items.map((item) => (
             <li key={item.key}>

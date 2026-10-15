@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site";
+import { HeaderSearch } from "./header-search";
 import { HeaderShell } from "./header-shell";
 import { Logo, Wordmark } from "./logo";
 import { NavLinks } from "./nav-links";
@@ -7,13 +8,13 @@ import { NavLinks } from "./nav-links";
 export function SiteHeader() {
   return (
     <HeaderShell>
-      <div aria-hidden="true" className="brand-stripe" />
-      <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2">
-        <Link href="/" className="group flex min-h-11 items-center gap-2.5 no-underline" aria-label={`${SITE.name}, ke beranda`}>
-          <Logo className="size-9 transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105" />
-          <Wordmark className="font-display text-xl font-extrabold tracking-tight text-ink" />
+      <div className="container-page flex flex-wrap items-center gap-x-4 sm:flex-nowrap">
+        <Link href="/" className="group order-1 flex min-h-12 items-center gap-2.5 no-underline" aria-label={`${SITE.name}, ke beranda`}>
+          <Logo className="size-8" />
+          <Wordmark className="text-lg font-semibold tracking-[-0.01em] text-ink" />
         </Link>
-        <NavLinks />
+        <HeaderSearch className="order-2 ml-auto sm:order-3 sm:ml-0" />
+        <NavLinks className="order-3 w-full pb-1 sm:order-2 sm:ml-auto sm:w-auto sm:pb-0" />
       </div>
     </HeaderShell>
   );

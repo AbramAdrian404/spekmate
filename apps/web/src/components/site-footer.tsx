@@ -12,12 +12,11 @@ export function SiteFooter({ meta }: { meta: Meta | null }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="reveal mt-20 bg-surface-2">
-      <div aria-hidden="true" className="brand-stripe" />
-      <div className="container-page py-12">
-        <div className="flex flex-col gap-6 border-b border-line pb-10 sm:flex-row sm:items-center sm:justify-between">
+    <footer className="bg-surface-2">
+      <div className="container-page py-14">
+        <div className="flex flex-col gap-6 border-b border-line-strong pb-10 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1.5">
-            <Wordmark className="font-display text-2xl font-extrabold tracking-tight text-ink" />
+            <Wordmark className="text-2xl font-semibold tracking-[-0.01em] text-ink" />
             <p className="text-ink-2">{SITE.tagline}.</p>
           </div>
           <Link href="/konsultasi" className="btn btn-primary shrink-0">
@@ -30,7 +29,7 @@ export function SiteFooter({ meta }: { meta: Meta | null }) {
           <div className="space-y-3">
             <p className="measure text-sm text-ink-2">
               Rekomendasi dipilih dari database kami sendiri, bukan dari seluruh pasar, dan database ini masih kecil. Harga dan stok
-              berubah; cek lagi di toko sebelum membeli.
+              berubah. Periksa kembali di toko sebelum membeli.
             </p>
             {meta ? (
               <p className="text-sm text-ink-3">
@@ -79,7 +78,7 @@ export function SiteFooter({ meta }: { meta: Meta | null }) {
             <p className="mb-2 font-semibold text-ink">Dibangun dengan</p>
             <ul className="flex flex-wrap gap-1.5">
               {STACK.map((name) => (
-                <li key={name} className="tag">
+                <li key={name} className="tag bg-surface">
                   {name}
                 </li>
               ))}
@@ -87,7 +86,7 @@ export function SiteFooter({ meta }: { meta: Meta | null }) {
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-4 border-t border-line pt-6 text-sm text-ink-3 sm:flex-row sm:justify-between">
+        <div className="flex flex-col items-center gap-4 border-t border-line-strong pt-6 text-sm text-ink-3 sm:flex-row sm:justify-between">
           <p>© {year} {SITE.name}. Proyek pribadi, dibuat untuk belajar dan portofolio.</p>
           <a href="#" className="inline-flex min-h-8 items-center gap-1.5 font-semibold text-ink-2 hover:text-ink">
             Kembali ke atas

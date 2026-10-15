@@ -134,6 +134,7 @@ export interface ModelFilters {
   condition?: Exclude<ConditionFilter, "semua">;
   need?: string;
   q?: string;
+  brand?: string;
   sort?: "name" | "price";
 }
 
@@ -142,6 +143,7 @@ export function modelsQuery(filters: ModelFilters = {}): string {
   if (filters.condition) params.set("condition", filters.condition);
   if (filters.need) params.set("need", filters.need);
   if (filters.q) params.set("q", filters.q);
+  if (filters.brand) params.set("brand", filters.brand);
   if (filters.sort && filters.sort !== "name") params.set("sort", filters.sort);
   const text = params.toString();
   return text ? `?${text}` : "";

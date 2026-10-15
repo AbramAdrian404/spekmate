@@ -92,6 +92,19 @@ def test_model_list(client, real_ds):
             assert 0 < r["low"] <= r["high"]
 
 
+def test_model_list_filters_by_brand(client, real_ds):
+    brands = {m["brand"] for m in real_ds.models if m.get("brand")}
+    assert len(brands) > 1
+    total = 0
+    for brand in brands:
+        for spelling in (brand, brand.upper(), f" {brand.lower()} "):
+            body = client.get("/api/models", params={"brand": spelling}).json()
+            assert body["items"] and {item["brand"] for item in body["items"]} == {brand}
+        total += body["total"]
+    assert total == len(real_ds.models)
+    assert client.get("/api/models", params={"brand": "tidak-ada"}).json() == {"total": 0, "items": []}
+
+
 def test_every_model_page_is_complete(client, real_ds):
     for model in real_ds.models:
         r = client.get(f"/api/models/{model['id']}")

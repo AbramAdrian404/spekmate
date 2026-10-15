@@ -13,7 +13,6 @@ interface HeroStageProps {
 }
 
 const at = (ms: number) => ({ "--rise-delay": `${ms}ms` }) as CSSProperties;
-const bob = (seconds: number) => ({ "--bob-delay": `${seconds}s` }) as CSSProperties;
 
 /**
  * The hero picture: an illustrated laptop with three cards floating around it. The cards quote a real
@@ -25,21 +24,21 @@ export function HeroStage({ featured, needName }: HeroStageProps) {
   const checked = formatDate(price?.last_checked);
 
   return (
-    <div aria-hidden="true" className="hero-stage mx-auto w-full max-w-[36rem] pb-10 pt-14 lg:max-w-none lg:pt-16">
+    <div aria-hidden="true" className="hero-stage mx-auto w-full max-w-[40rem] px-3 pb-10 pt-14 sm:px-0">
       <div className="stage-in" style={at(120)}>
-        <HeroLaptop className="h-auto w-full drop-shadow-[0_30px_40px_rgb(11_27_63/0.10)]" />
+        <HeroLaptop className="h-auto w-full drop-shadow-[0_30px_40px_rgb(0_0_0/0.10)]" />
       </div>
 
       {/* price */}
       <div className="card-in absolute left-0 top-2 sm:-left-2 lg:left-0" style={at(700)}>
-        <div className="float-card float-bob w-[9.75rem] p-3 sm:w-[11.5rem] sm:p-3.5" style={bob(0)}>
+        <div className="float-card w-[9.75rem] p-3 sm:w-[11.5rem] sm:p-3.5">
           {price && featured ? (
             <>
               <p className="flex items-center gap-1.5 text-[0.7rem] font-semibold text-ink-3 sm:text-xs">
                 <Tag className="size-3.5 text-accent" />
                 Harga acuan · {CONDITION_LABEL[featured.condition].toLowerCase()}
               </p>
-              <p className="mt-0.5 font-display text-xl font-extrabold tabular text-ink sm:text-2xl">{formatRupiahCompact(price.reference)}</p>
+              <p className="mt-0.5 font-display text-xl font-semibold tabular text-ink sm:text-2xl">{formatRupiahCompact(price.reference)}</p>
               <p className="mt-0.5 text-[0.7rem] leading-snug text-ink-2 sm:text-xs">
                 Kisaran <span className="tabular">{formatRupiahRange(price.low, price.high)}</span>
               </p>
@@ -61,11 +60,11 @@ export function HeroStage({ featured, needName }: HeroStageProps) {
 
       {/* verdict */}
       <div className="card-in absolute bottom-[9%] right-0 sm:-right-2 lg:right-0" style={at(860)}>
-        <div className="float-card float-bob w-[10.5rem] p-3 sm:w-[13rem] sm:p-3.5" style={bob(1.4)}>
+        <div className="float-card w-[10.5rem] p-3 sm:w-[13rem] sm:p-3.5">
           {featured ? (
             <>
               <VerdictBadge verdict={featured.verdict} label={featured.verdict_label} size="sm" />
-              <p className="mt-1.5 text-sm font-bold leading-snug text-ink">{featured.model_name}</p>
+              <p className="mt-1.5 text-sm font-semibold leading-snug text-ink">{featured.model_name}</p>
               <p className="mt-0.5 text-[0.7rem] leading-snug text-ink-2 sm:text-xs">
                 {needName ? `Untuk ${needName.toLowerCase()}` : "Hasil konsultasi"}
               </p>
@@ -81,7 +80,7 @@ export function HeroStage({ featured, needName }: HeroStageProps) {
 
       {/* upgrade: wider screens only, to keep the phone view clear */}
       <div className="card-in absolute bottom-0 left-[3%] hidden sm:block" style={at(1020)}>
-        <div className="float-card float-bob w-[13.25rem] space-y-1.5 p-3.5" style={bob(2.6)}>
+        <div className="float-card w-[13.25rem] space-y-1.5 p-3.5">
           {featured ? (
             <>
               <p className="flex items-start gap-2 text-xs leading-snug text-ink-2">

@@ -13,13 +13,13 @@ export function HeroLaptop({ className }: { className?: string }) {
     <svg viewBox="0 0 560 350" role="img" aria-label="Ilustrasi laptop yang menampilkan hasil konsultasi SpekMate" className={className}>
       <defs>
         <linearGradient id="hl-lid" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fbfcff" />
-          <stop offset="1" stopColor="#dbe3f2" />
+          <stop offset="0" stopColor="#fdfdfd" />
+          <stop offset="1" stopColor="#e1e1e6" />
         </linearGradient>
         <linearGradient id="hl-deck" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f4f7fd" />
-          <stop offset="0.55" stopColor="#d9e1f1" />
-          <stop offset="1" stopColor="#b9c5df" />
+          <stop offset="0" stopColor="#f5f5f7" />
+          <stop offset="0.55" stopColor="#dcdce0" />
+          <stop offset="1" stopColor="#bcbcc2" />
         </linearGradient>
         <linearGradient id="hl-mark" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#5a8bff" />
@@ -30,8 +30,8 @@ export function HeroLaptop({ className }: { className?: string }) {
           <stop offset="0.45" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
         <radialGradient id="hl-floor" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#0b1b3f" stopOpacity="0.28" />
-          <stop offset="1" stopColor="#0b1b3f" stopOpacity="0" />
+          <stop offset="0" stopColor="#000000" stopOpacity="0.28" />
+          <stop offset="1" stopColor="#000000" stopOpacity="0" />
         </radialGradient>
         <clipPath id="hl-screen">
           <rect x="104" y="42" width="352" height="208" rx="6" />
@@ -42,9 +42,9 @@ export function HeroLaptop({ className }: { className?: string }) {
       <ellipse cx="280" cy="326" rx="250" ry="15" fill="url(#hl-floor)" />
 
       {/* Lid and screen */}
-      <rect x="84" y="14" width="392" height="258" rx="20" fill="url(#hl-lid)" stroke="#c3cde3" />
-      <rect x="96" y="26" width="368" height="232" rx="11" fill="#0c1736" />
-      <circle cx="280" cy="34" r="2.2" fill="#2b3d73" />
+      <rect x="84" y="14" width="392" height="258" rx="20" fill="url(#hl-lid)" stroke="#cfcfd4" />
+      <rect x="96" y="26" width="368" height="232" rx="11" fill="#1d1d1f" />
+      <circle cx="280" cy="34" r="2.2" fill="#3a3a3c" />
 
       <g clipPath="url(#hl-screen)">
         <rect x="104" y="42" width="352" height="208" fill="#ffffff" />
@@ -103,9 +103,9 @@ export function HeroLaptop({ className }: { className?: string }) {
       </g>
 
       {/* Hinge and keyboard deck */}
-      <path d="M72 272h416a2 2 0 0 1 2 2v2H70v-2a2 2 0 0 1 2-2z" fill="#aab7d3" />
-      <path d="M44 276h472c0 0 8 0 8 8a24 24 0 0 1-24 24H60a24 24 0 0 1-24-24c0-8 8-8 8-8z" fill="url(#hl-deck)" stroke="#b3c0dc" />
-      <rect x="236" y="276" width="88" height="7" rx="3.5" fill="#aab7d3" />
+      <path d="M72 272h416a2 2 0 0 1 2 2v2H70v-2a2 2 0 0 1 2-2z" fill="#b0b0b6" />
+      <path d="M44 276h472c0 0 8 0 8 8a24 24 0 0 1-24 24H60a24 24 0 0 1-24-24c0-8 8-8 8-8z" fill="url(#hl-deck)" stroke="#c0c0c6" />
+      <rect x="236" y="276" width="88" height="7" rx="3.5" fill="#b0b0b6" />
     </svg>
   );
 }

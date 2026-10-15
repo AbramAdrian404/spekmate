@@ -249,6 +249,6 @@ MULTI_NEED_NOTE = (
     "Pilih lebih dari satu kebutuhan? Setiap kriteria (prosesor, grafis, RAM, penyimpanan, layar, refresh rate) "
     "dinilai memakai batas paling tinggi di antara kebutuhan yang kamu pilih untuk kriteria itu. Jadi laptop yang "
     "lolos sudah memenuhi semua kebutuhanmu sekaligus, bukan cuma salah satu. Kebutuhan yang tidak menilai suatu "
-    "kriteria tidak ikut menaikkan batasnya -- lebih banyak kebutuhan hanya bisa menambah atau menaikkan syarat, "
+    "kriteria tidak ikut menaikkan batasnya. Lebih banyak kebutuhan hanya bisa menambah atau menaikkan syarat, "
     "tidak pernah menurunkannya."
 )
