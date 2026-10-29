@@ -92,6 +92,8 @@ class PriceIn(_PriceFields):  # type: ignore[valid-type,misc]
     @field_validator("high")
     @classmethod
     def _high_not_below_low(cls, value: int, info: ValidationInfo) -> int:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         low = info.data.get("low")
         if low is not None and low > value:
             raise ValueError("Harga terendah tidak boleh lebih besar dari harga tertinggi.")
@@ -100,6 +102,8 @@ class PriceIn(_PriceFields):  # type: ignore[valid-type,misc]
     @field_validator("mid")
     @classmethod
     def _mid_between(cls, value: int, info: ValidationInfo) -> int:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         low, high = info.data.get("low"), info.data.get("high")
         lo, hi = (low if low is not None else high), (high if high is not None else low)
         if lo is not None and not (lo <= value <= hi):  # type: ignore[operator]
@@ -109,12 +113,16 @@ class PriceIn(_PriceFields):  # type: ignore[valid-type,misc]
     @field_validator("checked_on")
     @classmethod
     def _checked_not_future(cls, value: date) -> date:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         _not_in_future(value, "Tanggal pengecekan")
         return value
 
     @field_validator("source")
     @classmethod
     def _source_not_script(cls, value: str) -> str:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         if value.lower().startswith(("javascript:", "data:", "vbscript:")):
             raise ValueError("Sumber harga tidak boleh berupa skrip.")
         return value
@@ -132,6 +140,8 @@ class VariantIn(_VariantFields):  # type: ignore[valid-type,misc]
     @field_validator("ram_soldered_gb")
     @classmethod
     def _soldered_within_total(cls, value: int, info: ValidationInfo) -> int:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         if info.data.get("ram_gb") is not None and value > info.data["ram_gb"]:
             raise ValueError("RAM yang disolder tidak boleh lebih besar dari total RAM.")
         return value
@@ -139,6 +149,8 @@ class VariantIn(_VariantFields):  # type: ignore[valid-type,misc]
     @field_validator("ram_slots_free")
     @classmethod
     def _free_ram_slots(cls, value: int, info: ValidationInfo) -> int:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         if info.data.get("ram_slots_total") is not None and value > info.data["ram_slots_total"]:
             raise ValueError("Slot RAM kosong tidak boleh lebih banyak dari total slot.")
         return value
@@ -146,6 +158,8 @@ class VariantIn(_VariantFields):  # type: ignore[valid-type,misc]
     @field_validator("m2_slots_free")
     @classmethod
     def _free_m2_slots(cls, value: int, info: ValidationInfo) -> int:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         if info.data.get("m2_slots_total") is not None and value > info.data["m2_slots_total"]:
             raise ValueError("Slot M.2 kosong tidak boleh lebih banyak dari total slot.")
         return value
@@ -153,6 +167,8 @@ class VariantIn(_VariantFields):  # type: ignore[valid-type,misc]
     @field_validator("ram_max_gb")
     @classmethod
     def _max_not_below_current(cls, value: int, info: ValidationInfo) -> int:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         if info.data.get("ram_gb") is not None and value < info.data["ram_gb"]:
             raise ValueError("Batas RAM maksimum tidak boleh lebih kecil dari RAM saat ini.")
         return value
@@ -174,12 +190,16 @@ class ModelIn(_ModelFields):  # type: ignore[valid-type,misc]
     @field_validator("checked_on")
     @classmethod
     def _checked_not_future(cls, value: date) -> date:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         _not_in_future(value, "Tanggal verifikasi")
         return value
 
     @field_validator("spec_url")
     @classmethod
     def _spec_url_is_http(cls, value: str) -> str:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         if not value.lower().startswith(("http://", "https://")):
             raise ValueError("Tautan spesifikasi harus diawali http:// atau https://.")
         return value
@@ -187,6 +207,8 @@ class ModelIn(_ModelFields):  # type: ignore[valid-type,misc]
     @field_validator("variants")
     @classmethod
     def _published_needs_a_variant(cls, value: list[VariantIn] | None, info: ValidationInfo) -> list[VariantIn] | None:
+        if value is None:  # an explicit null means 'not filled in'; there is nothing to check
+            return value
         if value is not None and len(value) == 0 and info.data.get("status") == "published":
             raise ValueError("Laptop yang dipublikasikan harus punya minimal satu konfigurasi.")
         return value
@@ -292,6 +314,7 @@ class ModelListItem(BaseModel):
     cpus: list[str] = []
     ram_options: list[int] = []
     image_url: str | None = None
+    image_count: int = 0
     missing_count: int
     updated_at: datetime | None = None
     created_at: datetime | None = None

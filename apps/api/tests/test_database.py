@@ -547,6 +547,49 @@ def test_list_search_filter_sort_and_pages(admin):
     assert admin.get("/api/admin/models", params={"page_size": 100}).json()["total"] == 40
 
 
+def test_list_can_be_narrowed_to_incomplete_laptops_and_to_photo_gaps(admin):
+    everything = admin.get("/api/admin/models", params={"page_size": 100}).json()["items"]
+    incomplete = admin.get("/api/admin/models", params={"completeness": "incomplete", "page_size": 100}).json()
+    complete = admin.get("/api/admin/models", params={"completeness": "complete", "page_size": 100}).json()
+    assert incomplete["total"] + complete["total"] == len(everything)
+    assert all(i["missing_count"] > 0 for i in incomplete["items"])
+    assert all(i["missing_count"] == 0 for i in complete["items"])
+    # A new draft with nothing filled in is incomplete by definition.
+    admin.post("/api/admin/models", json=new_model(variants=[]))
+    after = admin.get("/api/admin/models", params={"completeness": "incomplete", "page_size": 100}).json()
+    assert after["total"] == incomplete["total"] + 1
+
+    assert admin.get("/api/admin/models", params={"photos": "with"}).json()["total"] == 0
+    assert admin.get("/api/admin/models", params={"photos": "without", "page_size": 100}).json()["total"] == 41
+    assert upload(admin).status_code == 201
+    with_photo = admin.get("/api/admin/models", params={"photos": "with"}).json()
+    assert [(i["id"], i["image_count"]) for i in with_photo["items"]] == [("asus-m1405ya", 1)]
+    assert admin.get("/api/admin/models", params={"photos": "without", "page_size": 100}).json()["total"] == 40
+    assert admin.get("/api/admin/models", params={"completeness": "nonsense"}).status_code == 422
+
+
+def test_explicit_nulls_mean_not_filled_in_and_are_not_an_error(admin):
+    """The web form sends null for every blank field. That used to crash the validators that compare two fields."""
+    from laptop_advisor import fields as F
+
+    blank_model = {field.name: None for field in F.MODEL_FIELDS if field.name != "id"}
+    blank_variant = {field.name: None for field in F.VARIANT_FIELDS if field.name not in ("id", "model_id")}
+    blank_price = {field.name: None for field in F.PRICE_FIELDS if field.name != "variant_id"}
+    body = {
+        **blank_model,
+        "brand": "Nol",
+        "series": "Semua Kosong",
+        "status": "draft",
+        "variants": [{**blank_variant, "prices": [{**blank_price, "condition": "baru", "low": 5_000_000}]}],
+    }
+    response = admin.post("/api/admin/models", json=body)
+    assert response.status_code == 201, response.text
+    saved = response.json()
+    assert saved["variants"][0]["prices"][0]["low"] == 5_000_000
+    assert saved["variants"][0]["prices"][0]["high"] is None
+    assert saved["spec_url"] is None
+
+
 def test_search_finds_drafts_but_the_public_site_does_not_show_them(admin):
     admin.post("/api/admin/models", json=new_model(series="Rahasia Draft"))
     assert admin.get("/api/admin/models", params={"q": "rahasia", "status": "draft"}).json()["total"] == 1

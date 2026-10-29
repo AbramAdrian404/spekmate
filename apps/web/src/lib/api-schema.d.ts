@@ -1110,6 +1110,11 @@ export interface components {
             ram_options: number[];
             /** Image Url */
             image_url?: string | null;
+            /**
+             * Image Count
+             * @default 0
+             */
+            image_count: number;
             /** Missing Count */
             missing_count: number;
             /** Updated At */
@@ -2260,6 +2265,8 @@ export interface operations {
                 ram?: number | null;
                 price_min?: number | null;
                 price_max?: number | null;
+                completeness?: "all" | "incomplete" | "complete";
+                photos?: "all" | "with" | "without";
                 sort?: "updated" | "created" | "name" | "price";
                 dir?: "asc" | "desc";
                 page?: number;

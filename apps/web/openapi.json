@@ -618,6 +618,36 @@
             }
           },
           {
+            "name": "completeness",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "incomplete",
+                "complete"
+              ],
+              "type": "string",
+              "default": "all",
+              "title": "Completeness"
+            }
+          },
+          {
+            "name": "photos",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "with",
+                "without"
+              ],
+              "type": "string",
+              "default": "all",
+              "title": "Photos"
+            }
+          },
+          {
             "name": "sort",
             "in": "query",
             "required": false,
@@ -4081,6 +4111,11 @@
               }
             ],
             "title": "Image Url"
+          },
+          "image_count": {
+            "type": "integer",
+            "title": "Image Count",
+            "default": 0
           },
           "missing_count": {
             "type": "integer",
