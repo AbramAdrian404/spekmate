@@ -55,11 +55,16 @@ export const REQUEST_TIMEOUT_MS = 10_000;
  * Short on purpose: the data is tiny and cheap to fetch, and a data update then shows up within minutes.
  */
 export const DATA_REVALIDATE_SECONDS = 300;
-const CACHED = { next: { revalidate: DATA_REVALIDATE_SECONDS } } as const;
+/**
+ * Every public answer carries this tag. When the admin changes a laptop, its Server Action expires the tag
+ * (updateTag), so the public pages show the change on the next visit instead of after the revalidate time.
+ */
+export const CATALOG_TAG = "catalog";
+const CACHED = { next: { revalidate: DATA_REVALIDATE_SECONDS, tags: [CATALOG_TAG] } };
 
-type Init = Omit<RequestInit, "signal"> & { next?: { revalidate?: number | false } };
+type Init = Omit<RequestInit, "signal"> & { next?: { revalidate?: number | false; tags?: string[] } };
 
-function apiBase(): string {
+export function apiBase(): string {
   return resolveApiUrl(process.env.API_URL, { onVercel: Boolean(process.env.VERCEL) });
 }
 
@@ -181,7 +186,7 @@ export function getRecommendationsCached(body: RecommendationRequest): Promise<R
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
     cache: "force-cache",
-    next: { revalidate: DATA_REVALIDATE_SECONDS },
+    next: { revalidate: DATA_REVALIDATE_SECONDS, tags: [CATALOG_TAG] },
   });
 }
 

@@ -11,7 +11,7 @@ import { getNeeds, load } from "@/lib/api";
 import { formToSearchParams, parseConsultParams, type SearchParams } from "@/lib/consult";
 
 export const metadata: Metadata = {
-  title: "Konsultasi laptop",
+  title: "Temukan laptop",
   description: "Pilih kebutuhan dan anggaran, lalu dapatkan sampai 5 rekomendasi laptop beserta alasannya.",
 };
 
@@ -22,7 +22,7 @@ export default async function KonsultasiPage({ searchParams }: { searchParams: P
   if (!needs.ok) {
     return (
       <>
-        <PageHeader eyebrow="Konsultasi" title="Cari laptop yang pas" />
+        <PageHeader title="Temukan laptop yang pas" />
         <div className="container-page py-10">
           <ApiProblem error={needs.error} retryHref="/konsultasi" />
         </div>
@@ -35,7 +35,7 @@ export default async function KonsultasiPage({ searchParams }: { searchParams: P
 
   return (
     <>
-      <PageHeader eyebrow="Konsultasi" title="Cari laptop yang pas">
+      <PageHeader title="Temukan laptop yang pas">
         <p>
           Jawab beberapa pertanyaan singkat. Kami carikan dari database kami, lalu jelaskan alasannya dengan bahasa biasa,
           termasuk RAM dan penyimpanannya bisa ditambah atau tidak.

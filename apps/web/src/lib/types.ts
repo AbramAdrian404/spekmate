@@ -8,6 +8,7 @@ export type NeedInfo = Schemas["NeedInfo"];
 export type ModelList = Schemas["ModelList"];
 export type ModelSummary = Schemas["ModelSummaryOut"];
 export type ModelDetail = Schemas["ModelDetailOut"];
+export type ModelImage = Schemas["ModelImageOut"];
 export type Variant = Schemas["VariantOut"];
 export type Assessment = Schemas["AssessmentOut"];
 export type Criterion = Schemas["CriterionOut"];
@@ -34,3 +35,20 @@ export type RecommendationRequest = {
   condition?: ConditionFilter;
   limit?: number;
 };
+
+// --- Admin (see lib/admin) -------------------------------------------------------------------------------------
+export type AdminUser = Schemas["AdminUserOut"];
+export type AdminLogin = Schemas["LoginOut"];
+export type AdminModel = Schemas["ModelAdminOut"];
+export type AdminModelInput = Schemas["ModelIn"];
+export type AdminVariant = Schemas["VariantRow"];
+export type AdminVariantInput = Schemas["VariantIn"];
+export type AdminPrice = Schemas["PriceRow"];
+export type AdminPriceInput = Schemas["PriceIn"];
+export type AdminImage = Schemas["ImageOut"];
+export type AdminModelList = Schemas["ModelListOut"];
+export type AdminModelListItem = Schemas["ModelListItem"];
+export type AdminDashboard = Schemas["DashboardOut"];
+export type AdminCpu = Schemas["CpuRow"];
+export type AdminGpu = Schemas["GpuRow"];
+export type PublicationStatus = Schemas["ModelAdminOut"]["status"];

@@ -3,18 +3,19 @@ import { SITE } from "@/lib/site";
 /**
  * The mark: a laptop whose screen shows three rising bars, the same "tingkat" meter the results use,
  * in the site's companion colors. Like any logo it keeps its own colors in light and dark mode.
- * The gradient id is fixed, so render the mark once per page (the header does). Also the favicon (app/icon.svg).
+ * The gradient id is fixed unless you pass another, so render the mark once per page or give each copy its own
+ * `gradientId`. Also the favicon (app/icon.svg).
  */
-export function Logo({ className = "size-9" }: { className?: string }) {
+export function Logo({ className = "size-9", gradientId = "spekmate-badge" }: { className?: string; gradientId?: string }) {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true" className={className}>
       <defs>
-        <linearGradient id="spekmate-badge" x1="8" y1="0" x2="56" y2="64" gradientUnits="userSpaceOnUse">
+        <linearGradient id={gradientId} x1="8" y1="0" x2="56" y2="64" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#5a78ee" />
           <stop offset="1" stopColor="#2a3fb5" />
         </linearGradient>
       </defs>
-      <rect width="64" height="64" rx="18" fill="url(#spekmate-badge)" />
+      <rect width="64" height="64" rx="18" fill={`url(#${gradientId})`} />
       <rect x="12" y="13" width="40" height="28" rx="5.5" fill="#fff" />
       <rect x="18.5" y="29" width="7" height="6.5" rx="2" fill="#40c59b" />
       <rect x="28.5" y="23.5" width="7" height="12" rx="2" fill="#f7c041" />

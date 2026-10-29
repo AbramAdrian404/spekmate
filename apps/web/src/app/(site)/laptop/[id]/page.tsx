@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { groupVerdicts } from "@/components/model-card";
+import { ModelPhoto } from "@/components/model-photo";
 import { VariantSection } from "@/components/variant-section";
 import { VerdictBadge } from "@/components/verdict-badge";
 import { ApiError, getModel, getModels } from "@/lib/api";
@@ -70,6 +71,20 @@ export default async function ModelPage({ params }: Props) {
 
       <div className="container-page grid gap-8 py-8 sm:py-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
         <div className="min-w-0 space-y-6">
+          {model.images.length > 0 ? (
+            <section aria-label="Foto laptop" className="space-y-3">
+              <ModelPhoto image={model.images[0]} fallbackAlt={model.name} className="aspect-[4/3] max-h-[28rem] w-full" priority />
+              {model.images.length > 1 ? (
+                <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+                  {model.images.slice(1).map((image) => (
+                    <li key={image.url}>
+                      <ModelPhoto image={image} fallbackAlt={model.name} className="aspect-[4/3]" />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+          ) : null}
           {model.watch_out ? (
             <aside className="callout" data-tone="warn" aria-label="Yang perlu diperhatikan">
               <TriangleAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0" />

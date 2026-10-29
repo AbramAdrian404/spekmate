@@ -140,6 +140,8 @@ def list_models(
     ram: Annotated[int | None, Query(ge=1, le=1024)] = None,
     price_min: Annotated[int | None, Query(ge=0)] = None,
     price_max: Annotated[int | None, Query(ge=0)] = None,
+    completeness: Literal["all", "incomplete", "complete"] = "all",
+    photos: Literal["all", "with", "without"] = "all",
     sort: Literal["updated", "created", "name", "price"] = "updated",
     dir: Literal["asc", "desc"] = "desc",
     page: Annotated[int, Query(ge=1, le=10_000)] = 1,
@@ -147,7 +149,8 @@ def list_models(
 ) -> A.ModelListOut:
     with db.begin() as conn:
         return admin_service.list_models(conn, q=q, brand=brand, status=status, cpu=cpu, ram=ram, price_min=price_min,
-                                         price_max=price_max, sort=sort, direction=dir, page=page, page_size=page_size)
+                                         price_max=price_max, completeness=completeness, photos=photos, sort=sort,
+                                         direction=dir, page=page, page_size=page_size)
 
 
 @router.post("/models", response_model=A.ModelAdminOut, status_code=201, summary="Add a laptop")

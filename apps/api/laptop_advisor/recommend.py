@@ -133,6 +133,7 @@ def recommend(cat: Catalog, req: S.RecommendationRequest) -> S.RecommendationRes
             rank=rank,
             model_id=o.variant.get("model_id") or "",
             model_name=cat.model_name(o.model),
+            image=(cat.images(o.model) or [None])[0],
             variant_id=o.variant["id"],
             variant_title=cat.variant_title(o.variant),
             condition=o.condition,  # type: ignore[arg-type]

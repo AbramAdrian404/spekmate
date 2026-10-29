@@ -94,6 +94,7 @@ def _list_item(m: Row, variants_of, prices_of, images_of) -> A.ModelListItem:
         cpus=sorted({v["cpu"] for v in variants if v.get("cpu")}),
         ram_options=sorted({int(v["ram_gb"]) for v in variants if v.get("ram_gb")}),
         image_url=photo["url"] if photo else None,
+        image_count=len(images_of.get(m["id"], [])),
         missing_count=len(model_missing(m, variants, prices_of)),
         updated_at=m["updated_at"], created_at=m["created_at"])
 
@@ -109,7 +110,8 @@ def _haystack(m: Row, variants: list[Row]) -> str:
 
 def list_models(conn: Connection, *, q: str | None = None, brand: str | None = None, status: str = "active",
                 cpu: str | None = None, ram: int | None = None, price_min: int | None = None,
-                price_max: int | None = None, sort: str = "updated", direction: str = "desc", page: int = 1,
+                price_max: int | None = None, completeness: str = "all", photos: str = "all",
+                sort: str = "updated", direction: str = "desc", page: int = 1,
                 page_size: int = 20) -> A.ModelListOut:
     everything = repo.fetch_everything(conn)
     variants_of, prices_of, images_of = _index(everything)
@@ -138,6 +140,14 @@ def list_models(conn: Connection, *, q: str | None = None, brand: str | None = N
         if price_min is not None and (item.price_high is None or item.price_high < price_min):
             continue
         if price_max is not None and (item.price_low is None or item.price_low > price_max):
+            continue
+        if completeness == "incomplete" and item.missing_count == 0:
+            continue
+        if completeness == "complete" and item.missing_count > 0:
+            continue
+        if photos == "without" and item.image_count > 0:
+            continue
+        if photos == "with" and item.image_count == 0:
             continue
         items.append(item)
 

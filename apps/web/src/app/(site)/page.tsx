@@ -25,7 +25,7 @@ const PRINCIPLES: ReadonlyArray<{ title: string; text: string; ready: boolean; I
     Icon: Wrench,
   },
   {
-    title: "Konsultasi sesuai aktivitas",
+    title: "Rekomendasi sesuai aktivitas",
     text: "Jawaban atas pertanyaan seperti cukup atau tidaknya untuk kuliah, desain, atau pemrograman, dalam bahasa sehari-hari. Cukup sebutkan aktivitasnya, bukan nama komponen.",
     ready: true,
     Icon: MessagesSquare,
@@ -83,7 +83,7 @@ export default async function HomePage() {
             <p className="mt-5 text-base text-ink-2">
               Belum tahu harus memilih apa?{" "}
               <a href="#mulai" className="inline-flex items-center gap-1 font-medium text-accent no-underline hover:underline">
-                Mulai konsultasi
+                Temukan laptop
                 <ArrowRight aria-hidden="true" className="size-4" />
               </a>
             </p>
@@ -116,7 +116,7 @@ export default async function HomePage() {
       <section id="mulai" aria-labelledby="mulai-judul" className="scroll-mt-16 py-20 sm:py-28">
         <div className="container-page">
           <h2 id="mulai-judul" className="reveal section-title">
-            Mulai konsultasi.
+            Temukan laptop.
           </h2>
           <p className="reveal section-lead" style={{ "--reveal-delay": "80ms" } as CSSProperties}>
             Pilih kebutuhan dan isi anggaran. Hasilnya tampil di halaman berikutnya, lengkap dengan alasannya.

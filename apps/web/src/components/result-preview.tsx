@@ -30,7 +30,7 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <h2 id="contoh-judul" className="reveal section-title">
-              Contoh hasil konsultasi.
+              Contoh hasil rekomendasi.
             </h2>
             <p className="reveal section-lead" style={{ "--reveal-delay": "80ms" } as CSSProperties}>
               Bukan tampilan rekaan. Ini jawaban sungguhan dari database untuk satu pertanyaan contoh.
@@ -143,7 +143,7 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
 
         <div className="reveal mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between" style={{ "--reveal-delay": "120ms" } as CSSProperties}>
           <p className="measure text-sm text-ink-2">
-            Dihitung dengan aturan yang sama seperti di halaman konsultasi. Harga berubah dan stok berbeda-beda. Periksa kembali di toko sebelum membeli.
+            Dihitung dengan aturan yang sama seperti di halaman Temukan laptop. Harga berubah dan stok berbeda-beda. Periksa kembali di toko sebelum membeli.
           </p>
           <a href="#mulai" className="btn btn-primary shrink-0">
             Coba dengan kebutuhan sendiri
