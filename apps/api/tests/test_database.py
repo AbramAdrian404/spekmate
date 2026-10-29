@@ -668,6 +668,18 @@ def test_upload_shows_on_the_public_pages_and_serves_the_file(admin):
     assert served.content == png()
 
 
+def test_recommendation_results_carry_the_main_photo(admin):
+    body = {"needs": ["kuliah-dan-kantor"], "budget_max": 20_000_000, "condition": "baru"}
+    public = TestClient(admin.app)
+    before = public.post("/api/recommendations", json=body).json()["results"]
+    assert before and all(item["image"] is None for item in before)
+    image = upload(admin, alt="Tampak depan").json()
+    after = public.post("/api/recommendations", json=body).json()["results"]
+    with_photo = [item for item in after if item["model_id"] == "asus-m1405ya"]
+    assert with_photo and all(item["image"]["url"] == image["url"] for item in with_photo)
+    assert all(item["image"] is None for item in after if item["model_id"] != "asus-m1405ya")
+
+
 def test_main_photo_can_change_and_deleting_it_promotes_another(admin):
     first = upload(admin).json()
     second = upload(admin, data=png(300, 300, (200, 40, 40))).json()

@@ -1394,6 +1394,8 @@ export interface components {
             model_id: string;
             /** Model Name */
             model_name: string;
+            /** @description The model's main photo, when one was uploaded. */
+            image?: components["schemas"]["ModelImageOut"] | null;
             /** Variant Id */
             variant_id: string;
             /** Variant Title */

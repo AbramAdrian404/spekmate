@@ -8,6 +8,7 @@ export type NeedInfo = Schemas["NeedInfo"];
 export type ModelList = Schemas["ModelList"];
 export type ModelSummary = Schemas["ModelSummaryOut"];
 export type ModelDetail = Schemas["ModelDetailOut"];
+export type ModelImage = Schemas["ModelImageOut"];
 export type Variant = Schemas["VariantOut"];
 export type Assessment = Schemas["AssessmentOut"];
 export type Criterion = Schemas["CriterionOut"];

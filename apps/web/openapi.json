@@ -5158,6 +5158,17 @@
             "type": "string",
             "title": "Model Name"
           },
+          "image": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelImageOut"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The model's main photo, when one was uploaded."
+          },
           "variant_id": {
             "type": "string",
             "title": "Variant Id"
