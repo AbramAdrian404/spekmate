@@ -214,6 +214,10 @@ class Catalog:
     def _model_prices(self, model: Row) -> list[Row]:
         return [p for v in self.ds.variants_of(model["id"]) for p in self.ds.prices_of(v["id"])]
 
+    def images(self, model: Row) -> list[S.ModelImageOut]:
+        return [S.ModelImageOut(url=img["url"], alt=img.get("alt"), is_primary=bool(img.get("is_primary")))
+                for img in self.ds.images_of(model["id"])]
+
     def model_summary(self, model: Row) -> S.ModelSummaryOut:
         variants = self.ds.variants_of(model["id"])
         prices = self._model_prices(model)
@@ -226,11 +230,12 @@ class Catalog:
             top = min(verdicts, key=lambda x: engine.VERDICT_RANK[x]) if verdicts else "tidak_dinilai"
             best.append(S.NeedVerdictOut(need_id=need.id, short_name=texts.need_short_name(need.id, need.name),
                                          verdict=top, verdict_label=engine.VERDICT_LABELS[top]))  # type: ignore[arg-type]
+        photos = self.images(model)
         return S.ModelSummaryOut(
             id=model["id"], brand=model.get("brand"), series=model.get("series"), name=self.model_name(model),
             year=model.get("year"), sales_status=_clean(model.get("sales_status")), summary=model.get("summary"),
             conditions=conditions,  # type: ignore[arg-type]
-            variant_count=len(variants), price_ranges=ranges, best_verdicts=best)
+            variant_count=len(variants), price_ranges=ranges, best_verdicts=best, image=photos[0] if photos else None)
 
     def model_detail(self, model_id: str) -> S.ModelDetailOut | None:
         model = self.ds.model(model_id)
@@ -247,7 +252,8 @@ class Catalog:
                              sd_card=_clean(model.get("sd_card")), lan=_clean(model.get("lan"))),
             watch_out=model.get("watch_out"), common_issues=model.get("common_issues"),
             spec_url=model.get("spec_url"), checked_on=model.get("checked_on"),
-            variants=[self.variant_out(v) for v in self.ds.variants_of(model["id"])])
+            variants=[self.variant_out(v) for v in self.ds.variants_of(model["id"])],
+            images=self.images(model))
 
     def list_models(self, condition: str | None = None, need: str | None = None, q: str | None = None,
                     brand: str | None = None, sort: str = "name") -> S.ModelList:

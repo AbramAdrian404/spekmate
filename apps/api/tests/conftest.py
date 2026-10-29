@@ -1,10 +1,17 @@
-import pytest
-from fastapi.testclient import TestClient
-from synthetic import make_catalog, make_dataset
+import os
 
-from laptop_advisor.catalog import get_catalog
-from laptop_advisor.main import app
-from laptop_advisor.store import get_dataset
+# The suite runs against the bundled JSON unless a test builds its own database-backed app. An empty value switches
+# the database off; without this line the app would create a SQLite file in apps/api/.data on import.
+os.environ["DATABASE_URL"] = ""
+
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+from synthetic import make_catalog, make_dataset  # noqa: E402
+
+from laptop_advisor.catalog import get_catalog  # noqa: E402
+from laptop_advisor.main import app  # noqa: E402
+from laptop_advisor.routes import current_catalog  # noqa: E402
+from laptop_advisor.store import get_dataset  # noqa: E402
 
 
 @pytest.fixture(scope="session")
@@ -36,8 +43,8 @@ def catalog():
 def synthetic_client():
     """The real app, but serving the made-up dataset."""
     cat = make_catalog()
-    app.dependency_overrides[get_catalog] = lambda: cat
+    app.dependency_overrides[current_catalog] = lambda: cat
     try:
         yield TestClient(app)
     finally:
-        app.dependency_overrides.pop(get_catalog, None)
+        app.dependency_overrides.pop(current_catalog, None)
