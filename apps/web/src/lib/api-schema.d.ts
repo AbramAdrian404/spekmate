@@ -139,10 +139,266 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sign in with email and password */
+        post: operations["login_api_admin_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** End this session */
+        post: operations["logout_api_admin_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Who is signed in */
+        get: operations["me_api_admin_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change the password; other sessions are ended */
+        post: operations["change_password_api_admin_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Numbers for the dashboard */
+        get: operations["dashboard_api_admin_dashboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Laptops, with search, filters, sorting and pages */
+        get: operations["list_models_api_admin_models_get"];
+        put?: never;
+        /** Add a laptop */
+        post: operations["create_model_api_admin_models_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/models/{model_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One laptop with everything under it */
+        get: operations["get_model_api_admin_models__model_id__get"];
+        /** Save changes to a laptop */
+        put: operations["update_model_api_admin_models__model_id__put"];
+        post?: never;
+        /** Archive a laptop (recoverable), or delete an archived one for good */
+        delete: operations["delete_model_api_admin_models__model_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/models/{model_id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Bring an archived laptop back as a draft */
+        post: operations["restore_model_api_admin_models__model_id__restore_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/models/{model_id}/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload a photo */
+        post: operations["upload_image_api_admin_models__model_id__images_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/images/{image_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete a photo */
+        delete: operations["delete_image_api_admin_images__image_id__delete"];
+        options?: never;
+        head?: never;
+        /** Change a photo's description or make it the main one */
+        patch: operations["patch_image_api_admin_images__image_id__patch"];
+        trace?: never;
+    };
+    "/api/admin/cpus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List prosesor */
+        get: operations["listing_api_admin_cpus_get"];
+        put?: never;
+        /** Add prosesor */
+        post: operations["add_api_admin_cpus_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/cpus/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit prosesor */
+        put: operations["edit_api_admin_cpus__name__put"];
+        post?: never;
+        /** Delete prosesor that no laptop uses */
+        delete: operations["remove_api_admin_cpus__name__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/gpus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List kartu grafis */
+        get: operations["listing_api_admin_gpus_get"];
+        put?: never;
+        /** Add kartu grafis */
+        post: operations["add_api_admin_gpus_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/gpus/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Edit kartu grafis */
+        put: operations["edit_api_admin_gpus__name__put"];
+        post?: never;
+        /** Delete kartu grafis that no laptop uses */
+        delete: operations["remove_api_admin_gpus__name__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AdminUserOut */
+        AdminUserOut: {
+            /** Email */
+            email: string;
+            /**
+             * Role
+             * @constant
+             */
+            role: "admin";
+        };
         /** AssessmentOut */
         AssessmentOut: {
             /** Need Id */
@@ -161,6 +417,23 @@ export interface components {
             /** Criteria */
             criteria: components["schemas"]["CriterionOut"][];
         };
+        /** Body_upload_image_api_admin_models__model_id__images_post */
+        Body_upload_image_api_admin_models__model_id__images_post: {
+            /**
+             * File
+             * @description JPG, PNG or WebP.
+             */
+            file: string;
+            /** Alt */
+            alt?: string | null;
+        };
+        /** BrandCount */
+        BrandCount: {
+            /** Brand */
+            brand: string;
+            /** Count */
+            count: number;
+        };
         /** Counts */
         Counts: {
             /** Models */
@@ -171,6 +444,37 @@ export interface components {
             prices: number;
             /** Needs */
             needs: number;
+        };
+        /** CpuIn */
+        CpuIn: {
+            /** Name */
+            name: string;
+            /** Maker */
+            maker?: string | null;
+            /** Generation */
+            generation?: string | null;
+            /** Codename */
+            codename?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Cores */
+            cores?: number | null;
+            /** Threads */
+            threads?: number | null;
+            /** Power Class */
+            power_class?: ("hemat" | "seimbang" | "performa") | null;
+            /** Windows11 */
+            windows11?: ("ya" | "tidak" | "unknown") | null;
+            /** Tier */
+            tier?: number | null;
+            /** Tier Reason */
+            tier_reason?: string | null;
+            /** Plain */
+            plain?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
         };
         /** CpuOut */
         CpuOut: {
@@ -194,6 +498,42 @@ export interface components {
             windows11?: string | null;
             /** Source */
             source?: string | null;
+        };
+        /** CpuRow */
+        CpuRow: {
+            /** Name */
+            name: string;
+            /** Maker */
+            maker?: string | null;
+            /** Generation */
+            generation?: string | null;
+            /** Codename */
+            codename?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Cores */
+            cores?: number | null;
+            /** Threads */
+            threads?: number | null;
+            /** Power Class */
+            power_class?: ("hemat" | "seimbang" | "performa") | null;
+            /** Windows11 */
+            windows11?: ("ya" | "tidak" | "unknown") | null;
+            /** Tier */
+            tier?: number | null;
+            /** Tier Reason */
+            tier_reason?: string | null;
+            /** Plain */
+            plain?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
+            /**
+             * Variant Count
+             * @default 0
+             */
+            variant_count: number;
         };
         /** CriterionOut */
         CriterionOut: {
@@ -239,6 +579,38 @@ export interface components {
             reason?: string | null;
             /** Basis */
             basis?: string | null;
+        };
+        /** DashboardOut */
+        DashboardOut: {
+            /** Models Total */
+            models_total: number;
+            by_status: components["schemas"]["StatusCounts"];
+            /** Variants */
+            variants: number;
+            /** Prices */
+            prices: number;
+            /** Images */
+            images: number;
+            /**
+             * Incomplete
+             * @description Models with at least one gap (see ModelAdminOut.missing).
+             */
+            incomplete: number;
+            /**
+             * Without Images
+             * @description Models that have no photo yet.
+             */
+            without_images: number;
+            /** Oldest Price Check */
+            oldest_price_check?: string | null;
+            /** Latest Price Check */
+            latest_price_check?: string | null;
+            /** Brands */
+            brands: components["schemas"]["BrandCount"][];
+            /** Recent */
+            recent: components["schemas"]["ModelListItem"][];
+            /** Needs Attention */
+            needs_attention: components["schemas"]["ModelListItem"][];
         };
         /** DisplayOut */
         DisplayOut: {
@@ -289,6 +661,31 @@ export interface components {
              */
             over_budget: number;
         };
+        /** GpuIn */
+        GpuIn: {
+            /** Name */
+            name: string;
+            /** Maker */
+            maker?: string | null;
+            /** Kind */
+            kind?: ("bawaan" | "terpisah") | null;
+            /** Architecture */
+            architecture?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Vram Gb */
+            vram_gb?: number | null;
+            /** Tier */
+            tier?: number | null;
+            /** Tier Reason */
+            tier_reason?: string | null;
+            /** Plain */
+            plain?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
+        };
         /** GpuOut */
         GpuOut: {
             /** Name */
@@ -310,6 +707,36 @@ export interface components {
             /** Source */
             source?: string | null;
         };
+        /** GpuRow */
+        GpuRow: {
+            /** Name */
+            name: string;
+            /** Maker */
+            maker?: string | null;
+            /** Kind */
+            kind?: ("bawaan" | "terpisah") | null;
+            /** Architecture */
+            architecture?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Vram Gb */
+            vram_gb?: number | null;
+            /** Tier */
+            tier?: number | null;
+            /** Tier Reason */
+            tier_reason?: string | null;
+            /** Plain */
+            plain?: string | null;
+            /** Source */
+            source?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
+            /**
+             * Variant Count
+             * @default 0
+             */
+            variant_count: number;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -324,6 +751,51 @@ export interface components {
              */
             status: "ok";
         };
+        /** ImageOut */
+        ImageOut: {
+            /** Id */
+            id: number;
+            /** Url */
+            url: string;
+            /** Alt */
+            alt?: string | null;
+            /** Is Primary */
+            is_primary: boolean;
+            /** Position */
+            position: number;
+            /** Content Type */
+            content_type: string;
+            /** Size Bytes */
+            size_bytes: number;
+        };
+        /** ImagePatchIn */
+        ImagePatchIn: {
+            /** Alt */
+            alt?: string | null;
+            /** Is Primary */
+            is_primary?: boolean | null;
+        };
+        /** LoginIn */
+        LoginIn: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+        };
+        /** LoginOut */
+        LoginOut: {
+            /**
+             * Token
+             * @description Shown once. The web app keeps it in an HttpOnly cookie; never in browser storage.
+             */
+            token: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            user: components["schemas"]["AdminUserOut"];
+        };
         /** MeaningOut */
         MeaningOut: {
             /** Code */
@@ -332,6 +804,11 @@ export interface components {
             label: string;
             /** Meaning */
             meaning?: string | null;
+        };
+        /** MessageOut */
+        MessageOut: {
+            /** Message */
+            message: string;
         };
         /**
          * Meta
@@ -388,6 +865,80 @@ export interface components {
              */
             multi_need_note: string;
         };
+        /** ModelAdminOut */
+        ModelAdminOut: {
+            /** Brand */
+            brand?: string | null;
+            /** Series */
+            series?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Sales Status */
+            sales_status?: ("dijual" | "bekas_saja" | "unknown") | null;
+            /** Body Material */
+            body_material?: string | null;
+            /** Screen Inches */
+            screen_inches?: number | null;
+            /** Usb A Count */
+            usb_a_count?: number | null;
+            /** Usb C Count */
+            usb_c_count?: number | null;
+            /** Usb C Kind */
+            usb_c_kind?: string | null;
+            /** Usb C Charging */
+            usb_c_charging?: ("ya" | "tidak" | "unknown") | null;
+            /** Hdmi */
+            hdmi?: ("ya" | "tidak" | "unknown") | null;
+            /** Hdmi Version */
+            hdmi_version?: string | null;
+            /** Sd Card */
+            sd_card?: ("ya" | "tidak" | "unknown") | null;
+            /** Lan */
+            lan?: ("ya" | "tidak" | "unknown") | null;
+            /** Summary */
+            summary?: string | null;
+            /** Watch Out */
+            watch_out?: string | null;
+            /** Common Issues */
+            common_issues?: string | null;
+            /** Spec Url */
+            spec_url?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "published" | "draft" | "archived";
+            /** Name */
+            name: string;
+            /** Created At */
+            created_at?: string | null;
+            /** Updated At */
+            updated_at?: string | null;
+            /** Version */
+            version: string;
+            /** Variants */
+            variants: components["schemas"]["VariantRow"][];
+            /** Images */
+            images: components["schemas"]["ImageOut"][];
+            /**
+             * Missing
+             * @description Gaps that keep this record from being complete.
+             * @default []
+             */
+            missing: string[];
+            /**
+             * Warnings
+             * @description Things worth a second look that did not block saving.
+             * @default []
+             */
+            warnings: string[];
+            /** @description How the rule engine rates the saved data, exactly as visitors see it. */
+            preview?: components["schemas"]["ModelDetailOut"] | null;
+        };
         /** ModelDetailOut */
         ModelDetailOut: {
             /** Id */
@@ -415,6 +966,8 @@ export interface components {
              * @description Best verdict among this model's variants, per need.
              */
             best_verdicts: components["schemas"]["NeedVerdictOut"][];
+            /** @description The main photo, when one was uploaded. */
+            image?: components["schemas"]["ModelImageOut"] | null;
             /** Body Material */
             body_material?: string | null;
             /** Screen Inches */
@@ -430,6 +983,90 @@ export interface components {
             checked_on?: string | null;
             /** Variants */
             variants: components["schemas"]["VariantOut"][];
+            /**
+             * Images
+             * @description All photos, main one first.
+             * @default []
+             */
+            images: components["schemas"]["ModelImageOut"][];
+        };
+        /** ModelImageOut */
+        ModelImageOut: {
+            /**
+             * Url
+             * @description Absolute, or relative to this site (/api/media/...) for locally stored photos.
+             */
+            url: string;
+            /** Alt */
+            alt?: string | null;
+            /**
+             * Is Primary
+             * @default false
+             */
+            is_primary: boolean;
+        };
+        /** ModelIn */
+        ModelIn: {
+            /** Brand */
+            brand: string;
+            /** Series */
+            series: string;
+            /** Year */
+            year?: number | null;
+            /** Sales Status */
+            sales_status?: ("dijual" | "bekas_saja" | "unknown") | null;
+            /** Body Material */
+            body_material?: string | null;
+            /** Screen Inches */
+            screen_inches?: number | null;
+            /** Usb A Count */
+            usb_a_count?: number | null;
+            /** Usb C Count */
+            usb_c_count?: number | null;
+            /** Usb C Kind */
+            usb_c_kind?: string | null;
+            /** Usb C Charging */
+            usb_c_charging?: ("ya" | "tidak" | "unknown") | null;
+            /** Hdmi */
+            hdmi?: ("ya" | "tidak" | "unknown") | null;
+            /** Hdmi Version */
+            hdmi_version?: string | null;
+            /** Sd Card */
+            sd_card?: ("ya" | "tidak" | "unknown") | null;
+            /** Lan */
+            lan?: ("ya" | "tidak" | "unknown") | null;
+            /** Summary */
+            summary?: string | null;
+            /** Watch Out */
+            watch_out?: string | null;
+            /** Common Issues */
+            common_issues?: string | null;
+            /** Spec Url */
+            spec_url?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
+            /**
+             * Id
+             * @description Only when creating. Left empty, it is made from brand and series. Never changes afterwards.
+             */
+            id?: string | null;
+            /**
+             * Status
+             * @description Draft is invisible to visitors.
+             * @default draft
+             * @enum {string}
+             */
+            status: "published" | "draft" | "archived";
+            /**
+             * Version
+             * @description The `version` last read. Edits fail with 409 if the record changed since.
+             */
+            version?: string | null;
+            /**
+             * Variants
+             * @description Null keeps existing configurations; a list is the new full set.
+             */
+            variants?: components["schemas"]["VariantIn"][] | null;
         };
         /** ModelList */
         ModelList: {
@@ -437,6 +1074,71 @@ export interface components {
             total: number;
             /** Items */
             items: components["schemas"]["ModelSummaryOut"][];
+        };
+        /** ModelListItem */
+        ModelListItem: {
+            /** Id */
+            id: string;
+            /** Brand */
+            brand?: string | null;
+            /** Series */
+            series?: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "published" | "draft" | "archived";
+            /** Year */
+            year?: number | null;
+            /** Variant Count */
+            variant_count: number;
+            /** Price Low */
+            price_low?: number | null;
+            /** Price High */
+            price_high?: number | null;
+            /**
+             * Cpus
+             * @default []
+             */
+            cpus: string[];
+            /**
+             * Ram Options
+             * @default []
+             */
+            ram_options: number[];
+            /** Image Url */
+            image_url?: string | null;
+            /** Missing Count */
+            missing_count: number;
+            /** Updated At */
+            updated_at?: string | null;
+            /** Created At */
+            created_at?: string | null;
+        };
+        /** ModelListOut */
+        ModelListOut: {
+            /** Items */
+            items: components["schemas"]["ModelListItem"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Pages */
+            pages: number;
+            /**
+             * Brands
+             * @description Every brand in the database, for the filter.
+             */
+            brands: string[];
+            /**
+             * Ram Options
+             * @description Every RAM size in the database, for the filter.
+             */
+            ram_options: number[];
         };
         /** ModelSummaryOut */
         ModelSummaryOut: {
@@ -465,6 +1167,8 @@ export interface components {
              * @description Best verdict among this model's variants, per need.
              */
             best_verdicts: components["schemas"]["NeedVerdictOut"][];
+            /** @description The main photo, when one was uploaded. */
+            image?: components["schemas"]["ModelImageOut"] | null;
         };
         /** NeedInfo */
         NeedInfo: {
@@ -516,6 +1220,13 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** PasswordChangeIn */
+        PasswordChangeIn: {
+            /** Current Password */
+            current_password: string;
+            /** New Password */
+            new_password: string;
+        };
         /** PortsOut */
         PortsOut: {
             /** Usb A Count */
@@ -534,6 +1245,33 @@ export interface components {
             sd_card?: string | null;
             /** Lan */
             lan?: string | null;
+        };
+        /** PriceIn */
+        PriceIn: {
+            /**
+             * Condition
+             * @enum {string}
+             */
+            condition: "baru" | "bekas";
+            /** Low */
+            low?: number | null;
+            /** High */
+            high?: number | null;
+            /** Mid */
+            mid?: number | null;
+            /** Source Type */
+            source_type?: ("marketplace" | "toko_resmi") | null;
+            /** Source */
+            source?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Id
+             * @description Present when editing an existing price row; omit to add a new one.
+             */
+            id?: number | null;
         };
         /** PriceObservationOut */
         PriceObservationOut: {
@@ -573,6 +1311,29 @@ export interface components {
             low: number;
             /** High */
             high: number;
+        };
+        /** PriceRow */
+        PriceRow: {
+            /** Condition */
+            condition?: ("baru" | "bekas") | null;
+            /** Low */
+            low?: number | null;
+            /** High */
+            high?: number | null;
+            /** Mid */
+            mid?: number | null;
+            /** Source Type */
+            source_type?: ("marketplace" | "toko_resmi") | null;
+            /** Source */
+            source?: string | null;
+            /** Checked On */
+            checked_on?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Id */
+            id: number;
+            /** Updated At */
+            updated_at?: string | null;
         };
         /**
          * PriceSummaryOut
@@ -759,6 +1520,24 @@ export interface components {
             /** Battery Warranty Months */
             battery_warranty_months?: number | null;
         };
+        /** StatusCounts */
+        StatusCounts: {
+            /**
+             * Published
+             * @default 0
+             */
+            published: number;
+            /**
+             * Draft
+             * @default 0
+             */
+            draft: number;
+            /**
+             * Archived
+             * @default 0
+             */
+            archived: number;
+        };
         /** StorageOut */
         StorageOut: {
             /** Gb */
@@ -825,6 +1604,119 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /** VariantIn */
+        VariantIn: {
+            /** Code */
+            code?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Sales Status */
+            sales_status?: ("dijual" | "bekas_saja" | "unknown") | null;
+            /** Discontinued Year */
+            discontinued_year?: number | null;
+            /** Market */
+            market?: string | null;
+            /** Official Segment */
+            official_segment?: string | null;
+            /** Official Target */
+            official_target?: string | null;
+            /** Cpu */
+            cpu?: string | null;
+            /** Gpu */
+            gpu?: string | null;
+            /** Gpu Tgp W */
+            gpu_tgp_w?: number | null;
+            /** Ram Gb */
+            ram_gb?: number | null;
+            /** Ram Type */
+            ram_type?: string | null;
+            /** Ram Speed Mts */
+            ram_speed_mts?: number | null;
+            /** Ram Channel */
+            ram_channel?: ("single" | "dual" | "unknown") | null;
+            /** Ram Layout */
+            ram_layout?: ("slot" | "setengah_disolder" | "disolder" | "unknown") | null;
+            /** Ram Slots Total */
+            ram_slots_total?: number | null;
+            /** Ram Slots Free */
+            ram_slots_free?: number | null;
+            /** Ram Soldered Gb */
+            ram_soldered_gb?: number | null;
+            /** Ram Max Gb */
+            ram_max_gb?: number | null;
+            /** Storage Gb */
+            storage_gb?: number | null;
+            /** Storage Type */
+            storage_type?: ("nvme_ssd" | "sata_ssd" | "emmc" | "hdd" | "unknown") | null;
+            /** Storage Interface */
+            storage_interface?: string | null;
+            /** Storage Form */
+            storage_form?: string | null;
+            /** Storage Replaceable */
+            storage_replaceable?: ("ya" | "tidak" | "unknown") | null;
+            /** M2 Slots Total */
+            m2_slots_total?: number | null;
+            /** M2 Slots Free */
+            m2_slots_free?: number | null;
+            /** Bay 25 Free */
+            bay_25_free?: ("ya" | "tidak" | "unknown") | null;
+            /** Upgrade Verification */
+            upgrade_verification?: ("terverifikasi" | "belum terverifikasi") | null;
+            /** Upgrade Source */
+            upgrade_source?: string | null;
+            /** Weight Kg */
+            weight_kg?: number | null;
+            /** Panel */
+            panel?: ("TN" | "VA" | "IPS" | "OLED" | "unknown") | null;
+            /** Resolution */
+            resolution?: string | null;
+            /** Refresh Hz */
+            refresh_hz?: number | null;
+            /** Touch */
+            touch?: ("ya" | "tidak" | "unknown") | null;
+            /** Battery Wh */
+            battery_wh?: number | null;
+            /** Charger W */
+            charger_w?: number | null;
+            /** Wifi */
+            wifi?: string | null;
+            /** Bluetooth */
+            bluetooth?: string | null;
+            /** Fingerprint */
+            fingerprint?: ("ya" | "tidak" | "unknown") | null;
+            /** Backlit Keyboard */
+            backlit_keyboard?: ("ya" | "tidak" | "unknown") | null;
+            /** Webcam */
+            webcam?: string | null;
+            /** Os */
+            os?: string | null;
+            /** Os Edition */
+            os_edition?: string | null;
+            /** Office */
+            office?: string | null;
+            /** Warranty Type */
+            warranty_type?: string | null;
+            /** Warranty Months */
+            warranty_months?: number | null;
+            /** Battery Warranty Months */
+            battery_warranty_months?: number | null;
+            /** Available New */
+            available_new?: ("ya" | "tidak" | "unknown") | null;
+            /** Available Used */
+            available_used?: ("ya" | "tidak" | "unknown") | null;
+            /** Editor Note */
+            editor_note?: string | null;
+            /**
+             * Id
+             * @description Present when editing; leave empty to add a configuration.
+             */
+            id?: string | null;
+            /**
+             * Prices
+             * @description Null keeps the existing price rows; a list replaces them.
+             */
+            prices?: components["schemas"]["PriceIn"][] | null;
+        };
         /** VariantOut */
         VariantOut: {
             /** Id */
@@ -869,6 +1761,129 @@ export interface components {
             price_summaries: components["schemas"]["PriceSummaryOut"][];
             /** Prices */
             prices: components["schemas"]["PriceObservationOut"][];
+        };
+        /** VariantRow */
+        VariantRow: {
+            /** Code */
+            code?: string | null;
+            /** Year */
+            year?: number | null;
+            /** Sales Status */
+            sales_status?: ("dijual" | "bekas_saja" | "unknown") | null;
+            /** Discontinued Year */
+            discontinued_year?: number | null;
+            /** Market */
+            market?: string | null;
+            /** Official Segment */
+            official_segment?: string | null;
+            /** Official Target */
+            official_target?: string | null;
+            /** Cpu */
+            cpu?: string | null;
+            /** Gpu */
+            gpu?: string | null;
+            /** Gpu Tgp W */
+            gpu_tgp_w?: number | null;
+            /** Ram Gb */
+            ram_gb?: number | null;
+            /** Ram Type */
+            ram_type?: string | null;
+            /** Ram Speed Mts */
+            ram_speed_mts?: number | null;
+            /** Ram Channel */
+            ram_channel?: ("single" | "dual" | "unknown") | null;
+            /** Ram Layout */
+            ram_layout?: ("slot" | "setengah_disolder" | "disolder" | "unknown") | null;
+            /** Ram Slots Total */
+            ram_slots_total?: number | null;
+            /** Ram Slots Free */
+            ram_slots_free?: number | null;
+            /** Ram Soldered Gb */
+            ram_soldered_gb?: number | null;
+            /** Ram Max Gb */
+            ram_max_gb?: number | null;
+            /** Storage Gb */
+            storage_gb?: number | null;
+            /** Storage Type */
+            storage_type?: ("nvme_ssd" | "sata_ssd" | "emmc" | "hdd" | "unknown") | null;
+            /** Storage Interface */
+            storage_interface?: string | null;
+            /** Storage Form */
+            storage_form?: string | null;
+            /** Storage Replaceable */
+            storage_replaceable?: ("ya" | "tidak" | "unknown") | null;
+            /** M2 Slots Total */
+            m2_slots_total?: number | null;
+            /** M2 Slots Free */
+            m2_slots_free?: number | null;
+            /** Bay 25 Free */
+            bay_25_free?: ("ya" | "tidak" | "unknown") | null;
+            /** Upgrade Verification */
+            upgrade_verification?: ("terverifikasi" | "belum terverifikasi") | null;
+            /** Upgrade Source */
+            upgrade_source?: string | null;
+            /** Weight Kg */
+            weight_kg?: number | null;
+            /** Panel */
+            panel?: ("TN" | "VA" | "IPS" | "OLED" | "unknown") | null;
+            /** Resolution */
+            resolution?: string | null;
+            /** Refresh Hz */
+            refresh_hz?: number | null;
+            /** Touch */
+            touch?: ("ya" | "tidak" | "unknown") | null;
+            /** Battery Wh */
+            battery_wh?: number | null;
+            /** Charger W */
+            charger_w?: number | null;
+            /** Wifi */
+            wifi?: string | null;
+            /** Bluetooth */
+            bluetooth?: string | null;
+            /** Fingerprint */
+            fingerprint?: ("ya" | "tidak" | "unknown") | null;
+            /** Backlit Keyboard */
+            backlit_keyboard?: ("ya" | "tidak" | "unknown") | null;
+            /** Webcam */
+            webcam?: string | null;
+            /** Os */
+            os?: string | null;
+            /** Os Edition */
+            os_edition?: string | null;
+            /** Office */
+            office?: string | null;
+            /** Warranty Type */
+            warranty_type?: string | null;
+            /** Warranty Months */
+            warranty_months?: number | null;
+            /** Battery Warranty Months */
+            battery_warranty_months?: number | null;
+            /** Available New */
+            available_new?: ("ya" | "tidak" | "unknown") | null;
+            /** Available Used */
+            available_used?: ("ya" | "tidak" | "unknown") | null;
+            /** Editor Note */
+            editor_note?: string | null;
+            /** Id */
+            id: string;
+            /** Model Id */
+            model_id: string;
+            /**
+             * Prices
+             * @default []
+             */
+            prices: components["schemas"]["PriceRow"][];
+            /**
+             * Title
+             * @description Readable name of the configuration, e.g. 'AMD Ryzen 5 7430U · 16 GB RAM · 512 GB'.
+             */
+            title: string;
+            /**
+             * Missing
+             * @description What still needs to be filled in for this configuration to be rated.
+             * @default []
+             */
+            missing: string[];
         };
         /** WarningOut */
         WarningOut: {
@@ -1105,6 +2120,675 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MethodologyOut"];
+                };
+            };
+        };
+    };
+    login_api_admin_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    logout_api_admin_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+        };
+    };
+    me_api_admin_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserOut"];
+                };
+            };
+        };
+    };
+    change_password_api_admin_password_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordChangeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    dashboard_api_admin_dashboard_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardOut"];
+                };
+            };
+        };
+    };
+    list_models_api_admin_models_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                brand?: string | null;
+                status?: "active" | "published" | "draft" | "archived" | "all";
+                cpu?: string | null;
+                ram?: number | null;
+                price_min?: number | null;
+                price_max?: number | null;
+                sort?: "updated" | "created" | "name" | "price";
+                dir?: "asc" | "desc";
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModelListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_model_api_admin_models_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModelIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModelAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_model_api_admin_models__model_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                model_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModelAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_model_api_admin_models__model_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                model_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModelIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModelAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_model_api_admin_models__model_id__delete: {
+        parameters: {
+            query?: {
+                permanent?: boolean;
+            };
+            header?: never;
+            path: {
+                model_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_model_api_admin_models__model_id__restore_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                model_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModelAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_image_api_admin_models__model_id__images_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                model_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_image_api_admin_models__model_id__images_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_image_api_admin_images__image_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                image_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_image_api_admin_images__image_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                image_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImagePatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listing_api_admin_cpus_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CpuRow"][];
+                };
+            };
+        };
+    };
+    add_api_admin_cpus_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CpuIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CpuRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    edit_api_admin_cpus__name__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CpuIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CpuRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_api_admin_cpus__name__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listing_api_admin_gpus_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GpuRow"][];
+                };
+            };
+        };
+    };
+    add_api_admin_gpus_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GpuIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GpuRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    edit_api_admin_gpus__name__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GpuIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GpuRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_api_admin_gpus__name__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

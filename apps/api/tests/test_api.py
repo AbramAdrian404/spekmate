@@ -45,9 +45,11 @@ def test_get_responses_are_cacheable_but_posts_are_not(client):
     assert "cache-control" not in post.headers
 
 
-def test_caching_can_be_switched_off(client, monkeypatch):
-    monkeypatch.setattr(api_main, "settings", dataclasses.replace(api_main.settings, cache_seconds=0))
-    assert client.get("/api/models").headers["cache-control"] == "no-store"
+def test_caching_can_be_switched_off():
+    from fastapi.testclient import TestClient
+
+    quiet = api_main.create_app(dataclasses.replace(api_main.settings, cache_seconds=0))
+    assert TestClient(quiet).get("/api/models").headers["cache-control"] == "no-store"
 
 
 def test_health_also_answers_head_without_changing_the_contract(client):

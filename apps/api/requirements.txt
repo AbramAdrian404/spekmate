@@ -1,2 +1,5 @@
 fastapi==0.142.3
 pydantic==2.13.5
+sqlalchemy==2.0.55
+psycopg[binary]==3.3.6
+python-multipart==0.0.32
