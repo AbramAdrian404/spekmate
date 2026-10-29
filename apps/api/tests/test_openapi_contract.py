@@ -8,7 +8,11 @@ from pathlib import Path
 
 import pytest
 
-from laptop_advisor.main import app
+from laptop_advisor.config import load_settings
+from laptop_advisor.main import create_app
+
+# The document is the same with or without a database; an empty DATABASE_URL keeps this test off the disk.
+app = create_app(load_settings({"DATABASE_URL": ""}))
 
 COMMITTED = Path(__file__).resolve().parents[2] / "web" / "openapi.json"
 FIX = "python apps/api/scripts/dump_openapi.py && (cd apps/web && npm run gen:types)"

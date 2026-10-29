@@ -41,6 +41,7 @@ class Dataset:
         self.cpus: list[Row] = raw["cpus"]
         self.gpus: list[Row] = raw["gpus"]
         self.prices: list[Row] = raw["prices"]
+        self.images: list[Row] = raw.get("images", [])  # only the database has photos; the JSON files do not
 
         self.needs: list[Need] = [Need(n["id"], n["name"], n.get("description")) for n in self.rules["needs"]]
         if not self.needs:
@@ -61,6 +62,9 @@ class Dataset:
         self._prices_by_variant: dict[str, list[Row]] = {}
         for p in self.prices:
             self._prices_by_variant.setdefault(_key(p["variant_id"]), []).append(p)
+        self._images_by_model: dict[str, list[Row]] = {}
+        for img in self.images:
+            self._images_by_model.setdefault(_key(img["model_id"]), []).append(img)
         self._warning_text = {w["code"]: w["text"] for w in self.rules["warnings"]}
         self._tier_meaning = {t["tier"]: t for t in self.rules["tiers"]}
 
@@ -83,6 +87,11 @@ class Dataset:
 
     def prices_of(self, variant_id: str) -> list[Row]:
         return self._prices_by_variant.get(_key(variant_id), [])
+
+    def images_of(self, model_id: str) -> list[Row]:
+        """Photos of one model, the main one first."""
+        found = self._images_by_model.get(_key(model_id), [])
+        return sorted(found, key=lambda img: (not img.get("is_primary"), img.get("position", 0), img.get("id", 0)))
 
     def cpu(self, name: str | None) -> Row | None:
         return self._cpu_by_name.get(_key(name)) if name else None
@@ -134,6 +143,14 @@ def load_raw(path: Path | None = None) -> dict[str, Any]:
             raise DatasetError(f"{file} is missing. Run: python scripts/export_data.py")
         raw[name] = json.loads(file.read_text(encoding="utf-8"))
     return raw
+
+
+def load_rules(path: Path | None = None) -> dict[str, Any]:
+    """The scoring rules. They stay in a file: thresholds are the published method, not day-to-day laptop data."""
+    file = (path or DATA_DIR) / "rules.json"
+    if not file.exists():
+        raise DatasetError(f"{file} is missing. Run: python scripts/export_data.py")
+    return json.loads(file.read_text(encoding="utf-8"))
 
 
 def load_dataset(path: Path | None = None) -> Dataset:

@@ -224,6 +224,12 @@ class NeedVerdictOut(BaseModel):
     verdict_label: str
 
 
+class ModelImageOut(BaseModel):
+    url: str = Field(description="Absolute, or relative to this site (/api/media/...) for locally stored photos.")
+    alt: str | None = None
+    is_primary: bool = False
+
+
 class ModelSummaryOut(BaseModel):
     id: str
     brand: str | None = None
@@ -236,6 +242,7 @@ class ModelSummaryOut(BaseModel):
     variant_count: int
     price_ranges: list[PriceRangeOut]
     best_verdicts: list[NeedVerdictOut] = Field(description="Best verdict among this model's variants, per need.")
+    image: ModelImageOut | None = Field(None, description="The main photo, when one was uploaded.")
 
 
 class PortsOut(BaseModel):
@@ -258,6 +265,7 @@ class ModelDetailOut(ModelSummaryOut):
     spec_url: str | None = None
     checked_on: date | None = None
     variants: list[VariantOut]
+    images: list[ModelImageOut] = Field(default=[], description="All photos, main one first.")
 
 
 class ModelList(BaseModel):

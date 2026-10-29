@@ -29,3 +29,6 @@ Thumbs.db
 # Excel and LibreOffice lock files that appear while the workbook is open
 ~$*
 .~lock.*#
+
+# Local database, uploaded photos and other machine-specific data of the API
+apps/api/.data/

@@ -3,14 +3,25 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi.responses import FileResponse
 
 from . import schemas as S
-from .catalog import Catalog, get_catalog
+from .catalog import Catalog
 from .recommend import UnknownNeed, recommend
+from .storage import LocalStorage
 
 router = APIRouter()
-CatalogDep = Annotated[Catalog, Depends(get_catalog)]
+
+MEDIA_TYPES = {".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}
+
+
+def current_catalog(request: Request) -> Catalog:
+    """The catalog of whichever source this app runs on (the database, or the bundled JSON)."""
+    return request.app.state.source.catalog()
+
+
+CatalogDep = Annotated[Catalog, Depends(current_catalog)]
 
 
 @router.get("/health", response_model=S.Health, tags=["service"], summary="Is the API alive?")
@@ -42,7 +53,9 @@ def list_models(
         Query(description="Need id. Keeps models with a variant rated Cocok or Bisa, dengan catatan."),
     ] = None,
     q: Annotated[str | None, Query(max_length=80, description="Words that must appear in the name or summary.")] = None,
-    brand: Annotated[str | None, Query(max_length=40, description="Only models of this brand (exact name, any letter case).")] = None,
+    brand: Annotated[
+        str | None, Query(max_length=40, description="Only models of this brand (exact name, any letter case).")
+    ] = None,
     sort: Annotated[Literal["name", "price"], Query()] = "name",
 ) -> S.ModelList:
     if need is not None and cat.ds.need(need) is None:
@@ -80,3 +93,16 @@ def recommendations(body: S.RecommendationRequest, cat: CatalogDep) -> S.Recomme
             summary="The scoring rules, in the open")
 def methodology(cat: CatalogDep) -> S.MethodologyOut:
     return cat.methodology()
+
+
+@router.get("/media/{key:path}", include_in_schema=False)
+def media(key: str, request: Request) -> FileResponse:
+    """Photos stored on this machine (development). With Vercel Blob the browser fetches them from Vercel instead."""
+    storage = request.app.state.storage
+    path = storage.open(key) if isinstance(storage, LocalStorage) else None
+    if path is None or path.suffix.lower() not in MEDIA_TYPES:
+        raise HTTPException(status_code=404, detail="Gambar tidak ditemukan.")
+    return FileResponse(path, media_type=MEDIA_TYPES[path.suffix.lower()], headers={
+        "Cache-Control": "public, max-age=31536000, immutable",  # the file name is random and never reused
+        "X-Content-Type-Options": "nosniff",
+    })
