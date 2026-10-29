@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { ScrollReveal } from "@/components/scroll-reveal";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-import { getMeta, load } from "@/lib/api";
 import { SITE, siteOrigin } from "@/lib/site";
 import { inter } from "./fonts";
 import "./globals.css";
@@ -26,23 +22,14 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  // The footer shows how fresh the data is. If the API is down the footer still renders, just without it.
-  const meta = await load(getMeta());
-
+/**
+ * Only the document shell lives here. The public site's header and footer are in app/(site)/layout.tsx, and the
+ * admin area has its own chrome, so neither leaks into the other.
+ */
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id" data-scroll-behavior="smooth" className={inter.variable}>
-      <body className="flex min-h-dvh flex-col">
-        <a href="#isi" className="skip-link">
-          Lewati ke isi halaman
-        </a>
-        <SiteHeader />
-        <main id="isi" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter meta={meta.ok ? meta.data : null} />
-        <ScrollReveal />
-      </body>
+      <body className="flex min-h-dvh flex-col">{children}</body>
     </html>
   );
 }

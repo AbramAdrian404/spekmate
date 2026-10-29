@@ -640,3 +640,63 @@
     line-height: 1.4;
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * Admin. Denser than the public site (smaller controls, flatter cards) and built only from the tokens above, so a
+ * palette change reaches it automatically.
+ * ------------------------------------------------------------------ */
+@layer components {
+  .admin-page {
+    background: var(--surface-2);
+  }
+  .admin-card {
+    @apply rounded-2xl border border-line bg-surface;
+  }
+  .admin-input {
+    @apply min-h-10 w-full rounded-lg border border-control bg-surface px-3 py-2 text-[0.95rem] text-ink placeholder:text-ink-3;
+  }
+  .admin-input[aria-invalid="true"] {
+    border-color: var(--kurang-fg);
+  }
+  .admin-input:disabled {
+    @apply bg-surface-2 text-ink-3;
+  }
+  .admin-label {
+    @apply mb-1 block text-sm font-semibold text-ink;
+  }
+  .btn-sm {
+    @apply min-h-9 px-4 py-1.5 text-sm;
+  }
+  .btn-danger {
+    background: var(--kurang-fg);
+    color: #fff;
+  }
+  .btn-danger:hover {
+    background: color-mix(in srgb, var(--kurang-fg) 85%, black);
+  }
+  .btn-danger-quiet {
+    color: var(--kurang-fg);
+  }
+  .btn-danger-quiet:hover {
+    background: var(--kurang-bg);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    @apply cursor-not-allowed opacity-60;
+    transform: none;
+  }
+  .admin-nav-link {
+    @apply flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-[0.95rem] font-medium text-ink-2 no-underline hover:bg-surface-2 hover:text-ink;
+  }
+  .admin-nav-link[aria-current="page"] {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+  .admin-tab {
+    @apply inline-flex min-h-9 items-center rounded-full px-3.5 text-sm font-medium text-ink-2 no-underline hover:bg-surface-2;
+  }
+  .admin-tab[aria-current="true"] {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+}
