@@ -259,6 +259,12 @@ Untuk web ini tidak diperlukan.
 
 Tidak ada rahasia di proyek ini; semua nilai di atas aman dilihat orang lain.
 
+## Dashboard admin
+
+Data laptop dikelola lewat panel di `/admin` (login, tabel, form, foto), bukan dengan mengedit spreadsheet.
+Cara menyiapkan, prosedur masuk, struktur halaman, skema database, hasil migrasi Excel, dan catatan keamanan ada di
+[docs/admin.md](docs/admin.md).
+
 ## Memperbarui data
 
 Spreadsheet `data/source/data-laptop.xlsx` adalah tempat data diedit. API tidak membaca Excel; ia membaca JSON
