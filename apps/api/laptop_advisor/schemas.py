@@ -300,6 +300,7 @@ class RecommendationItem(BaseModel):
     rank: int
     model_id: str
     model_name: str
+    image: ModelImageOut | None = Field(None, description="The model's main photo, when one was uploaded.")
     variant_id: str
     variant_title: str
     condition: Condition

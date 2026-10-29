@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { ConsultProgress } from "./consult-progress";
 
-/** A minimal stand-in for the real konsultasi form: just the two fields ConsultProgress watches. */
+/** A minimal stand-in for the real finder form: just the two fields ConsultProgress watches. */
 function TestForm({ needChecked = false, budget = "" }: { needChecked?: boolean; budget?: string }) {
   return (
     <form id="test-form" aria-label="Form tiruan">

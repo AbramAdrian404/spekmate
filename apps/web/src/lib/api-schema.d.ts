@@ -1110,6 +1110,11 @@ export interface components {
             ram_options: number[];
             /** Image Url */
             image_url?: string | null;
+            /**
+             * Image Count
+             * @default 0
+             */
+            image_count: number;
             /** Missing Count */
             missing_count: number;
             /** Updated At */
@@ -1389,6 +1394,8 @@ export interface components {
             model_id: string;
             /** Model Name */
             model_name: string;
+            /** @description The model's main photo, when one was uploaded. */
+            image?: components["schemas"]["ModelImageOut"] | null;
             /** Variant Id */
             variant_id: string;
             /** Variant Title */
@@ -2260,6 +2267,8 @@ export interface operations {
                 ram?: number | null;
                 price_min?: number | null;
                 price_max?: number | null;
+                completeness?: "all" | "incomplete" | "complete";
+                photos?: "all" | "with" | "without";
                 sort?: "updated" | "created" | "name" | "price";
                 dir?: "asc" | "desc";
                 page?: number;

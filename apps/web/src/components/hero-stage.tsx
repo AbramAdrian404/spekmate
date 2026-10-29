@@ -26,7 +26,7 @@ export function HeroStage({ featured, needName }: HeroStageProps) {
   return (
     <div aria-hidden="true" className="hero-stage mx-auto w-full max-w-[40rem] px-3 pb-10 pt-14 sm:px-0">
       <div className="stage-in" style={at(120)}>
-        <HeroLaptop className="h-auto w-full drop-shadow-[0_30px_40px_rgb(0_0_0/0.10)]" />
+        <HeroLaptop className="h-auto w-full drop-shadow-[0_30px_40px_rgb(36_59_83/0.14)]" />
       </div>
 
       {/* price */}
@@ -66,7 +66,7 @@ export function HeroStage({ featured, needName }: HeroStageProps) {
               <VerdictBadge verdict={featured.verdict} label={featured.verdict_label} size="sm" />
               <p className="mt-1.5 text-sm font-semibold leading-snug text-ink">{featured.model_name}</p>
               <p className="mt-0.5 text-[0.7rem] leading-snug text-ink-2 sm:text-xs">
-                {needName ? `Untuk ${needName.toLowerCase()}` : "Hasil konsultasi"}
+                {needName ? `Untuk ${needName.toLowerCase()}` : "Hasil rekomendasi"}
               </p>
             </>
           ) : (

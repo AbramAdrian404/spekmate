@@ -108,6 +108,32 @@ describe("the bright theme", () => {
   });
 });
 
+describe("the brand palette", () => {
+  it("keeps the five chosen colors exactly", () => {
+    expect(theme["brand-champagne"]).toBe("#f7f5f0");
+    expect(theme["brand-sapphire"]).toBe("#243b53");
+    expect(theme["brand-periwinkle"]).toBe("#5878f5");
+    expect(theme["brand-teal"]).toBe("#55c8b0");
+    expect(theme["brand-gold"]).toBe("#d9a86c");
+  });
+
+  it("uses champagne for the page and sapphire for the text", () => {
+    expect(theme.bg).toBe(theme["brand-champagne"]);
+    expect(theme.ink).toBe(theme["brand-sapphire"]);
+  });
+
+  it("explains itself: periwinkle alone is too light for text, so the working accent is a darker step", () => {
+    expect(contrast(theme["brand-periwinkle"]!, theme.bg!)).toBeLessThan(4.5);
+    expect(contrast(theme.accent!, theme.bg!)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("keeps the brand colors as the solid tone of their companions", () => {
+    expect(theme.blue).toBe(theme["brand-periwinkle"]);
+    expect(theme.mint).toBe(theme["brand-teal"]);
+    expect(theme.amber).toBe(theme["brand-gold"]);
+  });
+});
+
 describe("the site stays one bright theme", () => {
   it("does not switch palettes with the system's dark mode", () => {
     expect(css).not.toMatch(/prefers-color-scheme:\s*dark/);

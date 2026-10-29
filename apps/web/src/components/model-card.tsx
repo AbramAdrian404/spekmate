@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatRupiahRange } from "@/lib/format";
 import { CONDITION_LABEL, salesStatusLabel } from "@/lib/labels";
 import type { ModelSummary, Verdict } from "@/lib/types";
+import { ModelPhoto } from "./model-photo";
 import { VerdictBadge } from "./verdict-badge";
 
 const GROUP_ORDER: Verdict[] = ["cocok", "bisa_dengan_catatan", "data_belum_lengkap", "kurang_cocok"];
@@ -25,6 +26,9 @@ export function ModelCard({ model }: { model: ModelSummary }) {
   return (
     <li className="@container">
       <article aria-labelledby={headingId} className="card flex h-full flex-col gap-4 p-5 sm:p-6">
+        <Link href={href} tabIndex={-1} aria-hidden="true" className="block">
+          <ModelPhoto image={model.image} fallbackAlt="" className="aspect-[4/3]" />
+        </Link>
         <header className="space-y-2">
           <h2 id={headingId} className="text-xl font-semibold">
             <Link href={href} className="text-ink no-underline hover:underline">

@@ -267,7 +267,7 @@ export default async function MethodologyPage() {
               ))}
             </ol>
             <p className="text-sm text-ink-3">
-              Mau mencobanya? <Link href="/konsultasi">Mulai konsultasi</Link>. Setiap hasil juga menjelaskan kenapa ia ada di urutannya.
+              Mau mencobanya? <Link href="/konsultasi">Temukan laptop</Link>. Setiap hasil juga menjelaskan kenapa ia ada di urutannya.
             </p>
           </Section>
         </div>

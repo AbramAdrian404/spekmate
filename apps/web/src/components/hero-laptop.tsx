@@ -10,20 +10,20 @@ import type { CSSProperties } from "react";
  */
 export function HeroLaptop({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 560 350" role="img" aria-label="Ilustrasi laptop yang menampilkan hasil konsultasi SpekMate" className={className}>
+    <svg viewBox="0 0 560 350" role="img" aria-label="Ilustrasi laptop yang menampilkan hasil rekomendasi SpekMate" className={className}>
       <defs>
         <linearGradient id="hl-lid" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#fdfdfd" />
           <stop offset="1" stopColor="#e1e1e6" />
         </linearGradient>
         <linearGradient id="hl-deck" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f5f5f7" />
+          <stop offset="0" stopColor="#f3f1ec" />
           <stop offset="0.55" stopColor="#dcdce0" />
           <stop offset="1" stopColor="#bcbcc2" />
         </linearGradient>
         <linearGradient id="hl-mark" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#5a8bff" />
-          <stop offset="1" stopColor="#1d5cf0" />
+          <stop offset="0" stopColor="#7d95f7" />
+          <stop offset="1" stopColor="#3a59db" />
         </linearGradient>
         <linearGradient id="hl-glare" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#ffffff" stopOpacity="0.5" />
@@ -43,28 +43,28 @@ export function HeroLaptop({ className }: { className?: string }) {
 
       {/* Lid and screen */}
       <rect x="84" y="14" width="392" height="258" rx="20" fill="url(#hl-lid)" stroke="#cfcfd4" />
-      <rect x="96" y="26" width="368" height="232" rx="11" fill="#1d1d1f" />
+      <rect x="96" y="26" width="368" height="232" rx="11" fill="#243b53" />
       <circle cx="280" cy="34" r="2.2" fill="#3a3a3c" />
 
       <g clipPath="url(#hl-screen)">
         <rect x="104" y="42" width="352" height="208" fill="#ffffff" />
         {/* top bar */}
-        <rect x="104" y="42" width="352" height="26" fill="#f1f5fd" />
+        <rect x="104" y="42" width="352" height="26" fill="#eef1fc" />
         <rect x="116" y="49" width="12" height="12" rx="3.5" fill="url(#hl-mark)" />
-        <rect x="133" y="52" width="42" height="6" rx="3" fill="#0b1b3f" />
+        <rect x="133" y="52" width="42" height="6" rx="3" fill="#243b53" />
         <rect x="352" y="52" width="26" height="6" rx="3" fill="#c8d3ea" />
         <rect x="386" y="52" width="26" height="6" rx="3" fill="#c8d3ea" />
-        <rect x="420" y="52" width="24" height="6" rx="3" fill="#1d5cf0" />
+        <rect x="420" y="52" width="24" height="6" rx="3" fill="#3a59db" />
 
         {/* headline placeholder */}
-        <rect x="118" y="80" width="170" height="10" rx="5" fill="#0b1b3f" />
+        <rect x="118" y="80" width="170" height="10" rx="5" fill="#243b53" />
         <rect x="118" y="95" width="116" height="7" rx="3.5" fill="#c8d3ea" />
 
         {/* need pills: two picked, one not */}
         <g>
-          <rect x="118" y="111" width="82" height="22" rx="11" fill="#e4eeff" stroke="#1d5cf0" strokeWidth="1.4" />
-          <circle cx="130" cy="122" r="6" fill="#5b85f2" />
-          <rect x="140" y="119" width="48" height="6" rx="3" fill="#1342c4" opacity="0.75" />
+          <rect x="118" y="111" width="82" height="22" rx="11" fill="#e6ebfd" stroke="#3a59db" strokeWidth="1.4" />
+          <circle cx="130" cy="122" r="6" fill="#5878f5" />
+          <rect x="140" y="119" width="48" height="6" rx="3" fill="#2c48c4" opacity="0.75" />
         </g>
         <g>
           <rect x="207" y="111" width="68" height="22" rx="11" fill="#ffffff" stroke="#b6c2dd" strokeWidth="1.2" />
@@ -72,17 +72,17 @@ export function HeroLaptop({ className }: { className?: string }) {
           <rect x="229" y="119" width="36" height="6" rx="3" fill="#c8d3ea" />
         </g>
         <g>
-          <rect x="282" y="111" width="82" height="22" rx="11" fill="#e4eeff" stroke="#1d5cf0" strokeWidth="1.4" />
+          <rect x="282" y="111" width="82" height="22" rx="11" fill="#e6ebfd" stroke="#3a59db" strokeWidth="1.4" />
           <circle cx="294" cy="122" r="6" fill="#40c59b" />
-          <rect x="304" y="119" width="50" height="6" rx="3" fill="#1342c4" opacity="0.75" />
+          <rect x="304" y="119" width="50" height="6" rx="3" fill="#2c48c4" opacity="0.75" />
         </g>
 
         {/* result card */}
         <rect x="118" y="144" width="324" height="94" rx="12" fill="#ffffff" stroke="#dde4f2" />
         <rect x="118" y="144" width="324" height="4" rx="2" fill="#3fae6a" />
-        <circle cx="140" cy="168" r="10" fill="#1d5cf0" />
+        <circle cx="140" cy="168" r="10" fill="#3a59db" />
         <path d="M137 168.5l2.4 2.4 4.2-4.6" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <rect x="158" y="161" width="104" height="8" rx="4" fill="#0b1b3f" />
+        <rect x="158" y="161" width="104" height="8" rx="4" fill="#243b53" />
         <rect x="158" y="175" width="138" height="6" rx="3" fill="#c8d3ea" />
         <g className="screen-pop" style={{ "--pop-delay": "1000ms" } as CSSProperties}>
           <rect x="132" y="192" width="74" height="20" rx="10" fill="#e6f4ea" stroke="#b4dcbf" />
