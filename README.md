@@ -1,6 +1,6 @@
 # SpekMate
 
-SpekMate (*spek* + *mate*, teman) adalah konsultan laptop berbahasa biasa: kamu sebut kebutuhan dan anggaran,
+SpekMate (*spek* + *mate*, teman) adalah pemandu memilih laptop berbahasa biasa: kamu sebut kebutuhan dan anggaran,
 lalu dapat sampai 5 rekomendasi dari database kecil yang dicek satu per satu, lengkap dengan alasan, harga
 bertanggal, dan jawaban jujur soal RAM dan SSD: bisa ditambah atau tidak.
 
@@ -10,7 +10,7 @@ bertanggal, dan jawaban jujur soal RAM dan SSD: bisa ditambah atau tidak.
 > upgraded. Python (FastAPI) backend, Next.js (TypeScript) frontend, deployed as two connected Vercel projects.
 > The UI and the rest of this README are in Indonesian.
 
-| Beranda | Hasil konsultasi | Di ponsel |
+| Beranda | Hasil rekomendasi | Di ponsel |
 | --- | --- | --- |
 | ![Beranda](docs/images/beranda.png) | ![Hasil rekomendasi](docs/images/hasil-rekomendasi.png) | ![Hasil di ponsel](docs/images/hasil-ponsel.png) |
 
@@ -30,7 +30,7 @@ bertanggal, dan jawaban jujur soal RAM dan SSD: bisa ditambah atau tidak.
 
 ## Yang dilakukan
 
-- **Konsultasi.** Pilih kebutuhan (kuliah dan kantor, desain grafis, pemrograman, game ringan, game berat),
+- **Temukan laptop** (alamat `/konsultasi`). Pilih kebutuhan (kuliah dan kantor, desain grafis, pemrograman, game ringan, game berat),
   isi anggaran, dan kalau perlu penyimpanan minimal dan kondisi (baru atau bekas). Hasilnya diurutkan, dan
   urutannya dijelaskan.
 - **Aturan yang terbuka.** Tiap laptop dinilai dari ambang batas yang bisa dibaca di halaman *Cara menilai*
@@ -279,7 +279,7 @@ python scripts/export_data.py --check       # gagal kalau JSON tertinggal dari s
    perubahan aturan yang tidak konsisten ketahuan di sini.
 4. Commit dan push. Kedua project akan dibangun ulang.
 
-**Berapa lama sampai data baru tampil?** Hasil konsultasi selalu mengambil data langsung dari API, jadi memakai data
+**Berapa lama sampai data baru tampil?** Hasil rekomendasi selalu mengambil data langsung dari API, jadi memakai data
 baru begitu deploy API selesai. Halaman lain (beranda, daftar dan detail laptop, footer) menyimpan jawaban API
 sebentar: di API selama `CACHE_SECONDS` (bawaan 5 menit) dan di web selama `DATA_REVALIDATE_SECONDS` (5 menit, di
 `apps/web/src/lib/api.ts`). Jadi biasanya data baru terlihat dalam 5 sampai 10 menit. Halaman dibuat ulang di belakang
@@ -333,7 +333,7 @@ Mulai dari `python scripts/smoke_test.py …`. Ia membaca pola lulus dan gagalny
 | Build web gagal: "Failed to collect page data for /laptop/[id]" | Build tidak bisa mengambil data dari API: `API_URL` salah, API belum selesai deploy, atau Deployment Protection di API | Buka `API_URL/api/meta` di browser; harus tampil JSON. Perbaiki, lalu Redeploy |
 | `…/api/docs` di domain web menjawab 404 | `API_URL` menunjuk ke alamat yang tidak punya jalur itu (bukan project API), atau project API tidak terdeteksi sebagai FastAPI | Samakan `API_URL` dengan domain project API, cek Framework Preset FastAPI, lalu Redeploy project web |
 | `…/api/health` OK, tetapi `…/api/meta` error 500 | Folder `apps/api/laptop_advisor/data` tidak ikut ter-deploy atau kosong | Jalankan `python scripts/export_data.py`, commit hasilnya, deploy ulang project API |
-| Halaman Konsultasi: "Data laptop belum bisa diambil" | `API_URL` salah, API mati, atau Deployment Protection di API | Cek `…/api/health` langsung; lihat Logs project web (baris `[api]`) |
+| Halaman Temukan laptop: "Data laptop belum bisa diambil" | `API_URL` salah, API mati, atau Deployment Protection di API | Cek `…/api/health` langsung; lihat Logs project web (baris `[api]`) |
 | Smoke test menunjuk halaman login Vercel | Deployment Protection | Pakai domain produksi, atau matikan perlindungannya |
 | Rewrite jalan, tetapi `/konsultasi` gagal | `API_URL` terbaca berbeda saat build dan saat berjalan | Pastikan variabel ada untuk Production, lalu Redeploy |
 | Setelah mengubah `API_URL`, hasilnya sama saja | Alamat dibaca saat build | Redeploy project web |
@@ -345,7 +345,7 @@ Mulai dari `python scripts/smoke_test.py …`. Ia membaca pola lulus dan gagalny
 - **Deploy ke Vercel belum saya coba sendiri**, karena butuh akun Vercel. Cara kerjanya mengikuti dokumentasi Vercel
   untuk FastAPI dan Next.js (dibaca Oktober 2026) dan sisanya sudah diuji berjalan bersama secara lokal.
   `scripts/smoke_test.py` ada untuk membuktikannya di deploy pertamamu.
-- **Hasil konsultasi butuh JavaScript.** Hasilnya dimuat bertahap (streaming). Tanpa JavaScript, form tetap terkirim
+- **Hasil rekomendasi butuh JavaScript.** Hasilnya dimuat bertahap (streaming). Tanpa JavaScript, form tetap terkirim
   dan halaman terbuka, tetapi daftar hasilnya tidak tampil.
 - **Data kecil dan harga berubah.** Rekomendasi hanya berasal dari 40 model di database, bukan dari seluruh pasar.
   Harga bertanggal dan bisa sudah basi; web selalu mengingatkan untuk mengecek di toko.

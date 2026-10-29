@@ -1,8 +1,9 @@
-import { ArrowRight, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import Link from "next/link";
 import { formatDateLong } from "@/lib/format";
 import { NAV, SITE } from "@/lib/site";
 import type { Meta } from "@/lib/types";
+import { FooterCta } from "./footer-cta";
 import { Wordmark } from "./logo";
 
 const STACK = ["Next.js", "FastAPI", "Tailwind CSS", "TypeScript", "Vercel"] as const;
@@ -19,10 +20,7 @@ export function SiteFooter({ meta }: { meta: Meta | null }) {
             <Wordmark className="text-2xl font-semibold tracking-[-0.01em] text-ink" />
             <p className="text-ink-2">{SITE.tagline}.</p>
           </div>
-          <Link href="/konsultasi" className="btn btn-primary shrink-0">
-            Mulai konsultasi
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </Link>
+          <FooterCta />
         </div>
 
         <div className="grid gap-8 py-10 sm:grid-cols-2 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.9fr]">

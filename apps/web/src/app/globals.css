@@ -1,54 +1,63 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ *
- * Design tokens. One bright theme, in the manner of a product page: white and a pale grey in alternating
- * bands, near-black ink, and a single blue for actions and links. It does not follow the system's dark mode,
- * so the page always looks the way it was designed. Every text color pair below was picked for at least
- * 4.5:1 contrast (design-tokens.test.ts checks it).
+ * Design tokens. One light, premium theme: champagne white pages with white cards, deep sapphire ink, and
+ * electric periwinkle for actions. It does not follow the system's dark mode, so the page always looks the way it
+ * was designed. Every text color pair below was picked for at least 4.5:1 contrast (design-tokens.test.ts checks it).
  *
- * Violet, coral, amber and mint remain only as companion tones for the need pictures and verdict colors.
- * Verdict colors (green, amber, teal, rose, grey) keep their meaning and are never used as decoration.
+ * The five brand colors are kept exactly as chosen in --brand-*. Where one of them is too light to carry text or a
+ * button (periwinkle is 3.6:1 on champagne), the working token --accent is a darker step of the same hue, and the
+ * brand value is used only for shapes: the navbar glow, charts, stripes. To change the palette, change --brand-*
+ * and then the working tokens, and let the test say whether the pairs still hold.
+ *
+ * Mint, gold, violet and coral remain companion tones for the need pictures and chips. Verdict colors (green,
+ * amber, teal, rose, grey) keep their meaning and are never used as decoration.
  * ------------------------------------------------------------------ */
 :root {
   color-scheme: light;
 
-  --bg: #ffffff;
-  --surface: #ffffff;
-  --surface-2: #f5f5f7;
-  --ink: #1d1d1f;
-  --ink-2: #424245;
-  --ink-3: #6e6e73;
-  --line: #e5e5ea;
-  --line-strong: #d2d2d7;
-  /* Edge of form fields and choice cards: at least 3:1 against every surface it sits on. */
-  --control-line: #86868b;
+  /* The brand palette, as given. */
+  --brand-champagne: #f7f5f0;
+  --brand-sapphire: #243b53;
+  --brand-periwinkle: #5878f5;
+  --brand-teal: #55c8b0;
+  --brand-gold: #d9a86c;
 
-  --accent: #1d5cf0;
-  --accent-strong: #1342c4;
-  --accent-soft: #eaf1fe;
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-2: #efece5;
+  --ink: #243b53;
+  --ink-2: #40566e;
+  --ink-3: #56677d;
+  --line: #e4dfd4;
+  --line-strong: #d3ccbd;
+  /* Edge of form fields and choice cards: at least 3:1 against every surface it sits on. */
+  --control-line: #76808f;
+
+  /* Periwinkle, darkened to 4.5:1 for text and buttons. */
+  --accent: #3a59db;
+  --accent-strong: #2c48c4;
+  --accent-soft: #e6ebfd;
   --on-accent: #ffffff;
-  --focus: #1d5cf0;
+  --focus: #3a59db;
   --shadow-accent: color-mix(in srgb, var(--accent) 55%, transparent);
 
-
   /* Companion tones. solid = shapes and the top stripe; soft = tinted background; fg = text on soft or white. */
-  --blue: #5b85f2;
-  --blue-soft: #e0ebff;
-  --blue-fg: #2344ab;
+  --blue: #5878f5;
+  --blue-soft: #e4e9fd;
+  --blue-fg: #2a3fae;
   --violet: #9f75e1;
   --violet-soft: #f2e7ff;
   --violet-fg: #6635a3;
   --coral: #f37d65;
   --coral-soft: #ffe8e0;
   --coral-fg: #a43427;
-  --amber: #f7c041;
-  --amber-soft: #fef2cc;
-  --amber-fg: #7c4b02;
-  --mint: #40c59b;
-  --mint-soft: #d5f8ea;
-  --mint-fg: #006647;
-
-
+  --amber: #d9a86c;
+  --amber-soft: #f7e9d2;
+  --amber-fg: #7a4a0a;
+  --mint: #55c8b0;
+  --mint-soft: #ddf4ee;
+  --mint-fg: #0c5e4c;
 
   /* Verdict colors: text, background, border, and a solid edge. Never used without an icon and a label. */
   --cocok-fg: #166534;
@@ -99,17 +108,10 @@
 @layer base {
   html {
     background: var(--bg);
-    /* Keeps anchors (#hasil, #cara-kerja) from hiding under the sticky header. On phones the header
-       is two rows tall (logo, then menu); from the sm breakpoint it is one row. */
-    scroll-padding-top: 7.5rem;
+    /* Keeps anchors (#hasil, #cara-kerja) from hiding under the floating header (bar plus its margins). */
+    scroll-padding-top: 6rem;
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
-  }
-
-  @media (min-width: 40rem) {
-    html {
-      scroll-padding-top: 5rem;
-    }
   }
 
   body {
@@ -423,18 +425,128 @@
 }
 
 /* ------------------------------------------------------------------ *
- * Header
+ * Header: a floating glass bar.
+ *
+ * The <header> is a sticky, see-through frame of fixed height; the bar (.nav-pill) floats inside it with a margin
+ * around it, so the page content passes beneath and blurs through the glass. Only the shadow and the glass tint
+ * change on scroll, never the size, so nothing below ever jumps. The LED accent is one thin line along the bottom
+ * edge and one small dot on it whose glow slowly breathes; it is decoration (aria-hidden) and stops for people who
+ * ask for reduced motion.
  * ------------------------------------------------------------------ */
 @layer components {
-  /* A thin translucent bar that always carries its hairline, like a product site's global navigation. */
   .site-header {
-    background: color-mix(in srgb, var(--surface) 78%, transparent);
-    -webkit-backdrop-filter: saturate(1.8) blur(20px);
-    backdrop-filter: saturate(1.8) blur(20px);
-    border-bottom: 1px solid var(--line);
+    padding: 0.75rem 0 0.25rem;
+    pointer-events: none; /* the see-through frame must not swallow clicks meant for the page behind it */
   }
-  .site-header[data-scrolled="true"] {
-    background: color-mix(in srgb, var(--surface) 88%, transparent);
+  .nav-pill {
+    pointer-events: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3.5rem;
+    padding: 0.25rem 0.5rem 0.25rem 1rem;
+    border: 1px solid color-mix(in srgb, var(--surface) 70%, var(--line));
+    border-radius: 1.75rem;
+    background: color-mix(in srgb, var(--surface) 68%, transparent);
+    -webkit-backdrop-filter: saturate(1.6) blur(18px);
+    backdrop-filter: saturate(1.6) blur(18px);
+    box-shadow:
+      0 1px 0 color-mix(in srgb, #fff 80%, transparent) inset,
+      0 6px 20px -14px rgb(36 59 83 / 0.3);
+    transition:
+      box-shadow 220ms ease,
+      background-color 220ms ease,
+      border-color 220ms ease;
+  }
+  .site-header[data-scrolled="true"] .nav-pill {
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    border-color: var(--line);
+    box-shadow:
+      0 1px 0 color-mix(in srgb, #fff 80%, transparent) inset,
+      0 14px 34px -16px rgb(36 59 83 / 0.4);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .nav-pill {
+      background: var(--surface);
+    }
+  }
+
+  /* The LED: a hairline of periwinkle fading into teal, with a dot that glows. */
+  .nav-led {
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 2.25rem;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--brand-periwinkle) 30%, var(--brand-teal) 70%, transparent);
+    opacity: 0.75;
+  }
+  .nav-led::after {
+    content: "";
+    position: absolute;
+    left: 30%;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    border-radius: 9999px;
+    background: var(--brand-teal);
+    box-shadow:
+      0 0 6px 1px color-mix(in srgb, var(--brand-teal) 85%, transparent),
+      0 0 14px 3px color-mix(in srgb, var(--brand-periwinkle) 45%, transparent);
+    animation: led-breathe 5s ease-in-out infinite;
+  }
+  @keyframes led-breathe {
+    0%,
+    100% {
+      opacity: 0.45;
+      transform: scale(0.85);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-led::after {
+      animation: none;
+      opacity: 0.9;
+    }
+    .nav-pill {
+      transition: none;
+    }
+  }
+
+  .nav-link {
+    @apply inline-flex min-h-11 items-center rounded-full px-3.5 text-[0.95rem] text-ink-2 no-underline;
+    transition:
+      background-color 160ms,
+      color 160ms;
+  }
+  .nav-link:hover {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    color: var(--ink);
+  }
+  .nav-link[aria-current="page"] {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-weight: 600;
+  }
+
+  /* The phone menu: a glass sheet that drops below the bar. */
+  .nav-sheet {
+    pointer-events: auto;
+    position: absolute;
+    inset-inline: 0;
+    top: calc(100% + 0.5rem);
+    padding: 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 1.5rem;
+    background: color-mix(in srgb, var(--surface) 97%, transparent);
+    -webkit-backdrop-filter: saturate(1.6) blur(18px);
+    backdrop-filter: saturate(1.6) blur(18px);
+    box-shadow: 0 24px 48px -24px rgb(36 59 83 / 0.45);
   }
 }
 
@@ -505,7 +617,7 @@
     backdrop-filter: saturate(1.6) blur(16px);
     border: 1px solid var(--line);
     border-radius: 1.25rem;
-    box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.28);
+    box-shadow: 0 18px 40px -24px rgb(36 59 83 / 0.22);
   }
 
   /* Bars on the laptop's screen grow once, left to right, after the laptop has landed. */
@@ -603,7 +715,7 @@
   }
   .card-hover:hover,
   .card-hover:focus-within {
-    box-shadow: 0 20px 44px -26px rgb(0 0 0 / 0.3);
+    box-shadow: 0 20px 44px -26px rgb(36 59 83 / 0.24);
   }
 }
 

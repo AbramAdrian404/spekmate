@@ -12,7 +12,7 @@ const BLANK = { kebutuhan: [] as string[], anggaran: "", penyimpanan: "", kondis
 describe("ConsultForm", () => {
   it("is a GET form to /konsultasi that jumps to the results, so answers live in the address", () => {
     render(<ConsultForm needs={NEEDS} values={BLANK} />);
-    const form = screen.getByRole("form", { name: "Form konsultasi laptop" });
+    const form = screen.getByRole("form", { name: "Pertanyaan untuk menemukan laptop" });
     expect(form).toHaveAttribute("action", "/konsultasi#hasil");
   });
 
@@ -61,7 +61,7 @@ describe("ConsultForm", () => {
 describe("QuickConsult", () => {
   it("also jumps to the results", () => {
     render(<QuickConsult needs={NEEDS} />);
-    expect(screen.getByRole("form", { name: "Konsultasi cepat" })).toHaveAttribute("action", "/konsultasi#hasil");
+    expect(screen.getByRole("form", { name: "Temukan laptop cepat" })).toHaveAttribute("action", "/konsultasi#hasil");
   });
 
   it("offers every need as a chip to tick, with the same field name and values as the full form", () => {
@@ -96,7 +96,7 @@ describe("QuickConsult", () => {
 
   it("does not submit with nothing picked: it says so and moves focus to the first chip", () => {
     render(<QuickConsult needs={NEEDS} />);
-    const form = screen.getByRole("form", { name: "Konsultasi cepat" });
+    const form = screen.getByRole("form", { name: "Temukan laptop cepat" });
     const notPrevented = fireEvent.submit(form);
     expect(notPrevented).toBe(false);
     expect(screen.getByRole("alert")).toHaveTextContent("Pilih minimal satu kebutuhan.");
@@ -106,7 +106,7 @@ describe("QuickConsult", () => {
   it("drops the message as soon as a need is picked", async () => {
     const user = userEvent.setup();
     render(<QuickConsult needs={NEEDS} />);
-    fireEvent.submit(screen.getByRole("form", { name: "Konsultasi cepat" }));
+    fireEvent.submit(screen.getByRole("form", { name: "Temukan laptop cepat" }));
     expect(screen.getByRole("alert")).toBeInTheDocument();
     await user.click(screen.getByRole("checkbox", { name: /Pemrograman/ }));
     expect(screen.queryByRole("alert")).toBeNull();

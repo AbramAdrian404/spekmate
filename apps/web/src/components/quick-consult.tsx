@@ -52,7 +52,7 @@ export function QuickConsult({ needs }: { needs: NeedInfo[] }) {
       action="/konsultasi#hasil"
       onSubmit={onSubmit}
       className="grid gap-8 rounded-3xl bg-surface-2 p-6 sm:p-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-14"
-      aria-label="Konsultasi cepat"
+      aria-label="Temukan laptop cepat"
     >
       <fieldset ref={fieldsetRef} aria-required="true" aria-describedby={missing ? `${statusId} ${errorId}` : statusId} className="min-w-0">
         <legend className="field-label">Untuk apa laptopnya?</legend>

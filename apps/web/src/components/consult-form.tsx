@@ -28,7 +28,7 @@ export function ConsultForm({ needs, values, errors = {} }: ConsultFormProps) {
       action="/konsultasi#hasil"
       className="rise-in card space-y-8 p-5 sm:p-7"
       style={{ "--rise-delay": "220ms" } as CSSProperties}
-      aria-label="Form konsultasi laptop"
+      aria-label="Pertanyaan untuk menemukan laptop"
     >
       <ConsultProgress formId="konsultasi-form" />
 

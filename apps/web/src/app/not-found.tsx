@@ -17,7 +17,7 @@ export default function NotFound() {
               Lihat semua laptop
             </Link>
             <Link href="/konsultasi" className="btn btn-secondary">
-              Mulai konsultasi
+              Temukan laptop
             </Link>
           </div>
         </div>

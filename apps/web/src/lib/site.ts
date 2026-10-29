@@ -8,7 +8,8 @@ export const SITE = {
 } as const;
 
 export const NAV = [
-  { href: "/konsultasi", label: "Konsultasi" },
+  { href: "/", label: "Beranda" },
+  { href: "/konsultasi", label: "Temukan laptop" },
   { href: "/laptop", label: "Daftar laptop" },
   { href: "/cara-menilai", label: "Cara menilai" },
 ] as const;
