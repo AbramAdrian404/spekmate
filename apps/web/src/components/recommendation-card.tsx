@@ -4,6 +4,8 @@ import type { CSSProperties } from "react";
 import { formatDate, formatRupiahCompact, formatRupiahRange } from "@/lib/format";
 import { CONDITION_LABEL, priceFitLabel } from "@/lib/labels";
 import type { Recommendation } from "@/lib/types";
+import { needVisual } from "@/lib/need-visuals";
+import { LaptopArt } from "./laptop-art";
 import { ModelPhoto } from "./model-photo";
 import { CriteriaGlance } from "./criteria-glance";
 import { UpgradeFacts } from "./upgrade-facts";
@@ -24,7 +26,13 @@ export function RecommendationCard({ item, index = 0 }: { item: Recommendation; 
         className="card card-edge card-hover grid gap-6 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_16rem]"
       >
         <div className="min-w-0 space-y-4">
-          <ModelPhoto image={item.image} fallbackAlt={item.model_name} className="h-36 w-52 max-w-full" />
+          {item.image ? (
+            <ModelPhoto image={item.image} fallbackAlt={item.model_name} className="h-36 w-52 max-w-full" />
+          ) : (
+            <div aria-hidden="true" className="grid h-36 w-52 max-w-full place-items-center overflow-hidden rounded-xl bg-surface-2">
+              <LaptopArt tone={needVisual(item.need_fit[0]?.need_id ?? "").tone} className="w-40" />
+            </div>
+          )}
           <header>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-sm font-semibold text-on-accent tabular">

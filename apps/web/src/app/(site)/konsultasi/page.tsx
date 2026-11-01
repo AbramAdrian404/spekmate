@@ -36,10 +36,7 @@ export default async function KonsultasiPage({ searchParams }: { searchParams: P
   return (
     <>
       <PageHeader title="Temukan laptop yang pas">
-        <p>
-          Jawab beberapa pertanyaan singkat. Kami carikan dari database kami, lalu jelaskan alasannya dengan bahasa biasa,
-          termasuk RAM dan penyimpanannya bisa ditambah atau tidak.
-        </p>
+        <p>Empat langkah singkat. Hasilnya lengkap dengan alasan, harga bertanggal, dan jujur soal upgrade RAM dan SSD.</p>
       </PageHeader>
 
       <div className="container-page py-8 sm:py-10">

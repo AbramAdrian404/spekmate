@@ -13,6 +13,9 @@ interface BudgetFieldProps {
   name?: string;
   label?: string;
   suggestions?: boolean;
+  /** Controlled use: the wizard keeps the amount so its slider and this field always agree. */
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
 /**
@@ -20,12 +23,17 @@ interface BudgetFieldProps {
  * type and groups them with dots, so what you see is always the one format the database reads back:
  * "8.000.000". Letters and other shorthand ("jt", "juta") are simply dropped as you type them.
  */
-export function BudgetField({ defaultValue = "", error, id: fixedId, name = "anggaran", label = "Anggaran maksimal", suggestions = true }: BudgetFieldProps) {
+export function BudgetField({ defaultValue = "", error, id: fixedId, name = "anggaran", label = "Anggaran maksimal", suggestions = true, value: controlled, onValueChange }: BudgetFieldProps) {
   const generatedId = useId();
   const id = fixedId ?? generatedId;
   const hintId = `${id}-hint`;
   const errorId = `${id}-error`;
-  const [value, setValue] = useState(defaultValue);
+  const [inner, setInner] = useState(defaultValue);
+  const value = controlled ?? inner;
+  const setValue = (next: string) => {
+    setInner(next);
+    onValueChange?.(next);
+  };
 
   return (
     <div>

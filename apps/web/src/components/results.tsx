@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ApiProblem } from "@/components/api-problem";
 import { ComparisonPanel } from "@/components/comparison-panel";
 import { ExclusionSummary } from "@/components/exclusion-summary";
+import { QuickCompare } from "@/components/quick-compare";
 import { RecommendationCard } from "@/components/recommendation-card";
 import { getRecommendations, load } from "@/lib/api";
 import { type ConsultInput, joinNeeds } from "@/lib/consult";
@@ -71,6 +72,8 @@ export async function Results({ input, retryHref }: { input: ConsultInput; retry
           ))}
         </ol>
       )}
+
+      <QuickCompare results={response.results} />
 
       {count > 1 ? <ComparisonPanel results={response.results} /> : null}
 
