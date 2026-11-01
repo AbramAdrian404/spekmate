@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { activeCount, browse, browseOptions, browseQuery, cpuMaker, EMPTY_STATE, modelLowPrice, parseBrowse } from "./catalog-browse";
+import { activeCount, browse, browseOptions, browseQuery, cpuMaker, EMPTY_STATE, modelLowPrice, needCoverage, parseBrowse } from "./catalog-browse";
 import type { ModelSummary } from "./types";
 
 function model(over: Partial<ModelSummary> & { id: string }): ModelSummary {
@@ -115,5 +115,16 @@ describe("helpers", () => {
     expect(options.ramSteps).toEqual([8, 16, 32]);
     expect(options.price).toEqual({ min: 5_000_000, max: 17_000_000, step: 500_000 });
     expect(browseOptions([nameless]).price).toBeNull();
+  });
+});
+
+describe("needCoverage", () => {
+  it("counts the models that suit each need, out of all models", () => {
+    const coverage = needCoverage(all, ["kuliah", "game", "tidak-ada"]);
+    expect(coverage).toEqual([
+      { needId: "kuliah", count: 1, total: 3 },
+      { needId: "game", count: 1, total: 3 },
+      { needId: "tidak-ada", count: 0, total: 3 },
+    ]);
   });
 });

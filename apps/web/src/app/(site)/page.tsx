@@ -1,14 +1,17 @@
-import { ArrowRight, CalendarCheck, ListChecks, MessagesSquare, ScanSearch, Wrench, type LucideIcon } from "lucide-react";
+import { CalendarCheck, Cpu, Laptop, ListChecks, MessagesSquare, ScanSearch, Store, Tags, Wrench, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { BrandGrid } from "@/components/brand-grid";
 import { HeroSearch } from "@/components/hero-search";
 import { HeroStage } from "@/components/hero-stage";
 import { HowItWorks } from "@/components/how-it-works";
+import { NeedTiles } from "@/components/need-tiles";
 import { QuickConsult } from "@/components/quick-consult";
 import { ResultPreview } from "@/components/result-preview";
+import { StatTiles } from "@/components/stat-tiles";
 import { getMeta, getModels, getNeeds, getRecommendationsCached } from "@/lib/api";
 import { brandsFrom } from "@/lib/brands";
+import { needCoverage } from "@/lib/catalog-browse";
 import { formatDate, formatDateLong } from "@/lib/format";
 import { homeSampleRequest } from "@/lib/home-sample";
 import { cn } from "@/lib/cn";
@@ -80,14 +83,15 @@ export default async function HomePage() {
 
           <div className="rise-in mt-9" style={rise(200)}>
             <HeroSearch />
-            <p className="mt-5 text-base text-ink-2">
-              Belum tahu harus memilih apa?{" "}
-              <a href="#mulai" className="inline-flex items-center gap-1 font-medium text-accent no-underline hover:underline">
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/konsultasi" className="btn btn-primary btn-lg">
                 Temukan laptop
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </a>
-            </p>
-            <p className="mt-2 text-sm text-ink-3">
+              </Link>
+              <Link href="/laptop" className="btn btn-secondary btn-lg">
+                Lihat daftar laptop
+              </Link>
+            </div>
+            <p className="mt-5 text-sm text-ink-3">
               Database berisi {meta.counts.models} model dan {meta.counts.variants} konfigurasi
               {checkedShort ? `. Harga terakhir dicek ${checkedShort}` : null}.
             </p>
@@ -97,8 +101,22 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <section id="kebutuhan" aria-labelledby="kebutuhan-judul" className="py-16 sm:py-24">
+        <div className="container-page">
+          <h2 id="kebutuhan-judul" className="reveal section-title">
+            Untuk apa laptopnya.
+          </h2>
+          <p className="reveal section-lead" style={{ "--reveal-delay": "80ms" } as CSSProperties}>
+            Pilih satu, lalu lihat laptop yang cocok.
+          </p>
+          <div className="mt-10">
+            <NeedTiles needs={needs} coverage={needCoverage(models.items, needs.map((need) => need.id))} />
+          </div>
+        </div>
+      </section>
+
       {brands.length > 0 ? (
-        <section id="merek" aria-labelledby="merek-judul" className="bg-surface-2 py-20 sm:py-28">
+        <section id="merek" aria-labelledby="merek-judul" className="bg-surface-2 py-16 sm:py-24">
           <div className="container-page">
             <h2 id="merek-judul" className="reveal section-title">
               Jelajahi menurut merek.
@@ -185,20 +203,16 @@ export default async function HomePage() {
             {checked ? <>. Terakhir dicek {checked}</> : null}.
           </p>
 
-          <dl className="reveal mx-auto mt-14 grid max-w-3xl grid-cols-3 gap-4" style={{ "--reveal-delay": "140ms" } as CSSProperties}>
-            {[
-              { label: "model", value: meta.counts.models },
-              { label: "konfigurasi", value: meta.counts.variants },
-              { label: "catatan harga", value: meta.counts.prices },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex flex-col-reverse">
-                <dt className="mt-2 text-base text-ink-3">{label}</dt>
-                <dd className="text-5xl font-semibold tabular text-ink sm:text-6xl" style={{ letterSpacing: "-0.025em" }}>
-                  {value}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <div className="mx-auto mt-12 max-w-4xl text-left">
+            <StatTiles
+              stats={[
+                { label: "model", value: meta.counts.models, Icon: Laptop },
+                { label: "konfigurasi", value: meta.counts.variants, Icon: Cpu },
+                { label: "catatan harga", value: meta.counts.prices, Icon: Tags },
+                { label: "merek", value: brands.length, Icon: Store },
+              ]}
+            />
+          </div>
 
           <div className="reveal mt-14 flex flex-col items-center justify-center gap-3 sm:flex-row" style={{ "--reveal-delay": "200ms" } as CSSProperties}>
             <Link href="/laptop" className="btn btn-primary btn-lg">
