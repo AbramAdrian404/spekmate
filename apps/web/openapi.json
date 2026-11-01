@@ -3552,6 +3552,9 @@
             ],
             "description": "The main photo, when one was uploaded."
           },
+          "highlights": {
+            "$ref": "#/components/schemas/SpecHighlights"
+          },
           "body_material": {
             "anyOf": [
               {
@@ -4315,6 +4318,9 @@
               }
             ],
             "description": "The main photo, when one was uploaded."
+          },
+          "highlights": {
+            "$ref": "#/components/schemas/SpecHighlights"
           }
         },
         "type": "object",
@@ -4470,6 +4476,43 @@
           "rank"
         ],
         "title": "PanelRankOut"
+      },
+      "PartBrief": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tier": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind",
+            "description": "Graphics only: 'bawaan' or 'terpisah'."
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "PartBrief",
+        "description": "A processor or graphics chip as the catalog card shows it: the name and, when known, its 1-5 tier."
       },
       "PasswordChangeIn": {
         "properties": {
@@ -5397,6 +5440,63 @@
           "notes"
         ],
         "title": "RecommendationResponse"
+      },
+      "SpecHighlights": {
+        "properties": {
+          "cpus": {
+            "items": {
+              "$ref": "#/components/schemas/PartBrief"
+            },
+            "type": "array",
+            "title": "Cpus",
+            "description": "Distinct processors, best tier first.",
+            "default": []
+          },
+          "gpus": {
+            "items": {
+              "$ref": "#/components/schemas/PartBrief"
+            },
+            "type": "array",
+            "title": "Gpus",
+            "description": "Distinct graphics chips, best tier first.",
+            "default": []
+          },
+          "ram_gb": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Ram Gb",
+            "description": "Distinct RAM sizes, ascending.",
+            "default": []
+          },
+          "storage_gb": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Storage Gb",
+            "description": "Distinct storage sizes, ascending.",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "SpecHighlights",
+        "description": "What a model's configurations offer, for catalog cards and filters. Only values that exist in the data."
       },
       "SpecsOut": {
         "properties": {

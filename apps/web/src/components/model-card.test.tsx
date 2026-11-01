@@ -43,49 +43,67 @@ describe("ModelCard", () => {
     );
   }
 
-  it("links the name and the button to the detail page", () => {
+  it("links the name to the detail page", () => {
     renderCard();
     const heading = screen.getByRole("heading", { name: "Lenovo ThinkPad T480" });
     expect(within(heading).getByRole("link")).toHaveAttribute("href", "/laptop/lenovo-thinkpad-t480");
-    expect(screen.getByRole("link", { name: /Lihat detail/ })).toHaveAttribute("href", "/laptop/lenovo-thinkpad-t480");
   });
 
-  it("shows year, sales status and how many configurations", () => {
+  it("shows brand, year and sales status", () => {
     renderCard();
+    expect(screen.getByText("Lenovo")).toBeInTheDocument();
     expect(screen.getByText("Rilis 2018")).toBeInTheDocument();
     expect(screen.getByText("Hanya beredar bekas")).toBeInTheDocument();
-    expect(screen.getByText("2 konfigurasi")).toBeInTheDocument();
   });
 
-  it("says '1 konfigurasi' in the singular", () => {
-    renderCard({ variant_count: 1 });
-    expect(screen.getByText("1 konfigurasi")).toBeInTheDocument();
-  });
-
-  it("shows the price range per condition", () => {
+  it("quotes the lowest price as a starting price", () => {
     renderCard({
       price_ranges: [
         { condition: "baru", low: 7_729_000, high: 9_394_000 },
         { condition: "bekas", low: 3_150_000, high: 5_850_000 },
       ],
+      conditions: ["baru", "bekas"],
     });
-    expect(screen.getByText("Rp7,7–9,4 jt")).toBeInTheDocument();
-    expect(screen.getByText("Rp3,2–5,9 jt")).toBeInTheDocument();
+    expect(screen.getByText("Rp3,2 jt")).toBeInTheDocument();
     expect(screen.getByText("Baru")).toBeInTheDocument();
     expect(screen.getByText("Bekas")).toBeInTheDocument();
   });
 
   it("says so when there are no price notes, instead of showing a blank", () => {
-    renderCard({ price_ranges: [] });
+    renderCard({ price_ranges: [], conditions: [] });
     expect(screen.getByText("Belum ada catatan harga.")).toBeInTheDocument();
   });
 
-  it("lists the needs under each verdict, with the verdict in words", () => {
+  it("shows processor, RAM, storage and graphics from the configurations", () => {
     renderCard();
-    expect(screen.getByText("Cocok")).toBeInTheDocument();
+    expect(screen.getByText("Core i5-8350U +1")).toBeInTheDocument();
+    expect(screen.getByText("8–16 GB")).toBeInTheDocument();
+    expect(screen.getByText("256 GB–512 GB")).toBeInTheDocument();
+    expect(screen.getByText("GPU bawaan")).toBeInTheDocument();
+  });
+
+  it("leaves out a chip when the data for it is missing, rather than inventing one", () => {
+    renderCard({ highlights: { cpus: [], gpus: [], ram_gb: [], storage_gb: [] } });
+    expect(screen.queryByText(/GB/)).toBeNull();
+    expect(screen.queryByText(/GPU/)).toBeNull();
+  });
+
+  it("badges only the needs the model suits, with the need in words", () => {
+    renderCard();
     expect(screen.getByText("Kuliah & kantor")).toBeInTheDocument();
-    expect(screen.getByText("Pemrograman, Game ringan")).toBeInTheDocument();
-    expect(screen.getByText("Game berat")).toBeInTheDocument();
+    expect(screen.queryByText("Game berat")).toBeNull();
+  });
+
+  it("draws the laptop illustration as decoration when there is no photo", () => {
+    const { container } = renderCard({ image: null });
+    expect(container.querySelector("svg[viewBox='0 0 240 150']")).not.toBeNull();
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  it("shows the photo instead of the illustration when there is one", () => {
+    const { container } = renderCard({ image: { url: "/api/media/x.jpg", alt: "T480 dari depan", is_primary: true } });
+    expect(container.querySelector("img")).toHaveAttribute("src", "/api/media/x.jpg");
+    expect(container.querySelector("svg[viewBox='0 0 240 150']")).toBeNull();
   });
 
   it("copes with a model that has no year, status or summary", () => {

@@ -230,6 +230,21 @@ class ModelImageOut(BaseModel):
     is_primary: bool = False
 
 
+class PartBrief(BaseModel):
+    """A processor or graphics chip as the catalog card shows it: the name and, when known, its 1-5 tier."""
+    name: str
+    tier: int | None = None
+    kind: str | None = Field(None, description="Graphics only: 'bawaan' or 'terpisah'.")
+
+
+class SpecHighlights(BaseModel):
+    """What a model's configurations offer, for catalog cards and filters. Only values that exist in the data."""
+    cpus: list[PartBrief] = Field(default=[], description="Distinct processors, best tier first.")
+    gpus: list[PartBrief] = Field(default=[], description="Distinct graphics chips, best tier first.")
+    ram_gb: list[Number] = Field(default=[], description="Distinct RAM sizes, ascending.")
+    storage_gb: list[Number] = Field(default=[], description="Distinct storage sizes, ascending.")
+
+
 class ModelSummaryOut(BaseModel):
     id: str
     brand: str | None = None
@@ -243,6 +258,7 @@ class ModelSummaryOut(BaseModel):
     price_ranges: list[PriceRangeOut]
     best_verdicts: list[NeedVerdictOut] = Field(description="Best verdict among this model's variants, per need.")
     image: ModelImageOut | None = Field(None, description="The main photo, when one was uploaded.")
+    highlights: SpecHighlights = Field(default_factory=SpecHighlights)
 
 
 class PortsOut(BaseModel):
