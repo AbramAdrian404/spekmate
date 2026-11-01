@@ -1,7 +1,7 @@
 {
   "source_file": "data-laptop.xlsx",
-  "source_sha256": "5b3f1ec880d19f381005fe45f4c2c0a3bc43962e7a07b0948c9a59e57464b1c2",
-  "generated_at": "2026-10-15T11:10:19+00:00",
+  "source_sha256": "5c2b2ea7d5210bbcf5fa72e057e9e334f4a516454c683a23218ead07415f6756",
+  "generated_at": "2026-11-01T05:20:21+00:00",
   "last_checked": "2026-10-15",
   "counts": {
     "models": 40,
