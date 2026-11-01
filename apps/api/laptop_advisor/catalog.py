@@ -218,6 +218,26 @@ class Catalog:
         return [S.ModelImageOut(url=img["url"], alt=img.get("alt"), is_primary=bool(img.get("is_primary")))
                 for img in self.ds.images_of(model["id"])]
 
+    def _highlights(self, variants: list[Row]) -> S.SpecHighlights:
+        cpus: dict[str, S.PartBrief] = {}
+        gpus: dict[str, S.PartBrief] = {}
+        ram: set[float] = set()
+        storage: set[float] = set()
+        for v in variants:
+            specs = self.specs(v)
+            if specs.cpu:
+                cpus.setdefault(specs.cpu.name, S.PartBrief(name=specs.cpu.name, tier=specs.cpu.tier))
+            if specs.gpu:
+                gpus.setdefault(specs.gpu.name,
+                                S.PartBrief(name=specs.gpu.name, tier=specs.gpu.tier, kind=specs.gpu.kind))
+            if specs.ram.gb:
+                ram.add(specs.ram.gb)
+            if specs.storage.gb:
+                storage.add(specs.storage.gb)
+        best_first = lambda p: (-(p.tier or 0), p.name)  # noqa: E731
+        return S.SpecHighlights(cpus=sorted(cpus.values(), key=best_first), gpus=sorted(gpus.values(), key=best_first),
+                                ram_gb=sorted(ram), storage_gb=sorted(storage))
+
     def model_summary(self, model: Row) -> S.ModelSummaryOut:
         variants = self.ds.variants_of(model["id"])
         prices = self._model_prices(model)
@@ -231,11 +251,13 @@ class Catalog:
             best.append(S.NeedVerdictOut(need_id=need.id, short_name=texts.need_short_name(need.id, need.name),
                                          verdict=top, verdict_label=engine.VERDICT_LABELS[top]))  # type: ignore[arg-type]
         photos = self.images(model)
+        highlights = self._highlights(variants)
         return S.ModelSummaryOut(
             id=model["id"], brand=model.get("brand"), series=model.get("series"), name=self.model_name(model),
             year=model.get("year"), sales_status=_clean(model.get("sales_status")), summary=model.get("summary"),
             conditions=conditions,  # type: ignore[arg-type]
-            variant_count=len(variants), price_ranges=ranges, best_verdicts=best, image=photos[0] if photos else None)
+            variant_count=len(variants), price_ranges=ranges, best_verdicts=best, image=photos[0] if photos else None,
+            highlights=highlights)
 
     def model_detail(self, model_id: str) -> S.ModelDetailOut | None:
         model = self.ds.model(model_id)

@@ -64,6 +64,15 @@ export function modelSummary(overrides: Partial<ModelSummary> = {}): ModelSummar
       { need_id: "game-ringan", short_name: "Game ringan", verdict: "bisa_dengan_catatan", verdict_label: "Bisa, dengan catatan" },
       { need_id: "game-berat", short_name: "Game berat", verdict: "kurang_cocok", verdict_label: "Kurang cocok" },
     ],
+    highlights: {
+      cpus: [
+        { name: "Intel Core i5-8350U", tier: 3 },
+        { name: "Intel Core i5-8250U", tier: 2 },
+      ],
+      gpus: [{ name: "Intel UHD Graphics 620", tier: 1, kind: "bawaan" }],
+      ram_gb: [8, 16],
+      storage_gb: [256, 512],
+    },
     ...overrides,
   };
 }
