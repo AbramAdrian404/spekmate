@@ -9,7 +9,7 @@ import { StatusBadge, VerdictBadge } from "./verdict-badge";
 /**
  * The side-by-side table for whichever recommendation cards have their "Bandingkan" box checked.
  * Reads the checkboxes through a plain `change` listener instead of lifting state into every card
- * (the same pattern as ConsultProgress), so RecommendationCard stays a server-rendered component
+ * (a plain DOM listener rather than lifted state), so RecommendationCard stays a server-rendered component
  * with one plain, uncontrolled checkbox in it. `results` is the same data the cards already
  * received, passed down once so this never has to re-fetch anything of its own.
  *
