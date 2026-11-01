@@ -812,3 +812,82 @@
     color: var(--accent-strong);
   }
 }
+
+/* Catalog cards and the price slider ------------------------------------------------------------------------- */
+@layer components {
+  .product-card {
+    transition:
+      transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 220ms,
+      border-color 220ms;
+  }
+  .product-card:hover,
+  .product-card:focus-within {
+    transform: translateY(-3px);
+    border-color: var(--line-strong);
+    box-shadow: 0 18px 36px -22px rgb(36 59 83 / 0.35);
+  }
+  .product-art {
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .product-card:hover .product-art {
+    transform: scale(1.04) rotate(-1deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .product-card,
+    .product-art {
+      transition: none;
+    }
+    .product-card:hover,
+    .product-card:focus-within {
+      transform: none;
+    }
+    .product-card:hover .product-art {
+      transform: none;
+    }
+  }
+
+  .price-range {
+    appearance: none;
+    height: 1.5rem;
+    background: transparent;
+    cursor: pointer;
+  }
+  .price-range::-webkit-slider-runnable-track {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(to right, var(--accent) var(--fill, 100%), var(--line-strong) var(--fill, 100%));
+  }
+  .price-range::-moz-range-track {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--line-strong);
+  }
+  .price-range::-moz-range-progress {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--accent);
+  }
+  .price-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: -0.5rem;
+    border-radius: 9999px;
+    background: var(--surface);
+    border: 3px solid var(--accent);
+    box-shadow: 0 2px 6px rgb(36 59 83 / 0.25);
+  }
+  .price-range::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    background: var(--surface);
+    border: 3px solid var(--accent);
+  }
+  .price-range:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 4px;
+    border-radius: 9999px;
+  }
+}

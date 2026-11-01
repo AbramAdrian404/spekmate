@@ -968,6 +968,7 @@ export interface components {
             best_verdicts: components["schemas"]["NeedVerdictOut"][];
             /** @description The main photo, when one was uploaded. */
             image?: components["schemas"]["ModelImageOut"] | null;
+            highlights?: components["schemas"]["SpecHighlights"];
             /** Body Material */
             body_material?: string | null;
             /** Screen Inches */
@@ -1174,6 +1175,7 @@ export interface components {
             best_verdicts: components["schemas"]["NeedVerdictOut"][];
             /** @description The main photo, when one was uploaded. */
             image?: components["schemas"]["ModelImageOut"] | null;
+            highlights?: components["schemas"]["SpecHighlights"];
         };
         /** NeedInfo */
         NeedInfo: {
@@ -1224,6 +1226,21 @@ export interface components {
             rank: number;
             /** Note */
             note?: string | null;
+        };
+        /**
+         * PartBrief
+         * @description A processor or graphics chip as the catalog card shows it: the name and, when known, its 1-5 tier.
+         */
+        PartBrief: {
+            /** Name */
+            name: string;
+            /** Tier */
+            tier?: number | null;
+            /**
+             * Kind
+             * @description Graphics only: 'bawaan' or 'terpisah'.
+             */
+            kind?: string | null;
         };
         /** PasswordChangeIn */
         PasswordChangeIn: {
@@ -1490,6 +1507,36 @@ export interface components {
             notes: string[];
             /** Data Last Checked */
             data_last_checked?: string | null;
+        };
+        /**
+         * SpecHighlights
+         * @description What a model's configurations offer, for catalog cards and filters. Only values that exist in the data.
+         */
+        SpecHighlights: {
+            /**
+             * Cpus
+             * @description Distinct processors, best tier first.
+             * @default []
+             */
+            cpus: components["schemas"]["PartBrief"][];
+            /**
+             * Gpus
+             * @description Distinct graphics chips, best tier first.
+             * @default []
+             */
+            gpus: components["schemas"]["PartBrief"][];
+            /**
+             * Ram Gb
+             * @description Distinct RAM sizes, ascending.
+             * @default []
+             */
+            ram_gb: (number)[];
+            /**
+             * Storage Gb
+             * @description Distinct storage sizes, ascending.
+             * @default []
+             */
+            storage_gb: (number)[];
         };
         /** SpecsOut */
         SpecsOut: {

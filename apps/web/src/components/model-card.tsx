@@ -1,10 +1,13 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Cpu, HardDrive, MemoryStick, MonitorPlay } from "lucide-react";
 import Link from "next/link";
-import { formatRupiahRange } from "@/lib/format";
+import { highlightsOf, modelLowPrice } from "@/lib/catalog-browse";
+import { formatRupiahCompact, formatStorage } from "@/lib/format";
 import { CONDITION_LABEL, salesStatusLabel } from "@/lib/labels";
+import { needVisual } from "@/lib/need-visuals";
 import type { ModelSummary, Verdict } from "@/lib/types";
+import { LaptopArt } from "./laptop-art";
 import { ModelPhoto } from "./model-photo";
-import { VerdictBadge } from "./verdict-badge";
+import { SpecChip } from "./spec-chip";
 
 const GROUP_ORDER: Verdict[] = ["cocok", "bisa_dengan_catatan", "data_belum_lengkap", "kurang_cocok"];
 
@@ -17,63 +20,108 @@ export function groupVerdicts(model: Pick<ModelSummary, "best_verdicts">) {
   })).filter((group) => group.needs.length > 0);
 }
 
+/** "8 GB" for one size, "8–16 GB" for a spread. */
+export function sizeSpread(sizes: readonly number[]): string | null {
+  if (sizes.length === 0) return null;
+  const low = sizes[0];
+  const high = sizes[sizes.length - 1];
+  return low === high ? `${low} GB` : `${low}–${high} GB`;
+}
+
+function shortCpu(name: string): string {
+  return name.replace(/^(Intel|AMD)\s+/i, "").replace(/\s+with Radeon.*$/i, "");
+}
+
+/** A catalog card: the picture leads, then the name, the price and four spec chips. Everything else lives on the detail page. */
 export function ModelCard({ model }: { model: ModelSummary }) {
-  const groups = groupVerdicts(model);
   const status = salesStatusLabel(model.sales_status);
   const href = `/laptop/${encodeURIComponent(model.id)}`;
   const headingId = `model-${model.id}`;
+  const { cpus, gpus, ram_gb, storage_gb } = highlightsOf(model);
+  const suits = model.best_verdicts.filter((entry) => entry.verdict === "cocok");
+  const lead = suits[0] ?? model.best_verdicts.find((entry) => entry.verdict === "bisa_dengan_catatan");
+  const lowest = modelLowPrice(model);
+  const topGpu = gpus[0];
+  const storage = storage_gb.length ? `${formatStorage(storage_gb[0])}${storage_gb.length > 1 ? `–${formatStorage(storage_gb[storage_gb.length - 1])}` : ""}` : null;
 
   return (
     <li className="@container">
-      <article aria-labelledby={headingId} className="card flex h-full flex-col gap-4 p-5 sm:p-6">
-        <Link href={href} tabIndex={-1} aria-hidden="true" className="block">
-          <ModelPhoto image={model.image} fallbackAlt="" className="aspect-[4/3]" />
-        </Link>
-        <header className="space-y-2">
-          <h2 id={headingId} className="text-xl font-semibold">
-            <Link href={href} className="text-ink no-underline hover:underline">
-              {model.name}
-            </Link>
-          </h2>
-          <p className="flex flex-wrap items-center gap-2 text-sm text-ink-3">
-            {model.year ? <span>Rilis {model.year}</span> : null}
-            {status ? <span className="tag">{status}</span> : null}
-            <span>{model.variant_count === 1 ? "1 konfigurasi" : `${model.variant_count} konfigurasi`}</span>
-          </p>
-        </header>
-
-        {model.summary ? <p className="line-clamp-3 text-ink-2">{model.summary}</p> : null}
-
-        <div className="space-y-1.5">
-          {model.price_ranges.length > 0 ? (
-            model.price_ranges.map((range) => (
-              <p key={range.condition} className="flex flex-wrap items-baseline gap-x-2 text-ink">
-                <span className="tag">{CONDITION_LABEL[range.condition]}</span>
-                <span className="font-display text-lg font-semibold tabular">{formatRupiahRange(range.low, range.high)}</span>
-              </p>
-            ))
+      <article aria-labelledby={headingId} className="product-card group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-surface">
+        <Link href={href} tabIndex={-1} aria-hidden="true" className="product-media relative block aspect-[4/3] bg-surface-2">
+          {model.image ? (
+            <ModelPhoto image={model.image} fallbackAlt="" className="size-full rounded-none bg-transparent p-4" />
           ) : (
-            <p className="text-sm text-ink-3">Belum ada catatan harga.</p>
+            <span className="grid size-full place-items-center p-6">
+              <LaptopArt tone={needVisual(lead?.need_id ?? "").tone} className="product-art w-4/5 max-w-[15rem]" />
+            </span>
           )}
-        </div>
+          <span className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+            {model.conditions.map((condition) => (
+              <span key={condition} className="rounded-full bg-surface/90 px-2.5 py-1 text-xs font-semibold text-ink backdrop-blur">
+                {CONDITION_LABEL[condition]}
+              </span>
+            ))}
+          </span>
+        </Link>
 
-        {/* Wide enough: badge and needs line up in two columns. Narrow: each badge sits above its needs. */}
-        <dl className="grid gap-x-3 gap-y-3 border-t border-line pt-4 @sm:grid-cols-[max-content_1fr]">
-          {groups.map((group) => (
-            <div key={group.verdict} className="grid justify-items-start gap-1 @sm:contents">
-              <dt>
-                <VerdictBadge verdict={group.verdict} label={group.label} size="sm" />
-              </dt>
-              <dd className="text-sm text-ink-2 @sm:pt-0.5">{group.needs.join(", ")}</dd>
-            </div>
-          ))}
-        </dl>
+        <div className="flex flex-1 flex-col gap-3 p-5">
+          <header className="space-y-1">
+            <p className="flex flex-wrap items-center gap-x-2 text-sm text-ink-3">
+              {model.brand ? <span className="font-medium text-ink-2">{model.brand}</span> : null}
+              {model.year ? <span>Rilis {model.year}</span> : null}
+              {status ? <span className="tag">{status}</span> : null}
+            </p>
+            <h2 id={headingId} className="text-lg font-semibold leading-snug">
+              <Link href={href} className="text-ink no-underline after:absolute after:inset-0 hover:underline">
+                {model.name}
+              </Link>
+            </h2>
+          </header>
 
-        <div className="mt-auto pt-1">
-          <Link href={href} className="btn btn-secondary w-full sm:w-auto">
-            Lihat detail
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </Link>
+          <p className="text-ink">
+            {lowest !== null ? (
+              <>
+                <span className="text-sm text-ink-3">Mulai </span>
+                <span className="font-display text-2xl font-semibold tabular">{formatRupiahCompact(lowest)}</span>
+              </>
+            ) : (
+              <span className="text-sm text-ink-3">Belum ada catatan harga.</span>
+            )}
+          </p>
+
+          <div className="flex flex-wrap gap-1.5">
+            {cpus[0] ? (
+              <SpecChip Icon={Cpu} title={cpus.map((cpu) => cpu.name).join(", ")}>
+                {shortCpu(cpus[0].name)}
+                {cpus.length > 1 ? ` +${cpus.length - 1}` : ""}
+              </SpecChip>
+            ) : null}
+            {ram_gb.length ? <SpecChip Icon={MemoryStick}>{sizeSpread(ram_gb)}</SpecChip> : null}
+            {storage ? <SpecChip Icon={HardDrive}>{storage}</SpecChip> : null}
+            {topGpu ? (
+              <SpecChip Icon={MonitorPlay} title={topGpu.name}>
+                {topGpu.kind === "terpisah" ? "GPU terpisah" : "GPU bawaan"}
+              </SpecChip>
+            ) : null}
+          </div>
+
+          <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
+            {suits.slice(0, 2).map((entry) => {
+              const { Icon } = needVisual(entry.need_id);
+              return (
+                <span key={entry.need_id} className="badge badge-sm" data-tone="cocok" data-verdict="cocok">
+                  <Icon aria-hidden="true" className="size-3.5 shrink-0" />
+                  <span className="sr-only">Cocok untuk </span>
+                  {entry.short_name}
+                </span>
+              );
+            })}
+            {suits.length === 0 && lead ? <span className="text-sm text-ink-2">{lead.verdict_label}: {lead.short_name}</span> : null}
+            <ArrowRight aria-hidden="true" className="ml-auto size-5 text-ink-3 transition-transform group-hover:translate-x-1 group-hover:text-accent" />
+          </div>
+          <span className="sr-only">
+            {model.variant_count === 1 ? "1 konfigurasi" : `${model.variant_count} konfigurasi`}. Lihat detail.
+          </span>
         </div>
       </article>
     </li>
