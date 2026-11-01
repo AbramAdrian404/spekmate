@@ -192,3 +192,15 @@ export function browseOptions(models: readonly ModelSummary[]): BrowseOptions {
       : null,
   };
 }
+
+/** How many models suit each need (a "cocok" or "bisa dengan catatan" verdict), for the tiles on the home page. */
+export function needCoverage(models: readonly ModelSummary[], needIds: readonly string[]): { needId: string; count: number; total: number }[] {
+  return needIds.map((needId) => ({
+    needId,
+    count: models.filter((model) => {
+      const verdict = model.best_verdicts.find((entry) => entry.need_id === needId)?.verdict;
+      return verdict !== undefined && GOOD.has(verdict);
+    }).length,
+    total: models.length,
+  }));
+}

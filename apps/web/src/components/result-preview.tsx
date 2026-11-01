@@ -4,6 +4,9 @@ import type { CSSProperties } from "react";
 import { formatDate, formatRupiah, formatRupiahCompact, formatRupiahRange } from "@/lib/format";
 import { CONDITION_LABEL, priceFitLabel, sentenceCase } from "@/lib/labels";
 import type { ConditionFilter, Recommendation } from "@/lib/types";
+import { needVisual } from "@/lib/need-visuals";
+import { LaptopArt } from "./laptop-art";
+import { ModelPhoto } from "./model-photo";
 import { StatusBadge, VerdictBadge } from "./verdict-badge";
 
 interface ResultPreviewProps {
@@ -59,6 +62,13 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
                   data-verdict={item.verdict}
                   className="card card-edge card-hover flex w-full flex-col gap-4 p-6"
                 >
+                  {item.image ? (
+                    <ModelPhoto image={item.image} fallbackAlt={item.model_name} className="aspect-[4/3] w-full" />
+                  ) : (
+                    <div aria-hidden="true" className="grid aspect-[4/3] place-items-center rounded-xl bg-surface-2">
+                      <LaptopArt tone={needVisual(item.need_fit[0]?.need_id ?? "").tone} className="w-3/5 max-w-[12rem]" />
+                    </div>
+                  )}
                   <header className="space-y-1.5">
                     <div className="flex items-center gap-2.5">
                       <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-sm font-semibold text-on-accent tabular">
