@@ -1,13 +1,19 @@
+import { ChevronDown } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { LinkifiedText } from "@/components/linkified-text";
+import { AssessmentFlow } from "@/components/assessment-flow";
+import { NeedLimits } from "@/components/need-limits";
 import { PageHeader } from "@/components/page-header";
+import { StatusRadar } from "@/components/status-radar";
 import { TierMeter } from "@/components/tier-meter";
 import { StatusBadge, VerdictBadge } from "@/components/verdict-badge";
-import { getMethodology } from "@/lib/api";
-import { formatDateLong } from "@/lib/format";
-import type { Status, Verdict } from "@/lib/types";
+import { getMethodology, getNeeds, getRecommendationsCached, load } from "@/lib/api";
+import { cn } from "@/lib/cn";
+import { formatDateLong, formatRupiah } from "@/lib/format";
+import { contrastingResult, methodSampleRequest } from "@/lib/home-sample";
+import { STATUS_LEVEL, STATUS_TONE_CLASS } from "@/lib/status-level";
+import type { Recommendation, Status, Verdict } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Cara menilai",
@@ -16,33 +22,121 @@ export const metadata: Metadata = {
 
 const VERDICT_CODES: readonly string[] = ["cocok", "bisa_dengan_catatan", "data_belum_lengkap", "kurang_cocok", "tidak_dinilai"];
 const STATUS_CODES: readonly string[] = ["nyaman", "cukup", "kurang", "belum_ada_data", "tidak_dinilai"];
-
 const isVerdict = (code: string): code is Verdict => VERDICT_CODES.includes(code);
 const isStatus = (code: string): code is Status => STATUS_CODES.includes(code);
 
 const SECTIONS = [
+  { id: "alur", label: "Alur" },
+  { id: "batas", label: "Batas kebutuhan" },
+  { id: "contoh", label: "Contoh" },
   { id: "arti-penilaian", label: "Arti penilaian" },
-  { id: "arti-status", label: "Arti status tiap kriteria" },
-  { id: "batas", label: "Batas untuk tiap kebutuhan" },
-  { id: "gabungan", label: "Memilih lebih dari satu kebutuhan" },
-  { id: "tingkat", label: "Tingkat prosesor dan grafis" },
-  { id: "layar", label: "Peringkat jenis layar" },
-  { id: "peringatan", label: "Peringatan umum" },
-  { id: "belum-dinilai", label: "Yang belum kami nilai" },
-  { id: "urutan", label: "Cara mengurutkan rekomendasi" },
+  { id: "tingkat", label: "Tingkat" },
+  { id: "urutan", label: "Urutan" },
+  { id: "lainnya", label: "Selengkapnya" },
 ] as const;
 
-function Section({ id, title, intro, children }: { id: string; title: string; intro?: ReactNode; children: ReactNode }) {
+function Section({ id, title, lead, children }: { id: string; title: string; lead?: string; children: ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-judul`} className="scroll-mt-24 space-y-4">
+    <section id={id} aria-labelledby={`${id}-judul`} className="scroll-mt-24 space-y-6">
       <div className="space-y-1.5">
-        <h2 id={`${id}-judul`} className="text-2xl font-semibold">
+        <h2 id={`${id}-judul`} className="reveal text-2xl font-semibold sm:text-3xl">
           {title}
         </h2>
-        {intro ? <p className="measure text-ink-2">{intro}</p> : null}
+        {lead ? <p className="reveal measure text-ink-2">{lead}</p> : null}
       </div>
       {children}
     </section>
+  );
+}
+
+/** A long explanation folded away until wanted. */
+function Fold({ id, title, hint, children }: { id?: string; title: string; hint?: string; children: ReactNode }) {
+  return (
+    <details id={id} className="group scroll-mt-24 rounded-2xl border border-line bg-surface">
+      <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-3 [&::-webkit-details-marker]:hidden">
+        <span>
+          <span className="block font-semibold text-ink">{title}</span>
+          {hint ? <span className="block text-sm text-ink-3">{hint}</span> : null}
+        </span>
+        <ChevronDown aria-hidden="true" className="size-5 shrink-0 text-ink-3 transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="space-y-3 border-t border-line px-5 py-4 text-ink-2">{children}</div>
+    </details>
+  );
+}
+
+/** Three small segments: how far up the comfort scale a status sits. The words go with it, so color is never alone. */
+function Meter({ status }: { status: Status }) {
+  return (
+    <span aria-hidden="true" className="flex w-16 gap-0.5">
+      {[1, 2, 3].map((segment) => (
+        <span key={segment} className={cn("h-2.5 flex-1 rounded-sm", segment <= STATUS_LEVEL[status] ? STATUS_TONE_CLASS[status] : "bg-surface-2 ring-1 ring-inset ring-line")} />
+      ))}
+    </span>
+  );
+}
+
+function WorkedExample({ items, needName, budget }: { items: Recommendation[]; needName: string; budget: number }) {
+  const first = items[0];
+  const second = contrastingResult(items);
+  const rows = first.criteria.filter((criterion) => criterion.status !== "tidak_dinilai");
+  const palette = ["var(--accent)", "#b3741b"];
+  const radarItems = second ? [first, second] : [first];
+  const labels = rows.map((row) => row.label);
+  const series = radarItems.map((item, index) => ({
+    name: `Peringkat ${item.rank}: ${item.model_name}`,
+    color: palette[index],
+    dashed: index === 1,
+    values: rows.map((row) => STATUS_LEVEL[item.criteria.find((candidate) => candidate.key === row.key)?.status ?? "belum_ada_data"]),
+  }));
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <article className="reveal rounded-3xl border border-line bg-surface p-5 sm:p-7">
+        <p className="text-sm text-ink-3">
+          Contoh nyata: kebutuhan {needName.toLowerCase()}, anggaran {formatRupiah(budget)}, baru
+        </p>
+        <h3 className="mt-1 text-xl font-semibold">{first.model_name}</h3>
+        <p className="text-sm text-ink-2">{first.variant_title}</p>
+
+        <ul className="mt-5 divide-y divide-line">
+          {rows.map((row) => {
+            const criterion = first.criteria.find((candidate) => candidate.key === row.key) ?? row;
+            return (
+              <li key={row.key} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 py-3 sm:grid-cols-[7rem_minmax(0,1fr)_auto_auto]">
+                <span className="font-medium text-ink">{criterion.label}</span>
+                <span className="order-3 col-span-2 text-sm text-ink-2 sm:order-none sm:col-span-1">{criterion.value_text ?? "belum diketahui"}</span>
+                <Meter status={criterion.status} />
+                <StatusBadge status={criterion.status} label={criterion.status_label} size="sm" />
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="mt-5 rounded-2xl bg-surface-2 p-4">
+          <p className="text-sm font-semibold text-ink">Penilaian akhir</p>
+          <div className="mt-2">
+            <VerdictBadge verdict={first.verdict} label={first.verdict_label} />
+          </div>
+          <p className="mt-2 text-sm text-ink-2">{first.reason}</p>
+        </div>
+      </article>
+
+      <div className="reveal rounded-3xl border border-line bg-surface p-5 sm:p-7">
+        <h3 className="text-xl font-semibold">Dua laptop berdampingan</h3>
+        {second ? (
+          <>
+            <p className="mt-1 text-sm text-ink-2">Peringkat pertama dan laptop yang statusnya paling berbeda darinya. Makin jauh ke tepi, makin nyaman untuk kriteria itu.</p>
+            <div className="mt-4">
+              <StatusRadar labels={labels} series={series} />
+            </div>
+            <p className="mt-4 text-xs text-ink-3">Garis luar berarti Nyaman, tengah berarti Cukup, dekat pusat berarti Kurang. Ini status dari mesin penilaian, bukan skor.</p>
+          </>
+        ) : (
+          <p className="mt-2 text-ink-2">Semua hasil teratas punya status yang sama untuk kebutuhan ini, jadi tidak ada perbedaan yang bisa digambar.</p>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -50,227 +144,156 @@ export default async function MethodologyPage() {
   const rules = await getMethodology();
   const checked = formatDateLong(rules.data_last_checked);
 
+  // A real consultation on today's data, so the example is never copy written by hand.
+  const needs = await load(getNeeds());
+  const sampleRequest = needs.ok ? methodSampleRequest(needs.data) : null;
+  const sample = sampleRequest ? await load(getRecommendationsCached(sampleRequest)) : null;
+  const sampleNeed = sampleRequest && needs.ok ? needs.data.find((need) => need.id === sampleRequest.needs[0]) : null;
+  const items = sample?.ok ? sample.data.results : [];
+  const criteriaCount = new Set(rules.needs.flatMap(({ criteria }) => criteria.map((criterion) => criterion.key))).size;
+
   return (
     <>
       <PageHeader eyebrow="Transparansi" title="Cara kami menilai laptop">
         <p>
-          Penilaian dihitung dengan aturan tetap yang semuanya ada di halaman ini, bukan ditebak. Data yang sama selalu memberi hasil
-          yang sama, dan setiap hasil menjelaskan alasannya.
-          {checked ? <> Aturan dan data terakhir dicek {checked}.</> : null}
+          Aturannya tetap dan terbuka, jadi data yang sama selalu memberi hasil yang sama.
+          {checked ? <> Terakhir dicek {checked}.</> : null}
         </p>
       </PageHeader>
 
-      <div className="container-page grid gap-10 py-8 sm:py-10 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-12">
-        <nav aria-label="Isi halaman" className="lg:sticky lg:top-24 lg:self-start">
-          <p className="mb-2 text-sm font-semibold text-ink">Isi halaman</p>
-          <ul className="space-y-1 text-sm">
-            {SECTIONS.map((section) => (
-              <li key={section.id}>
-                <a href={`#${section.id}`} className="inline-flex min-h-8 items-center">
-                  {section.label}
-                </a>
+      <div className="container-page space-y-16 py-10 sm:space-y-20 sm:py-14">
+        <nav aria-label="Isi halaman" className="-mx-1 flex flex-wrap gap-2">
+          {SECTIONS.map((section) => (
+            <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-10 items-center rounded-full border border-line-strong bg-surface px-4 text-sm font-medium text-ink-2 no-underline hover:border-ink-3 hover:text-ink">
+              {section.label}
+            </a>
+          ))}
+        </nav>
+
+        <Section id="alur" title="Dari data sampai urutan" lead="Lima tahap, selalu dengan urutan yang sama.">
+          <AssessmentFlow criteria={criteriaCount} statuses={rules.statuses.length} verdicts={rules.verdicts.length} />
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Arti status kriteria">
+            {rules.statuses.map((status) => (
+              <li key={status.code} className="reveal flex flex-col gap-2 rounded-2xl border border-line bg-surface p-4">
+                {isStatus(status.code) ? <StatusBadge status={status.code} label={status.label} size="md" className="self-start" /> : <span className="tag self-start">{status.label}</span>}
+                <span className="text-sm text-ink-2">{status.meaning}</span>
               </li>
             ))}
           </ul>
-        </nav>
+        </Section>
 
-        <div className="min-w-0 space-y-14">
-          <Section
-            id="arti-penilaian"
-            title="Arti penilaian"
-            intro="Setiap laptop mendapat satu penilaian untuk tiap kebutuhan. Aturannya dicek berurutan dari atas, dan yang pertama cocok yang dipakai."
-          >
-            <ol className="space-y-3">
-              {rules.verdicts.map((verdict, index) => (
-                <li key={verdict.code} className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-start sm:gap-4">
-                  <span className="flex items-center gap-3 sm:w-64 sm:shrink-0">
-                    <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-surface-2 text-xs font-semibold tabular text-ink-2">
-                      {index + 1}
-                    </span>
-                    {isVerdict(verdict.code) ? <VerdictBadge verdict={verdict.code} label={verdict.label} /> : <span className="tag">{verdict.label}</span>}
-                  </span>
-                  <span className="text-ink-2">{verdict.meaning}</span>
-                </li>
-              ))}
-            </ol>
+        <Section id="batas" title="Batas tiap kebutuhan" lead="Pilih kebutuhan untuk melihat di mana sebuah kriteria terasa kurang, cukup, dan nyaman.">
+          <NeedLimits needs={rules.needs} />
+          <p className="measure text-sm text-ink-3">{rules.multi_need_note}</p>
+        </Section>
+
+        {items.length > 0 && sampleNeed && sampleRequest ? (
+          <Section id="contoh" title="Contoh satu penilaian" lead="Diambil dari database hari ini, bukan dibuat untuk halaman ini.">
+            <WorkedExample items={items} needName={sampleNeed.name} budget={sampleRequest.budget_max} />
           </Section>
+        ) : null}
 
-          <Section id="arti-status" title="Arti status tiap kriteria" intro="Enam hal dibandingkan satu per satu dengan batas kebutuhan: prosesor, grafis, RAM, penyimpanan, jenis layar, dan refresh rate.">
-            <ul className="space-y-3">
-              {rules.statuses.map((status) => (
-                <li key={status.code} className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-start sm:gap-4">
-                  <span className="sm:w-64 sm:shrink-0">
-                    {isStatus(status.code) ? <StatusBadge status={status.code} label={status.label} size="md" /> : <span className="tag">{status.label}</span>}
-                  </span>
-                  <span className="text-ink-2">{status.meaning}</span>
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          <Section
-            id="batas"
-            title="Batas untuk tiap kebutuhan"
-            intro="Batas minimal artinya di bawah ini laptop terasa kurang. Nyaman mulai artinya dari sini pemakaian terasa lancar. Kriteria yang tidak ikut menentukan sebuah kebutuhan tidak ditampilkan."
-          >
-            <div className="space-y-8">
-              {rules.needs.map(({ need, criteria }) => {
-                const used = criteria.filter((criterion) => criterion.assessed);
-                const unused = criteria.filter((criterion) => !criterion.assessed);
-                return (
-                  <article key={need.id} aria-labelledby={`batas-${need.id}`} className="space-y-3">
-                    <div>
-                      <h3 id={`batas-${need.id}`} className="text-xl font-semibold">
-                        {need.name}
-                      </h3>
-                      {need.description ? <p className="measure text-ink-2">{need.description}</p> : null}
-                    </div>
-                    <div className="table-wrap bg-surface">
-                      <table className="data-table min-w-[40rem]">
-                        <caption className="sr-only">Batas penilaian untuk {need.name}</caption>
-                        <thead>
-                          <tr>
-                            <th scope="col">Yang dinilai</th>
-                            <th scope="col">Batas minimal</th>
-                            <th scope="col">Nyaman mulai</th>
-                            <th scope="col">Alasan dan dasar</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {used.map((criterion) => (
-                            <tr key={criterion.key}>
-                              <th scope="row" className="font-semibold">
-                                {criterion.label}
-                              </th>
-                              <td className="tabular">{criterion.minimum_text ?? "-"}</td>
-                              <td className="tabular">{criterion.comfortable_text ?? "-"}</td>
-                              <td className="space-y-1">
-                                {criterion.reason ? <p>{criterion.reason}</p> : null}
-                                {criterion.basis ? (
-                                  <p className="text-xs text-ink-3">
-                                    Dasar: <LinkifiedText text={criterion.basis} />
-                                  </p>
-                                ) : null}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {unused.length > 0 ? (
-                      <p className="text-sm text-ink-3">Tidak ikut menentukan: {unused.map((criterion) => criterion.label.toLowerCase()).join(", ")}.</p>
-                    ) : null}
-                  </article>
-                );
-              })}
-            </div>
-          </Section>
-
-          <Section id="gabungan" title="Memilih lebih dari satu kebutuhan">
-            <p className="measure text-ink-2">{rules.multi_need_note}</p>
-            <p className="text-sm text-ink-3">
-              Contoh: bila Kuliah dan kantor serta Desain grafis dipilih sekaligus, RAM memakai batas yang lebih tinggi di antara
-              keduanya, bukan dirata-rata dan bukan salah satunya saja.
-            </p>
-          </Section>
-
-          <Section id="tingkat" title="Tingkat prosesor dan grafis" intro="Prosesor dan grafis kami golongkan ke dalam lima tingkat supaya mudah dibandingkan. Tingkat ini penilaian kami sendiri berdasarkan data pabrikan, bukan skor resmi.">
-            <div className="table-wrap bg-surface">
-              <table className="data-table min-w-[36rem]">
-                <caption className="sr-only">Arti tiap tingkat</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Tingkat</th>
-                    <th scope="col">Prosesor</th>
-                    <th scope="col">Grafis</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rules.tiers.map((tier) => (
-                    <tr key={tier.tier}>
-                      <th scope="row">
-                        <TierMeter tier={tier.tier} />
-                      </th>
-                      <td>{tier.cpu ?? "-"}</td>
-                      <td>{tier.gpu ?? "-"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Section>
-
-          <Section id="layar" title="Peringkat jenis layar" intro="Untuk kebutuhan yang peduli warna, jenis layar diurutkan dari yang paling dasar sampai paling baik.">
-            <div className="table-wrap bg-surface">
-              <table className="data-table min-w-[30rem]">
-                <caption className="sr-only">Peringkat jenis layar</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Peringkat</th>
-                    <th scope="col">Jenis layar</th>
-                    <th scope="col">Catatan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...rules.panels]
-                    .sort((a, b) => a.rank - b.rank)
-                    .map((panel) => (
-                      <tr key={panel.name}>
-                        <td className="tabular">{panel.rank}</td>
-                        <th scope="row">{panel.name}</th>
-                        <td>{panel.note ?? "-"}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </Section>
-
-          <Section
-            id="peringatan"
-            title="Peringatan umum"
-            intro="Enam hal ini ditampilkan sebagai peringatan, tetapi tidak pernah mengubah penilaian. Kamu yang memutuskan seberapa penting buatmu."
-          >
-            <ul className="space-y-3">
-              {rules.warnings.map((warning) => (
-                <li key={warning.code} className="card flex gap-4 p-4">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-sm font-semibold tabular text-ink-2">{warning.code}</span>
-                  <div className="space-y-1">
-                    {warning.when ? <p className="text-sm font-semibold text-ink">Muncul kalau: {warning.when}</p> : null}
-                    <p className="text-ink-2">{warning.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          <Section id="belum-dinilai" title="Yang belum kami nilai" intro="Hal-hal ini penting tetapi belum ikut dihitung, jadi cek sendiri sebelum membeli.">
-            <ul className="space-y-3">
-              {rules.not_scored.map((entry) => (
-                <li key={entry.item} className="card space-y-1 p-4">
-                  <p className="font-semibold text-ink">{entry.item}</p>
-                  {entry.reason ? <p className="text-ink-2">{entry.reason}</p> : null}
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          <Section id="urutan" title="Cara mengurutkan rekomendasi" intro="Setelah laptop yang kurang cocok, di atas anggaran, atau tidak memenuhi syarat penyimpananmu disisihkan, sisanya diurutkan dengan langkah ini, dari yang paling menentukan.">
-            <ol className="space-y-2.5">
-              {rules.ranking_steps.map((step, index) => (
-                <li key={step} className="card flex gap-4 p-4">
-                  <span aria-hidden="true" className="grid size-7 shrink-0 place-items-center rounded-full bg-accent-soft text-sm font-semibold tabular text-accent-strong">
+        <Section id="arti-penilaian" title="Arti penilaian akhir" lead="Dicek dari atas ke bawah. Aturan pertama yang cocok yang dipakai.">
+          <ol className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {rules.verdicts.map((verdict, index) => (
+              <li key={verdict.code} className="reveal flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5">
+                <span className="flex items-center gap-3">
+                  <span aria-hidden="true" className="grid size-7 place-items-center rounded-full bg-surface-2 text-xs font-semibold tabular text-ink-2">
                     {index + 1}
                   </span>
-                  <span className="text-ink-2">{step}</span>
-                </li>
-              ))}
+                  {isVerdict(verdict.code) ? <VerdictBadge verdict={verdict.code} label={verdict.label} /> : <span className="tag">{verdict.label}</span>}
+                </span>
+                <span className="text-sm text-ink-2">{verdict.meaning}</span>
+              </li>
+            ))}
+          </ol>
+        </Section>
+
+        <Section id="tingkat" title="Tingkat prosesor dan grafis" lead="Dikelompokkan ke lima tingkat supaya mudah dibandingkan. Ini penilaian kami sendiri berdasarkan data pabrikan, bukan skor resmi.">
+          <ol className="grid gap-3 md:grid-cols-5">
+            {rules.tiers.map((tier) => (
+              <li key={tier.tier} className="reveal flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4">
+                <TierMeter tier={tier.tier} />
+                <p className="text-sm text-ink-2">
+                  <span className="font-semibold text-ink">Prosesor. </span>
+                  {tier.cpu ?? "-"}
+                </p>
+                <p className="text-sm text-ink-2">
+                  <span className="font-semibold text-ink">Grafis. </span>
+                  {tier.gpu ?? "-"}
+                </p>
+              </li>
+            ))}
+          </ol>
+          <div>
+            <h3 className="mb-3 text-lg font-semibold">Peringkat jenis layar</h3>
+            <ol className="flex flex-wrap items-stretch gap-2" aria-label="Peringkat jenis layar, dari dasar ke terbaik">
+              {[...rules.panels]
+                .sort((a, b) => a.rank - b.rank)
+                .map((panel) => (
+                  <li key={panel.name} className="flex min-w-36 flex-1 flex-col gap-1 rounded-2xl border border-line bg-surface p-4">
+                    <span className="flex items-center gap-2">
+                      <span aria-hidden="true" className="grid size-6 place-items-center rounded-full bg-accent-soft text-xs font-semibold tabular text-accent-strong">
+                        {panel.rank}
+                      </span>
+                      <span className="font-semibold text-ink">{panel.name}</span>
+                    </span>
+                    {panel.note ? <span className="text-xs text-ink-2">{panel.note}</span> : null}
+                  </li>
+                ))}
             </ol>
-            <p className="text-sm text-ink-3">
-              Mau mencobanya? <Link href="/konsultasi">Temukan laptop</Link>. Setiap hasil juga menjelaskan kenapa ia ada di urutannya.
-            </p>
-          </Section>
-        </div>
+          </div>
+        </Section>
+
+        <Section id="urutan" title="Cara mengurutkan rekomendasi" lead="Setelah yang kurang cocok, di atas anggaran, atau tidak memenuhi syarat penyimpananmu disisihkan, sisanya diurutkan dengan langkah ini, dari yang paling menentukan.">
+          <ol className="space-y-2.5">
+            {rules.ranking_steps.map((step, index) => (
+              <li key={step} className="reveal flex items-center gap-4 rounded-2xl border border-line bg-surface p-4">
+                <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-accent text-sm font-semibold tabular text-on-accent">
+                  {index + 1}
+                </span>
+                <span className="text-ink-2">{step}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="text-sm text-ink-3">
+            Mau mencobanya? <Link href="/konsultasi">Temukan laptop</Link>. Setiap hasil juga menjelaskan kenapa ia ada di urutannya.
+          </p>
+        </Section>
+
+        <Section id="lainnya" title="Selengkapnya" lead="Penjelasan yang lebih panjang, dilipat supaya halaman tetap ringan.">
+          <div className="space-y-3">
+            <Fold id="peringatan" title="Peringatan umum" hint="Tampil sebagai catatan, tidak pernah mengubah penilaian.">
+              <ul className="space-y-3">
+                {rules.warnings.map((warning) => (
+                  <li key={warning.code} className="flex gap-3">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-sm font-semibold tabular text-ink-2">{warning.code}</span>
+                    <span>
+                      {warning.when ? <span className="block text-sm font-semibold text-ink">Muncul kalau: {warning.when}</span> : null}
+                      {warning.text}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Fold>
+            <Fold id="belum-dinilai" title="Yang belum kami nilai" hint="Penting, tetapi belum ikut dihitung. Cek sendiri sebelum membeli.">
+              <ul className="space-y-3">
+                {rules.not_scored.map((entry) => (
+                  <li key={entry.item}>
+                    <span className="block font-semibold text-ink">{entry.item}</span>
+                    {entry.reason ? <span>{entry.reason}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </Fold>
+            <Fold id="gabungan" title="Memilih lebih dari satu kebutuhan">
+              <p>{rules.multi_need_note}</p>
+              <p className="text-sm text-ink-3">
+                Contoh: bila Kuliah dan kantor serta Desain grafis dipilih sekaligus, RAM memakai batas yang lebih tinggi di antara keduanya, bukan dirata-rata dan bukan salah satunya saja.
+              </p>
+            </Fold>
+          </div>
+        </Section>
       </div>
     </>
   );

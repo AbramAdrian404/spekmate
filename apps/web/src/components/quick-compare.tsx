@@ -1,17 +1,8 @@
 import { formatRupiahCompact } from "@/lib/format";
 import { CONDITION_LABEL } from "@/lib/labels";
-import type { Recommendation, Status } from "@/lib/types";
+import { STATUS_LEVEL as LEVEL, STATUS_TONE_CLASS as TONE } from "@/lib/status-level";
+import type { Recommendation } from "@/lib/types";
 import { cn } from "@/lib/cn";
-
-/** How full a status meter is: 3 of 3 for comfortable, 2 for enough, 1 for lacking. No data and not assessed are empty. */
-const LEVEL: Record<Status, number> = { nyaman: 3, cukup: 2, kurang: 1, belum_ada_data: 0, tidak_dinilai: 0 };
-const TONE: Record<Status, string> = {
-  nyaman: "bg-[var(--cocok-edge)]",
-  cukup: "bg-[var(--bisa-edge)]",
-  kurang: "bg-[var(--kurang-edge)]",
-  belum_ada_data: "bg-line-strong",
-  tidak_dinilai: "bg-line-strong",
-};
 
 /**
  * The recommendations side by side at a glance, without ticking anything: a price bar per laptop and, per criterion, a
