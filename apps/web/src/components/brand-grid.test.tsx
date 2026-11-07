@@ -10,7 +10,7 @@ const BRANDS = [
 describe("BrandGrid", () => {
   it("makes one link per brand, to the catalog filtered to that brand, and says how many models it has", async () => {
     vi.resetModules();
-    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>() }));
+    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>(), BRAND_COLORS: {} }));
     const { BrandGrid } = await import("./brand-grid");
     render(<BrandGrid brands={BRANDS} />);
     const links = screen.getAllByRole("link");
@@ -21,7 +21,7 @@ describe("BrandGrid", () => {
 
   it("shows the brand's name in plain type until its logo file has been added", async () => {
     vi.resetModules();
-    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>() }));
+    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>(), BRAND_COLORS: {} }));
     const { BrandGrid } = await import("./brand-grid");
     const { container } = render(<BrandGrid brands={BRANDS} />);
     expect(container.querySelector("img")).toBeNull();
@@ -30,7 +30,7 @@ describe("BrandGrid", () => {
 
   it("shows the official logo, with the brand's name as its text, once the file is listed", async () => {
     vi.resetModules();
-    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>(["asus"]) }));
+    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>(["asus"]), BRAND_COLORS: {} }));
     const { BrandGrid } = await import("./brand-grid");
     render(<BrandGrid brands={BRANDS} />);
     const logo = screen.getByRole("img", { name: "ASUS" });
@@ -40,7 +40,7 @@ describe("BrandGrid", () => {
 
   it("encodes a brand name that is not URL-safe", async () => {
     vi.resetModules();
-    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>() }));
+    vi.doMock("@/lib/brand-logos", () => ({ BRAND_LOGOS: new Set<string>(), BRAND_COLORS: {} }));
     const { BrandGrid } = await import("./brand-grid");
     render(<BrandGrid brands={[{ name: "Acer & Co", slug: "acer-co", models: 2 }]} />);
     expect(screen.getByRole("link")).toHaveAttribute("href", "/laptop?merek=Acer%20%26%20Co");
