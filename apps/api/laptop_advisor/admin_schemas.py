@@ -234,6 +234,8 @@ class ImagePatchIn(BaseModel):
     model_config = ConfigDict(extra="forbid")
     alt: str | None = Field(None, max_length=200)
     is_primary: bool | None = None
+    source_name: str | None = Field(None, max_length=120)
+    source_url: str | None = Field(None, max_length=1000)
 
 
 # --------------------------------------------------------------------------- #
@@ -254,6 +256,8 @@ class ImageOut(BaseModel):
     id: int
     url: str
     alt: str | None = None
+    source_name: str | None = None
+    source_url: str | None = None
     is_primary: bool
     position: int
     content_type: str

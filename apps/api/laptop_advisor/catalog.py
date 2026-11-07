@@ -215,7 +215,8 @@ class Catalog:
         return [p for v in self.ds.variants_of(model["id"]) for p in self.ds.prices_of(v["id"])]
 
     def images(self, model: Row) -> list[S.ModelImageOut]:
-        return [S.ModelImageOut(url=img["url"], alt=img.get("alt"), is_primary=bool(img.get("is_primary")))
+        return [S.ModelImageOut(url=img["url"], alt=img.get("alt"), is_primary=bool(img.get("is_primary")),
+                                source_name=img.get("source_name"), source_url=img.get("source_url"))
                 for img in self.ds.images_of(model["id"])]
 
     def _highlights(self, variants: list[Row]) -> S.SpecHighlights:

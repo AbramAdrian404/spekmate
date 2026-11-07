@@ -142,7 +142,32 @@ def load_raw(path: Path | None = None) -> dict[str, Any]:
         if not file.exists():
             raise DatasetError(f"{file} is missing. Run: python scripts/export_data.py")
         raw[name] = json.loads(file.read_text(encoding="utf-8"))
+    raw["images"] = load_shipped_photos(folder)
     return raw
+
+
+def load_shipped_photos(path: Path | None = None) -> list[dict[str, Any]]:
+    """Product photos that ship with the site (apps/web/public/laptops), each with its source. Optional file.
+
+    Unlike uploads, these live in the repository, so they show in the read-only JSON mode as well. A photo uploaded
+    through the admin replaces them for that model (see `with_shipped_photos`).
+    """
+    file = (path or DATA_DIR) / "photos.json"
+    if not file.exists():
+        return []
+    rows = json.loads(file.read_text(encoding="utf-8"))
+    out: list[dict[str, Any]] = []
+    for position, row in enumerate(rows, start=1):
+        if not row.get("model_id") or not row.get("url"):
+            raise DatasetError(f"photos.json row {position} needs model_id and url")
+        out.append({"id": -position, "position": position, "is_primary": bool(row.get("is_primary", True)), **row})
+    return out
+
+
+def with_shipped_photos(uploaded: list[dict[str, Any]], shipped: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Uploaded photos win; shipped photos fill in only for models that have no upload."""
+    has_upload = {_key(img["model_id"]) for img in uploaded}
+    return [*uploaded, *(img for img in shipped if _key(img["model_id"]) not in has_upload)]
 
 
 def load_rules(path: Path | None = None) -> dict[str, Any]:

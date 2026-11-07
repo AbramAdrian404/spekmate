@@ -1494,6 +1494,30 @@
               }
             ],
             "title": "Alt"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
           }
         },
         "type": "object",
@@ -2807,6 +2831,28 @@
             ],
             "title": "Alt"
           },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
           "is_primary": {
             "type": "boolean",
             "title": "Is Primary"
@@ -2859,6 +2905,30 @@
               }
             ],
             "title": "Is Primary"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
           }
         },
         "additionalProperties": false,
@@ -3680,6 +3750,30 @@
             "type": "boolean",
             "title": "Is Primary",
             "default": false
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name",
+            "description": "Where the photo comes from, e.g. the maker's website."
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url",
+            "description": "The page the photo was found on."
           }
         },
         "type": "object",

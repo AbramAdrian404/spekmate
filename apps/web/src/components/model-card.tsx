@@ -47,9 +47,11 @@ export function ModelCard({ model }: { model: ModelSummary }) {
   return (
     <li className="@container">
       <article aria-labelledby={headingId} className="product-card group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-surface">
-        <Link href={href} tabIndex={-1} aria-hidden="true" className="product-media relative block aspect-[4/3] bg-surface-2">
+        <Link href={href} tabIndex={-1} aria-hidden="true" className={`product-media relative block aspect-[4/3] ${model.image ? "photo-plate" : "bg-surface-2"}`}>
           {model.image ? (
-            <ModelPhoto image={model.image} fallbackAlt="" className="size-full rounded-none bg-transparent p-4" />
+            <span className="absolute inset-3 sm:inset-4">
+              <ModelPhoto image={model.image} fallbackAlt="" className="product-photo size-full" plate={false} sizes="(min-width: 1280px) 22rem, (min-width: 640px) 45vw, 90vw" />
+            </span>
           ) : (
             <span className="grid size-full place-items-center p-6">
               <LaptopArt tone={needVisual(lead?.need_id ?? "").tone} className="product-art w-4/5 max-w-[15rem]" />

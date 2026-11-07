@@ -35,7 +35,7 @@ from .fields import CPU_FIELDS, GPU_FIELDS, MODEL_FIELDS, PRICE_FIELDS, VARIANT_
 metadata = MetaData()
 
 # Bumped whenever the table layout changes, so a future migration knows where a database stands.
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 def _column(field: Field, *, primary_key: bool = False, nullable: bool = True, money: bool = False) -> Column:
@@ -109,6 +109,9 @@ images = Table(
     Column("content_type", String(40), nullable=False),
     Column("size_bytes", Integer, nullable=False),
     Column("alt", String(200), nullable=True),
+    # Where the photo comes from: the site's name and the page it was found on. Shown under the photo.
+    Column("source_name", String(120), nullable=True),
+    Column("source_url", String(1000), nullable=True),
     Column("is_primary", Boolean, nullable=False, server_default=false()),
     Column("position", Integer, nullable=False, server_default="0"),
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),

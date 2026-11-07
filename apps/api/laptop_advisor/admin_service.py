@@ -219,7 +219,8 @@ def model_detail(conn: Connection, rules: dict[str, Any], model_id: str) -> A.Mo
     return A.ModelAdminOut(
         **base, name=model_name(found), version=repo.version_of(found["updated_at"]),
         variants=variant_out,
-        images=[A.ImageOut(id=i["id"], url=i["url"], alt=i["alt"], is_primary=i["is_primary"], position=i["position"],
+        images=[A.ImageOut(id=i["id"], url=i["url"], alt=i["alt"], source_name=i.get("source_name"),
+                           source_url=i.get("source_url"), is_primary=i["is_primary"], position=i["position"],
                            content_type=i["content_type"], size_bytes=i["size_bytes"]) for i in photos],
         missing=model_missing(found, variants, prices_of),
         warnings=_warnings(found, variants, cpu_names, gpu_names),

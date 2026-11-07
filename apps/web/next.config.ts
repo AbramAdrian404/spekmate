@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { resolveApiUrl } from "./src/lib/api-url";
+import { PHOTO_HOSTS } from "./src/lib/photo-hosts";
 
 // Fails the build with a readable message if API_URL is missing on Vercel or malformed.
 const apiUrl = resolveApiUrl(process.env.API_URL, { onVercel: Boolean(process.env.VERCEL) });
@@ -7,6 +8,12 @@ const apiUrl = resolveApiUrl(process.env.API_URL, { onVercel: Boolean(process.en
 const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    // Product photos come from the makers' own image servers (see src/lib/photo-hosts.ts); nothing else is resized.
+    remotePatterns: PHOTO_HOSTS.map(({ hostname, pathname }) => ({ protocol: "https" as const, hostname, pathname })),
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+  },
   experimental: {
     // Photos are uploaded through Server Actions. The browser shrinks them first (see lib/admin/image-prep.ts); this
     // limit sits just above the API's own 4 MB cap, and under the roughly 4.5 MB request limit of Vercel functions.

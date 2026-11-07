@@ -17,6 +17,13 @@ describe("ModelPhoto", () => {
     expect(img).toHaveAttribute("loading", "lazy");
   });
 
+  it("sends a maker's photo through the optimiser, still whole", () => {
+    render(<ModelPhoto image={{ url: "https://dlcdnwebimgs.asus.com/gain/abc/w800/fwebp", alt: "ASUS", is_primary: true }} fallbackAlt="ASUS" />);
+    const img = screen.getByRole("img", { name: "ASUS" });
+    expect(img.getAttribute("src")).toContain("/_next/image?url=");
+    expect(img.className).toContain("object-contain");
+  });
+
   it("falls back to the model name when the alt text is blank", () => {
     render(<ModelPhoto image={{ url: "/x.png", alt: "  ", is_primary: false }} fallbackAlt="ASUS Vivobook" />);
     expect(screen.getByRole("img", { name: "ASUS Vivobook" })).toBeInTheDocument();

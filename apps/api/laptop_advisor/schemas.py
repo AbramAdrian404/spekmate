@@ -228,6 +228,8 @@ class ModelImageOut(BaseModel):
     url: str = Field(description="Absolute, or relative to this site (/api/media/...) for locally stored photos.")
     alt: str | None = None
     is_primary: bool = False
+    source_name: str | None = Field(None, description="Where the photo comes from, e.g. the maker's website.")
+    source_url: str | None = Field(None, description="The page the photo was found on.")
 
 
 class PartBrief(BaseModel):
