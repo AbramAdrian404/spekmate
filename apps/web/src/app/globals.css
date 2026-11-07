@@ -911,6 +911,13 @@
   .photo-img {
     mix-blend-mode: multiply;
   }
+  /* The hero's product photo: a pool of light under the laptop instead of a box around it. */
+  .hero-spotlight {
+    border-radius: 2rem;
+    background:
+      radial-gradient(60% 18% at 50% 92%, rgb(36 59 83 / 0.16), transparent 70%),
+      radial-gradient(70% 70% at 50% 45%, #ffffff 0%, color-mix(in srgb, var(--bg) 60%, #ffffff) 60%, transparent 78%);
+  }
   .product-photo {
     transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
