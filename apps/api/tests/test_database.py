@@ -658,7 +658,8 @@ def test_upload_shows_on_the_public_pages_and_serves_the_file(admin):
     public = TestClient(admin.app)
     detail = public.get("/api/models/asus-m1405ya").json()
     assert detail["image"]["url"] == image["url"]
-    assert detail["images"][0] == {"url": image["url"], "alt": "Tampak depan", "is_primary": True}
+    assert detail["images"][0] == {"url": image["url"], "alt": "Tampak depan", "is_primary": True,
+                                   "source_name": None, "source_url": None}
     listed = next(m for m in public.get("/api/models").json()["items"] if m["id"] == "asus-m1405ya")
     assert listed["image"]["url"] == image["url"]
 
@@ -803,3 +804,49 @@ def test_a_database_makes_the_cdn_cache_default_off_unless_asked():
     assert load_settings({"CACHE_SECONDS": "120"}).effective_cache_seconds == 120
     assert load_settings({"BLOB_READ_WRITE_TOKEN": " tok "}).blob_token == "tok"
     assert load_settings({"MAX_UPLOAD_BYTES": "abc"}).max_upload_bytes == 4_000_000
+
+
+def test_a_photo_keeps_its_source_and_shows_it_publicly(admin):
+    r = admin.post("/api/admin/models/asus-m1405ya/images", files={"file": ("f.png", png(), "image/png")},
+                   data={"alt": "Tampak depan", "source_name": "Situs resmi ASUS",
+                         "source_url": "https://www.asus.com/id/laptops/"})
+    assert r.status_code == 201, r.text
+    image = r.json()
+    assert (image["source_name"], image["source_url"]) == ("Situs resmi ASUS", "https://www.asus.com/id/laptops/")
+    public = TestClient(admin.app).get("/api/models/asus-m1405ya").json()
+    assert public["images"][0]["source_name"] == "Situs resmi ASUS"
+
+    assert admin.patch(f"/api/admin/images/{image['id']}", json={"source_name": "  ", "source_url": None}).status_code == 200
+    assert TestClient(admin.app).get("/api/models/asus-m1405ya").json()["images"][0]["source_name"] is None
+
+
+@pytest.mark.parametrize("data", [
+    {"source_url": "https://contoh.id/foto"},  # an address with no name
+    {"source_name": "Situs", "source_url": "javascript:alert(1)"},  # not a web address
+])
+def test_a_photo_source_must_be_a_named_web_address(admin, data):
+    r = admin.post("/api/admin/models/asus-m1405ya/images", files={"file": ("f.png", png(), "image/png")}, data=data)
+    assert r.status_code == 422
+
+
+def test_an_older_database_gets_the_photo_source_columns(tmp_path):
+    from sqlalchemy import create_engine, inspect, text
+
+    from laptop_advisor.db import Database
+
+    url = f"sqlite:///{(tmp_path / 'old.db').as_posix()}"
+    engine = create_engine(url)
+    with engine.begin() as conn:
+        conn.execute(text("CREATE TABLE images (id INTEGER PRIMARY KEY, model_id VARCHAR(80) NOT NULL, "
+                          "url VARCHAR(1000) NOT NULL, storage_key VARCHAR(500) NOT NULL, content_type VARCHAR(40) "
+                          "NOT NULL, size_bytes INTEGER NOT NULL, alt VARCHAR(200), is_primary BOOLEAN NOT NULL "
+                          "DEFAULT 0, position INTEGER NOT NULL DEFAULT 0, created_at DATETIME)"))
+        conn.execute(text("INSERT INTO images (model_id, url, storage_key, content_type, size_bytes) "
+                          "VALUES ('m', '/x.png', 'k', 'image/png', 1)"))
+    db = Database(url)
+    db.ensure_schema()
+    columns = {c["name"] for c in inspect(db.engine).get_columns("images")}
+    assert {"source_name", "source_url"} <= columns
+    with db.begin() as conn:
+        assert conn.execute(text("SELECT url, source_name FROM images")).one() == ("/x.png", None)
+    db.dispose()

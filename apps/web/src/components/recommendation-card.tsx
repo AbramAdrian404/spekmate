@@ -27,7 +27,7 @@ export function RecommendationCard({ item, index = 0 }: { item: Recommendation; 
       >
         <div className="min-w-0 space-y-4">
           {item.image ? (
-            <ModelPhoto image={item.image} fallbackAlt={item.model_name} className="h-36 w-52 max-w-full" />
+            <ModelPhoto image={item.image} fallbackAlt={item.model_name} className="h-36 w-52 max-w-full" sizes="13rem" />
           ) : (
             <div aria-hidden="true" className="grid h-36 w-52 max-w-full place-items-center overflow-hidden rounded-xl bg-surface-2">
               <LaptopArt tone={needVisual(item.need_fit[0]?.need_id ?? "").tone} className="w-40" />

@@ -5,7 +5,7 @@ import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
 
-from sqlalchemy import Connection, Integer, String, cast, create_engine, event, select, update
+from sqlalchemy import Connection, Integer, String, cast, create_engine, event, inspect, select, text, update
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.pool import StaticPool
@@ -58,10 +58,13 @@ class Database:
                 return
             try:
                 metadata.create_all(self.engine)
+                _add_missing_columns(self.engine)
                 with self.engine.begin() as conn:
                     for key, value in (("data_version", "1"), ("schema_version", str(SCHEMA_VERSION))):
                         if conn.execute(select(app_state.c.key).where(app_state.c.key == key)).first() is None:
                             conn.execute(app_state.insert().values(key=key, value=value))
+                    conn.execute(update(app_state).where(app_state.c.key == "schema_version")
+                                 .values(value=str(SCHEMA_VERSION)))
             except SQLAlchemyError as exc:
                 raise DatabaseUnavailable(f"{type(exc).__name__}: {exc}") from exc
             self._ready = True
@@ -82,6 +85,28 @@ class Database:
 
     def dispose(self) -> None:
         self.engine.dispose()
+
+
+# Nullable columns added after a table first shipped. create_all() never alters an existing table, so each one is
+# added here when missing. Adding a nullable column keeps every existing row as it was.
+_LATER_COLUMNS: tuple[tuple[str, str], ...] = (
+    ("images", "source_name"),
+    ("images", "source_url"),
+)
+
+
+def _add_missing_columns(engine: Engine) -> None:
+    present: dict[str, set[str]] = {}
+    for table_name, column_name in _LATER_COLUMNS:
+        if table_name not in present:
+            present[table_name] = {c["name"] for c in inspect(engine).get_columns(table_name)}
+        if column_name in present[table_name]:
+            continue
+        column = metadata.tables[table_name].c[column_name]
+        ddl = column.type.compile(dialect=engine.dialect)
+        with engine.begin() as conn:
+            conn.execute(text(f'ALTER TABLE {table_name} ADD COLUMN {column_name} {ddl}'))
+        present[table_name].add(column_name)
 
 
 def read_version(conn: Connection) -> int:

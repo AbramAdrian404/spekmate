@@ -17,7 +17,7 @@ from typing import Protocol
 from . import repo
 from .catalog import Catalog, get_catalog
 from .db import Database, DatabaseUnavailable, read_version
-from .store import Dataset, load_rules
+from .store import Dataset, load_rules, load_shipped_photos, with_shipped_photos
 
 log = logging.getLogger("spekmate.datasource")
 CHECK_EVERY = 2.0
@@ -62,6 +62,7 @@ class DbSource:
         with self.db.begin() as conn:
             version = read_version(conn)
             raw = repo.load_raw(conn, self._rules)
+        raw["images"] = with_shipped_photos(raw.get("images", []), load_shipped_photos())
         return Catalog(Dataset(raw)), version
 
     def catalog(self) -> Catalog:

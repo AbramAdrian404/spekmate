@@ -63,7 +63,7 @@ export function ResultPreview({ results, needName, budget, condition, checked }:
                   className="card card-edge card-hover flex w-full flex-col gap-4 p-6"
                 >
                   {item.image ? (
-                    <ModelPhoto image={item.image} fallbackAlt={item.model_name} className="aspect-[4/3] w-full" />
+                    <ModelPhoto image={item.image} fallbackAlt={item.model_name} className="aspect-[4/3] w-full" sizes="(min-width: 1024px) 24rem, 90vw" />
                   ) : (
                     <div aria-hidden="true" className="grid aspect-[4/3] place-items-center rounded-xl bg-surface-2">
                       <LaptopArt tone={needVisual(item.need_fit[0]?.need_id ?? "").tone} className="w-3/5 max-w-[12rem]" />

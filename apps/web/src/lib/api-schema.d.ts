@@ -426,6 +426,10 @@ export interface components {
             file: string;
             /** Alt */
             alt?: string | null;
+            /** Source Name */
+            source_name?: string | null;
+            /** Source Url */
+            source_url?: string | null;
         };
         /** BrandCount */
         BrandCount: {
@@ -759,6 +763,10 @@ export interface components {
             url: string;
             /** Alt */
             alt?: string | null;
+            /** Source Name */
+            source_name?: string | null;
+            /** Source Url */
+            source_url?: string | null;
             /** Is Primary */
             is_primary: boolean;
             /** Position */
@@ -774,6 +782,10 @@ export interface components {
             alt?: string | null;
             /** Is Primary */
             is_primary?: boolean | null;
+            /** Source Name */
+            source_name?: string | null;
+            /** Source Url */
+            source_url?: string | null;
         };
         /** LoginIn */
         LoginIn: {
@@ -1005,6 +1017,16 @@ export interface components {
              * @default false
              */
             is_primary: boolean;
+            /**
+             * Source Name
+             * @description Where the photo comes from, e.g. the maker's website.
+             */
+            source_name?: string | null;
+            /**
+             * Source Url
+             * @description The page the photo was found on.
+             */
+            source_url?: string | null;
         };
         /** ModelIn */
         ModelIn: {

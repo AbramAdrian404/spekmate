@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { groupVerdicts } from "@/components/model-card";
 import { ModelPhoto } from "@/components/model-photo";
+import { PhotoCredit } from "@/components/photo-credit";
 import { VariantSection } from "@/components/variant-section";
 import { VerdictBadge } from "@/components/verdict-badge";
 import { ApiError, getModel, getModels } from "@/lib/api";
@@ -73,12 +74,13 @@ export default async function ModelPage({ params }: Props) {
         <div className="min-w-0 space-y-6">
           {model.images.length > 0 ? (
             <section aria-label="Foto laptop" className="space-y-3">
-              <ModelPhoto image={model.images[0]} fallbackAlt={model.name} className="aspect-[4/3] max-h-[28rem] w-full" priority />
+              <ModelPhoto image={model.images[0]} fallbackAlt={model.name} className="aspect-[4/3] max-h-[28rem] w-full" priority sizes="(min-width: 1024px) 50rem, 100vw" />
+              <PhotoCredit image={model.images[0]} />
               {model.images.length > 1 ? (
                 <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                   {model.images.slice(1).map((image) => (
                     <li key={image.url}>
-                      <ModelPhoto image={image} fallbackAlt={model.name} className="aspect-[4/3]" />
+                      <ModelPhoto image={image} fallbackAlt={model.name} className="aspect-[4/3]" sizes="12rem" />
                     </li>
                   ))}
                 </ul>
