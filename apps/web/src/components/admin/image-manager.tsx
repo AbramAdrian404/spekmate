@@ -24,6 +24,7 @@ export function ImageManager({ modelId, modelName, images }: Props) {
   const [removing, setRemoving] = useState<AdminImage | null>(null);
   const [pending, startTransition] = useTransition();
   const [alts, setAlts] = useState<Record<number, string>>({});
+  const [sources, setSources] = useState<Record<number, { name: string; url: string }>>({});
 
   async function upload(files: FileList | null) {
     if (!files || files.length === 0) return;
@@ -72,6 +73,21 @@ export function ImageManager({ modelId, modelName, images }: Props) {
     });
   }
 
+  function sourceOf(image: AdminImage) {
+    return sources[image.id] ?? { name: image.source_name ?? "", url: image.source_url ?? "" };
+  }
+
+  function saveSource(image: AdminImage) {
+    const { name, url } = sourceOf(image);
+    if (name.trim() === (image.source_name ?? "") && url.trim() === (image.source_url ?? "")) return;
+    startTransition(async () => {
+      const result = await updateImageAction(image.id, { source_name: name.trim() || null, source_url: url.trim() || null });
+      if (result.ok) toast.success("Sumber gambar disimpan");
+      else toast.error("Belum berhasil", result.message);
+      router.refresh();
+    });
+  }
+
   function remove(image: AdminImage) {
     startTransition(async () => {
       const result = await deleteImageAction(image.id);
@@ -109,6 +125,29 @@ export function ImageManager({ modelId, modelName, images }: Props) {
                 onBlur={() => saveAlt(image)}
                 placeholder="Deskripsi singkat untuk pembaca layar"
               />
+              <fieldset className="space-y-2" onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) saveSource(image);
+              }}>
+                <legend className="admin-label">Sumber gambar</legend>
+                <input
+                  aria-label="Nama sumber"
+                  className="admin-input"
+                  maxLength={120}
+                  value={sourceOf(image).name}
+                  onChange={(event) => setSources((s) => ({ ...s, [image.id]: { ...sourceOf(image), name: event.target.value } }))}
+                  placeholder="Misalnya: Situs resmi ASUS Indonesia"
+                />
+                <input
+                  aria-label="Alamat halaman sumber"
+                  className="admin-input"
+                  type="url"
+                  inputMode="url"
+                  maxLength={1000}
+                  value={sourceOf(image).url}
+                  onChange={(event) => setSources((s) => ({ ...s, [image.id]: { ...sourceOf(image), url: event.target.value } }))}
+                  placeholder="https://… halaman produk tempat foto ditemukan"
+                />
+              </fieldset>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-ink-3">{(image.size_bytes / 1000).toFixed(0)} KB</span>
                 <div className="flex gap-1">

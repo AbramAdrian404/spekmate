@@ -118,7 +118,7 @@ export async function uploadImageAction(formData: FormData): Promise<Result<Admi
 
 export async function updateImageAction(
   id: number,
-  change: { alt?: string | null; is_primary?: boolean },
+  change: adminApi.ImageChange,
 ): Promise<Result<{ message: string }>> {
   const { token } = await requireAdmin();
   const result = await adminApi.patchImage(token, id, change);

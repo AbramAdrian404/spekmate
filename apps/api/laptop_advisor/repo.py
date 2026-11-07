@@ -121,7 +121,8 @@ def _next_position(conn: Connection, table: Any) -> int:
 def _image_row(m: Any) -> Row:
     return {"id": m["id"], "model_id": m["model_id"], "url": m["url"], "alt": m["alt"],
             "is_primary": bool(m["is_primary"]), "position": m["position"], "content_type": m["content_type"],
-            "size_bytes": m["size_bytes"], "storage_key": m["storage_key"]}
+            "size_bytes": m["size_bytes"], "storage_key": m["storage_key"],
+            "source_name": m["source_name"], "source_url": m["source_url"]}
 
 
 def fetch_everything(conn: Connection) -> dict[str, Any]:
@@ -382,15 +383,27 @@ def image_slot(conn: Connection, model_id: str) -> str:
     return row["id"]
 
 
+def clean_source(name: str | None, url: str | None) -> tuple[str | None, str | None]:
+    """Trim a photo's source. The page address must be a web address; a name alone is fine, an address alone is not."""
+    name = (name or "").strip() or None
+    url = (url or "").strip() or None
+    if url and not url.lower().startswith(("https://", "http://")):
+        raise Invalid("Alamat sumber gambar harus diawali https:// atau http://.", ("source_url",))
+    if url and not name:
+        raise Invalid("Isi juga nama sumbernya, misalnya situs resmi produsennya.", ("source_name",))
+    return name, url
+
+
 def add_image(conn: Connection, model_id: str, *, url: str, storage_key: str, content_type: str, size_bytes: int,
-              alt: str | None) -> int:
+              alt: str | None, source: tuple[str | None, str | None] = (None, None)) -> int:
     row = _model_row(conn, model_id)
     existing = conn.execute(select(func.count()).where(images.c.model_id == row["id"])).scalar() or 0
     if existing >= MAX_IMAGES_PER_MODEL:
         raise Conflict(f"Satu laptop maksimal {MAX_IMAGES_PER_MODEL} gambar. Hapus yang tidak dipakai dulu.")
     result = conn.execute(insert(images).values(
         model_id=row["id"], url=url, storage_key=storage_key, content_type=content_type, size_bytes=size_bytes,
-        alt=alt, is_primary=existing == 0, position=existing + 1, created_at=now_utc()))
+        alt=alt, source_name=source[0], source_url=source[1], is_primary=existing == 0, position=existing + 1,
+        created_at=now_utc()))
     conn.execute(update(models).where(models.c.id == row["id"]).values(updated_at=now_utc()))
     bump_version(conn)
     return int(result.inserted_primary_key[0])
@@ -404,10 +417,13 @@ def _image(conn: Connection, image_id: int) -> Any:
 
 
 def patch_image(conn: Connection, image_id: int, *, alt: str | None, alt_given: bool,
-                make_primary: bool | None) -> None:
+                make_primary: bool | None, source: tuple[str | None, str | None] | None = None) -> None:
     row = _image(conn, image_id)
     if alt_given:
         conn.execute(update(images).where(images.c.id == image_id).values(alt=alt))
+    if source is not None:
+        conn.execute(update(images).where(images.c.id == image_id)
+                     .values(source_name=source[0], source_url=source[1]))
     if make_primary:
         conn.execute(update(images).where(images.c.model_id == row["model_id"]).values(is_primary=False))
         conn.execute(update(images).where(images.c.id == image_id).values(is_primary=True))

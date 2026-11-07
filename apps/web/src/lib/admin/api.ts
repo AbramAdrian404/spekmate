@@ -174,7 +174,15 @@ export const uploadImage = (token: string, modelId: string, file: Blob, fileName
   });
 };
 
-export const patchImage = (token: string, id: number, change: { alt?: string | null; is_primary?: boolean }) =>
+/** What the admin can change on a photo. Source fields are a pair: the site's name and the page the photo came from. */
+export interface ImageChange {
+  alt?: string | null;
+  is_primary?: boolean;
+  source_name?: string | null;
+  source_url?: string | null;
+}
+
+export const patchImage = (token: string, id: number, change: ImageChange) =>
   call<{ message: string }>(`/images/${id}`, { method: "PATCH", token, json: change });
 
 export const deleteImage = (token: string, id: number) =>

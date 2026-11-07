@@ -1,0 +1,233 @@
+[
+  {
+    "model_id": "asus-m1405ya",
+    "url": "https://dlcdnwebimgs.asus.com/gain/fb77e930-3e38-4978-91a4-a037a24a0e60/w800/fwebp",
+    "alt": "ASUS Vivobook 14 M1405YA",
+    "source_name": "Situs resmi ASUS",
+    "source_url": "https://www.asus.com/laptops/for-home/vivobook/asus-vivobook-14-oled-m1405/techspec/"
+  },
+  {
+    "model_id": "hp-pavilion-x360-14",
+    "url": "https://id-media.apjonlinecdn.com/catalog/product/cache/b3b166914d87ce343d4dc5ec5117b502/c/0/c08252924-touch_1.png",
+    "alt": "HP Pavilion x360 14-ek1000",
+    "source_name": "Toko resmi HP Indonesia",
+    "source_url": "https://www.hp.com/id-id/shop/hp-pavilion-x360-2-in-1-laptop-14-ek1005tu-7n725pa.html"
+  },
+  {
+    "model_id": "lenovo-thinkpad-t480",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/ThinkPad/ThinkPad_T480/Compressedimage/ThinkPad_T480_CT1_01.png",
+    "alt": "Lenovo ThinkPad T480",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/ThinkPad/ThinkPad_T480"
+  },
+  {
+    "model_id": "dell-latitude-5400",
+    "url": "https://i.dell.com/is/image/DellContent//content/dam/ss2/product-images/dell-client-products/notebooks/latitude-notebooks/14-5400/global-spi/ng/notebook-latitude-14-5400-nt-relsize-500-ng.psd?fmt=png-alpha&wid=1000",
+    "alt": "Dell Latitude 5400",
+    "source_name": "Dukungan resmi Dell",
+    "source_url": "https://www.dell.com/support/product-details/en-id/product/latitude-14-5400-laptop/overview"
+  },
+  {
+    "model_id": "asus-zenbook-14-oled-ux3405ma",
+    "url": "https://dlcdnwebimgs.asus.com/gain/ee320356-c9eb-441f-840d-1a2126e7c3da/w800/fwebp",
+    "alt": "ASUS Zenbook 14 OLED UX3405MA",
+    "source_name": "Situs resmi ASUS",
+    "source_url": "https://www.asus.com/laptops/for-home/zenbook/asus-zenbook-14-oled-ux3405/techspec/"
+  },
+  {
+    "model_id": "lenovo-ideapad-slim-3-14iah8",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/IdeaPad/IdeaPad_Slim_3_14IAH8/Compressedimage/IdeaPad_Slim_3_14IAH8_CT1_01.png",
+    "alt": "Lenovo IdeaPad Slim 3 14IAH8",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/IdeaPad/IdeaPad_Slim_3_14IAH8"
+  },
+  {
+    "model_id": "asus-vivobook-go-14-e1404",
+    "url": "https://dlcdnwebimgs.asus.com/gain/7b6485d2-2950-485c-92c9-58692b928766/w800/fwebp",
+    "alt": "ASUS Vivobook Go 14 E1404",
+    "source_name": "Situs resmi ASUS Indonesia",
+    "source_url": "https://www.asus.com/id/laptops/for-home/vivobook/vivobook-go-14-e1404f/techspec/"
+  },
+  {
+    "model_id": "asus-vivobook-15-a1504",
+    "url": "https://dlcdnwebimgs.asus.com/gain/8eab0384-e8de-469a-b948-a28660db588c/w800/fwebp",
+    "alt": "ASUS Vivobook 15 A1504",
+    "source_name": "Situs resmi ASUS Indonesia",
+    "source_url": "https://www.asus.com/id/laptops/for-home/vivobook/asus-vivobook-15-a1504/techspec/"
+  },
+  {
+    "model_id": "hp-laptop-14-ep1",
+    "url": "https://id-media.apjonlinecdn.com/catalog/product/cache/b3b166914d87ce343d4dc5ec5117b502/c/0/c08482846_2_10.png",
+    "alt": "HP HP Laptop 14",
+    "source_name": "Toko resmi HP Indonesia",
+    "source_url": "https://www.hp.com/id-id/shop/hp-laptop-14-ep1177tu-c7sd0pa.html"
+  },
+  {
+    "model_id": "lenovo-ideapad-slim-5-14irh10r",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/IdeaPad/IdeaPad_Slim_5_14IRH10R/Compressedimage/IdeaPad_Slim_5_14IRH10R_CT1_01.png",
+    "alt": "Lenovo IdeaPad Slim 5 14IRH10R",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/IdeaPad/IdeaPad_Slim_5_14IRH10R"
+  },
+  {
+    "model_id": "lenovo-thinkbook-14-g9-ipl",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/ThinkBook/ThinkBook_14_G9_IPL/Compressedimage/ThinkBook_14_G9_IPL_CT1_02.png",
+    "alt": "Lenovo ThinkBook 14 Gen 9",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/ThinkBook/ThinkBook_14_G9_IPL"
+  },
+  {
+    "model_id": "apple-macbook-air-13-m5",
+    "url": "https://www.apple.com/v/macbook-air/specs/c/images/specs/13-inch/mba_13_hero__c067qisf51oy_large_2x.jpg",
+    "alt": "Apple MacBook Air 13 inci",
+    "source_name": "Situs resmi Apple Indonesia",
+    "source_url": "https://www.apple.com/id/macbook-air/specs/"
+  },
+  {
+    "model_id": "asus-tuf-gaming-a15-fa507n",
+    "url": "https://dlcdnwebimgs.asus.com/gain/7909b0a1-1457-4953-a9e7-41b2be78affa/w800/fwebp",
+    "alt": "ASUS TUF Gaming A15 FA507N",
+    "source_name": "Situs resmi ASUS",
+    "source_url": "https://www.asus.com/laptops/for-gaming/tuf-gaming/asus-tuf-gaming-a15-2023/techspec/"
+  },
+  {
+    "model_id": "lenovo-loq-15irx10",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/LOQ/LOQ_15IRX10/Compressedimage/LOQ_15IRX10_CT1_01.png",
+    "alt": "Lenovo LOQ 15IRX10",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/LOQ/LOQ_15IRX10"
+  },
+  {
+    "model_id": "acer-nitro-v-15-anv15-52",
+    "url": "https://images.acer.com/is/image/acer/acer-nitro-v-15-anv15-52-non-fingerprint-with-backlit-on-wp-logo-black-01?wid=1000&fmt=png-alpha",
+    "alt": "Acer Nitro V 15 ANV15-52",
+    "source_name": "Situs resmi Acer Indonesia",
+    "source_url": "https://www.acer.com/id-id/laptops/nitro/nitro-v-15/pdp/NH.QZ9SN.002"
+  },
+  {
+    "model_id": "lenovo-thinkpad-t14-gen-1",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/ThinkPad/ThinkPad_T14_Gen_1_Intel/Compressedimage/ThinkPad_T14_Gen_1_Intel_CT1_01.png",
+    "alt": "Lenovo ThinkPad T14 Gen 1",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/ThinkPad/ThinkPad_T14_Gen_1_Intel"
+  },
+  {
+    "model_id": "dell-latitude-7490",
+    "url": "https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/latitude-notebooks/14-7490/touch/notebooks-latitude-14-7490t-relsize-500-ng.psd?fmt=png-alpha&wid=1000",
+    "alt": "Dell Latitude 7490",
+    "source_name": "Dukungan resmi Dell",
+    "source_url": "https://www.dell.com/support/product-details/en-id/product/latitude-14-7490-laptop/overview"
+  },
+  {
+    "model_id": "hp-victus-15-fa2666tx",
+    "url": "https://id-media.apjonlinecdn.com/catalog/product/cache/b3b166914d87ce343d4dc5ec5117b502/B/6/B6NR1PA-1_T1776827421.png",
+    "alt": "HP Victus 15 fa2666TX",
+    "source_name": "Toko resmi HP Indonesia",
+    "source_url": "https://www.hp.com/id-id/shop/victus-gaming-laptop-15-fa2666tx-b6nr1pa.html"
+  },
+  {
+    "model_id": "msi-thin-15-b13uc",
+    "url": "https://storage-asset.msi.com/global/picture/product/product_1703836731e91276452775bc50462f97208cabe553.webp",
+    "alt": "MSI Thin 15 B13UC",
+    "source_name": "Situs resmi MSI Indonesia",
+    "source_url": "https://id.msi.com/Laptop/Thin-15-B13UX/Specification"
+  },
+  {
+    "model_id": "asus-rog-strix-g16-g614pm",
+    "url": "https://dlcdnwebimgs.asus.com/gain/270B0DAF-FC8B-46F5-91E1-6755EA2A4D8E/w800/fwebp",
+    "alt": "ASUS ROG Strix G16",
+    "source_name": "Situs resmi ROG Indonesia",
+    "source_url": "https://rog.asus.com/id/laptops/rog-strix/rog-strix-g16-2025-g614/spec/"
+  },
+  {
+    "model_id": "lenovo-legion-5-15irx10",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/Legion/Legion_5_15IRX10/Compressedimage/Legion_5_15IRX10_CT1_02.png",
+    "alt": "Lenovo Legion 5 15IRX10",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/Legion/Legion_5_15IRX10"
+  },
+  {
+    "model_id": "acer-aspire-lite-14-al14-32p",
+    "url": "https://images.acer.com/is/image/acer/acer-aspire-lite-14-al14-32p-non-fingerprint-non-backilt-silver-05?wid=1000&fmt=png-alpha",
+    "alt": "Acer Aspire Lite 14 AL14-32P",
+    "source_name": "Situs resmi Acer Indonesia",
+    "source_url": "https://www.acer.com/id-id/laptops/aspire/aspire-lite/pdp/NX.D3KSN.001"
+  },
+  {
+    "model_id": "axioo-hype-5-gen-12-v2",
+    "url": "https://axiooworld.com/uploads/products/690eea72-51f5-45c0-b61c-6e215c96c6da.png?h=554&w=732&s=9587e281da881bf50588ec764a20842b",
+    "alt": "Axioo Hype 5 Gen 12 v2",
+    "source_name": "Situs resmi Axioo",
+    "source_url": "https://axiooworld.com/product/hype-5-gen-12-v2/specifications"
+  },
+  {
+    "model_id": "infinix-xbook-14-neo",
+    "url": "https://global.pro.infinixmobility.com/media/wysiwyg/20260916-173303.png",
+    "alt": "Infinix XBOOK 14 NEO",
+    "source_name": "Situs resmi Infinix Indonesia",
+    "source_url": "https://id.infinixmobility.com/specs/xbook-14-neo"
+  },
+  {
+    "model_id": "apple-macbook-air-13-m1",
+    "url": "https://cdsassets.apple.com/live/SZLF0YNV/images/sp/111883_macbookair.png",
+    "alt": "Apple MacBook Air 13 inci",
+    "source_name": "Dukungan resmi Apple",
+    "source_url": "https://support.apple.com/en-us/111883"
+  },
+  {
+    "model_id": "lenovo-thinkpad-x1-carbon-gen-8",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/ThinkPad/ThinkPad_X1_Carbon_Gen_8/Compressedimage/ThinkPad_X1_Carbon_Gen_8_CT1_01.png",
+    "alt": "Lenovo ThinkPad X1 Carbon Gen 8",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/ThinkPad/ThinkPad_X1_Carbon_Gen_8"
+  },
+  {
+    "model_id": "lenovo-thinkpad-e14-gen-7",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/ThinkPad/ThinkPad_E14_Gen_7_Intel/Compressedimage/ThinkPad_E14_Gen_7_Intel_CT1_01.png",
+    "alt": "Lenovo ThinkPad E14 Gen 7",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/ThinkPad/ThinkPad_E14_Gen_7_Intel"
+  },
+  {
+    "model_id": "dell-inspiron-15-3530",
+    "url": "https://i.dell.com/is/image/DellContent/content/dam/images/products/laptops-and-2-in-1s/inspiron/15-3530-non-touch/in3530nt-cnb-05000ff090-sl-plastic.psd?fmt=png-alpha&wid=1000",
+    "alt": "Dell Inspiron 15 3530",
+    "source_name": "Dukungan resmi Dell",
+    "source_url": "https://www.dell.com/support/product-details/en-id/product/inspiron-15-3530-laptop/overview"
+  },
+  {
+    "model_id": "hp-pavilion-plus-14-ew0021tu",
+    "url": "https://id-media.apjonlinecdn.com/catalog/product/cache/b3b166914d87ce343d4dc5ec5117b502/c/0/c08679778.png",
+    "alt": "HP Pavilion Plus Laptop 14-ew0021TU",
+    "source_name": "Toko resmi HP Indonesia (14-ew0020TU, seri 14-ew0 yang sama)",
+    "source_url": "https://www.hp.com/id-id/shop/hp-pavilion-plus-laptop-14-ew0020tu-8r290pa.html"
+  },
+  {
+    "model_id": "asus-expertbook-p1-p1403cva",
+    "url": "https://dlcdnwebimgs.asus.com/gain/aa6a44d5-ecb9-4f5b-931a-52b1cc4ff5dc/w800/fwebp",
+    "alt": "ASUS ExpertBook P1 P1403CVA",
+    "source_name": "Situs resmi ASUS Indonesia",
+    "source_url": "https://www.asus.com/id/laptops/for-work/expertbook/expertbook-p1-p1403/techspec/"
+  },
+  {
+    "model_id": "asus-vivobook-pro-15-oled-n6506",
+    "url": "https://dlcdnwebimgs.asus.com/gain/f6ceb9bd-4e0d-42c0-aba5-848fce621a7a/w800/fwebp",
+    "alt": "ASUS Vivobook Pro 15 OLED N6506",
+    "source_name": "Situs resmi ASUS Indonesia",
+    "source_url": "https://www.asus.com/id/laptops/for-home/vivobook/asus-vivobook-pro-15-oled-n6506/techspec/"
+  },
+  {
+    "model_id": "asus-vivobook-s14-s3407qa",
+    "url": "https://dlcdnwebimgs.asus.com/gain/1fd077e5-c8e9-4edb-bd07-a3868fdb4e32/w800/fwebp",
+    "alt": "ASUS Vivobook S14 S3407QA",
+    "source_name": "Situs resmi ASUS Indonesia",
+    "source_url": "https://www.asus.com/id/laptops/for-home/vivobook/asus-vivobook-s14-s3407q/techspec/"
+  },
+  {
+    "model_id": "lenovo-yoga-7-2-in-1-14ill10",
+    "url": "https://psrefstuff.lenovo.com/syspool/Sys/Image/Yoga/Yoga_7_2_in_1_14ILL10/Compressedimage/Yoga_7_2_in_1_14ILL10_CT1_01.png",
+    "alt": "Lenovo Yoga 7i 2-in-1 14 Gen 10",
+    "source_name": "Lenovo PSREF (situs resmi Lenovo)",
+    "source_url": "https://psref.lenovo.com/Product/Yoga/Yoga_7_2_in_1_14ILL10"
+  }
+]

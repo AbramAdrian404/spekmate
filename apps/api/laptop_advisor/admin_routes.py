@@ -212,6 +212,8 @@ async def upload_image(
     _: AdminDep,
     file: Annotated[UploadFile, File(description="JPG, PNG or WebP.")],
     alt: Annotated[str | None, Form(max_length=200)] = None,
+    source_name: Annotated[str | None, Form(max_length=120)] = None,
+    source_url: Annotated[str | None, Form(max_length=1000)] = None,
 ) -> A.ImageOut:
     settings = request.app.state.settings
     limit = settings.max_upload_bytes
@@ -223,6 +225,7 @@ async def upload_image(
         info = imagefile.inspect(data, max_bytes=limit)
     except imagefile.ImageRejected as exc:
         raise repo.Invalid(str(exc), ("file",)) from None
+    source = repo.clean_source(source_name, source_url)
 
     with db.begin() as conn:  # fail before storing anything if the laptop does not exist or has too many photos
         real_id = repo.image_slot(conn, model_id)
@@ -237,7 +240,7 @@ async def upload_image(
         with db.begin() as conn:
             image_id = repo.add_image(conn, real_id, url=stored.url, storage_key=stored.key,
                                       content_type=info.content_type, size_bytes=len(data),
-                                      alt=(alt or "").strip() or None)
+                                      alt=(alt or "").strip() or None, source=source)
     except Exception:
         _remove_files(request, [(stored.key, stored.url)])  # do not leave an orphan behind
         raise
@@ -250,8 +253,11 @@ async def upload_image(
               summary="Change a photo's description or make it the main one")
 def patch_image(image_id: int, body: A.ImagePatchIn, request: Request, db: DbDep, _: AdminDep) -> A.MessageOut:
     with db.begin() as conn:
-        repo.patch_image(conn, image_id, alt=body.alt, alt_given="alt" in body.model_fields_set,
-                         make_primary=body.is_primary)
+        given = body.model_fields_set
+        source = (repo.clean_source(body.source_name, body.source_url)
+                  if given & {"source_name", "source_url"} else None)
+        repo.patch_image(conn, image_id, alt=body.alt, alt_given="alt" in given,
+                         make_primary=body.is_primary, source=source)
     _after_write(request)
     return A.MessageOut(message="Gambar diperbarui.")
 
