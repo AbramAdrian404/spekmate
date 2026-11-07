@@ -4,6 +4,7 @@ import { formatDate, formatRupiahCompact, formatRupiahRange } from "@/lib/format
 import { CONDITION_LABEL } from "@/lib/labels";
 import type { Recommendation } from "@/lib/types";
 import { HeroLaptop } from "./hero-laptop";
+import { ModelPhoto } from "./model-photo";
 import { VerdictBadge } from "./verdict-badge";
 
 interface HeroStageProps {
@@ -26,7 +27,15 @@ export function HeroStage({ featured, needName }: HeroStageProps) {
   return (
     <div aria-hidden="true" className="hero-stage mx-auto w-full max-w-[40rem] px-3 pb-10 pt-14 sm:px-0">
       <div className="stage-in" style={at(120)}>
-        <HeroLaptop className="h-auto w-full drop-shadow-[0_30px_40px_rgb(36_59_83/0.14)]" />
+        {featured?.image ? (
+          // The real product photo of the featured result, lit like a studio shot. The drawn laptop is only the
+          // stand-in for a database whose first result has no photo yet.
+          <div className="hero-spotlight relative aspect-[16/11] w-full">
+            <ModelPhoto image={featured.image} fallbackAlt={featured.model_name} plate={false} priority className="size-full" sizes="(min-width: 640px) 40rem, 92vw" />
+          </div>
+        ) : (
+          <HeroLaptop className="h-auto w-full drop-shadow-[0_30px_40px_rgb(36_59_83/0.14)]" />
+        )}
       </div>
 
       {/* price */}
